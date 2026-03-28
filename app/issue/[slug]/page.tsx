@@ -1,12 +1,15 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getIssueBySlug, issues } from "@/lib/data"
+import { getIssueBySlug, getAllIssueSlugs } from "@/lib/queries"
 import { ArticleCard } from "@/components/article-card"
 import { ArrowLeft } from "lucide-react"
 
+export const revalidate = 3600
+
 export async function generateStaticParams() {
-  return issues.map((issue) => ({ slug: issue.slug }))
+  const slugs = await getAllIssueSlugs()
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({
@@ -15,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const issue = getIssueBySlug(slug)
+  const issue = await getIssueBySlug(slug)
   if (!issue) return { title: "Issue Not Found" }
   return {
     title: `Issue ${issue.number}: ${issue.title}`,
@@ -28,7 +31,7 @@ export default async function IssuePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const issue = getIssueBySlug(slug)
+  const issue = await getIssueBySlug(slug)
   if (!issue) notFound()
 
   return (

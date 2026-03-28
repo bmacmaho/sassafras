@@ -1,5 +1,5 @@
 import Link from "next/link"
-import type { Article } from "@/lib/data"
+import type { Article } from "@/lib/types"
 import { MediaBadge } from "@/components/media-badge"
 import { cn } from "@/lib/utils"
 

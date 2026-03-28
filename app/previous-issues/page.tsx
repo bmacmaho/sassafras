@@ -1,14 +1,18 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { issues } from "@/lib/data"
+import { getAllIssues } from "@/lib/queries"
+import { mediaTypeLabels } from "@/lib/types"
 import { ArrowRight } from "lucide-react"
-import { mediaTypeLabels } from "@/lib/data"
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "Archive",
 }
 
-export default function PreviousIssuesPage() {
+export default async function PreviousIssuesPage() {
+  const issues = await getAllIssues()
+
   return (
     <div>
       <section className="border-b border-border">
@@ -26,10 +30,10 @@ export default function PreviousIssuesPage() {
       <section>
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="flex flex-col gap-0">
-            {issues.map((issue, index) => (
+            {issues.map((issue) => (
               <Link
                 key={issue.slug}
-                href={issue.slug === issues[0].slug ? "/current-issue" : `/issue/${issue.slug}`}
+                href={issue.isCurrent ? "/current-issue" : `/issue/${issue.slug}`}
                 className="group"
               >
                 <div className="flex flex-col gap-6 border-t border-border py-10 md:flex-row md:items-start md:gap-10">
@@ -50,7 +54,7 @@ export default function PreviousIssuesPage() {
                       <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                         {`Issue ${issue.number} \u2014 ${issue.season} ${issue.year}`}
                       </p>
-                      {index === 0 && (
+                      {issue.isCurrent && (
                         <span className="rounded-sm bg-accent px-2 py-0.5 text-[10px] uppercase tracking-wider text-accent-foreground">
                           Current
                         </span>

@@ -1,13 +1,17 @@
 import type { Metadata } from "next"
-import { getCurrentIssue } from "@/lib/data"
+import { notFound } from "next/navigation"
+import { getCurrentIssue } from "@/lib/queries"
 import { ArticleCard } from "@/components/article-card"
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "Current Issue",
 }
 
-export default function CurrentIssuePage() {
-  const issue = getCurrentIssue()
+export default async function CurrentIssuePage() {
+  const issue = await getCurrentIssue()
+  if (!issue) notFound()
 
   return (
     <div>

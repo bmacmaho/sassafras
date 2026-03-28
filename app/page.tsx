@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { getCurrentIssue, getPreviousIssues } from "@/lib/data"
+import { getCurrentIssue, getPreviousIssues } from "@/lib/queries"
 import { ArticleCard } from "@/components/article-card"
 import { MediaBadge } from "@/components/media-badge"
 import { ArrowRight, ArrowDown } from "lucide-react"
@@ -13,9 +13,14 @@ import {
   ScrollProgress,
 } from "@/components/scroll-animations"
 
-export default function HomePage() {
-  const currentIssue = getCurrentIssue()
-  const previousIssues = getPreviousIssues()
+export const revalidate = 3600
+
+export default async function HomePage() {
+  const [currentIssue, previousIssues] = await Promise.all([
+    getCurrentIssue(),
+    getPreviousIssues(),
+  ])
+  if (!currentIssue) return null
   const featured = currentIssue.articles[0]
   const rest = currentIssue.articles.slice(1)
 

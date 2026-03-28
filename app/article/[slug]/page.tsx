@@ -1,19 +1,16 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getArticleBySlug, issues } from "@/lib/data"
+import { getArticleBySlug, getAllArticleSlugs, getCurrentIssue } from "@/lib/queries"
 import { MediaBadge } from "@/components/media-badge"
 import { ArticleBody } from "@/components/article-body"
 import { ArrowLeft } from "lucide-react"
 
+export const revalidate = 3600
+
 export async function generateStaticParams() {
-  const slugs: { slug: string }[] = []
-  for (const issue of issues) {
-    for (const article of issue.articles) {
-      slugs.push({ slug: article.slug })
-    }
-  }
-  return slugs
+  const slugs = await getAllArticleSlugs()
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({
@@ -22,7 +19,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const data = getArticleBySlug(slug)
+  const data = await getArticleBySlug(slug)
   if (!data) return { title: "Article Not Found" }
   return {
     title: `${data.title} by ${data.author}`,
@@ -36,11 +33,14 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const data = getArticleBySlug(slug)
+  const [data, currentIssue] = await Promise.all([
+    getArticleBySlug(slug),
+    getCurrentIssue(),
+  ])
   if (!data) notFound()
 
   const issueLink =
-    data.issue.slug === issues[0].slug
+    currentIssue && data.issue.slug === currentIssue.slug
       ? "/current-issue"
       : `/issue/${data.issue.slug}`
 

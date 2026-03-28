@@ -1,4 +1,4 @@
-import { type MediaType, mediaTypeLabels } from "@/lib/data"
+import { type MediaType, mediaTypeLabels } from "@/lib/types"
 import { Headphones, Video, FileText, Feather, Image } from "lucide-react"
 import { cn } from "@/lib/utils"
 

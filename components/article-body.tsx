@@ -1,6 +1,6 @@
 "use client"
 
-import type { Article } from "@/lib/data"
+import type { Article } from "@/lib/types"
 import { Play, Pause, Volume2 } from "lucide-react"
 import { useState } from "react"
 
