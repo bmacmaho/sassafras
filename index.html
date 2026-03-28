@@ -42,6 +42,27 @@
       margin: 0 auto 4px;
     }
 
+    nav {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: white;
+    }
+
     /* ── Divider ── */
     hr {
       border: none;
@@ -92,6 +113,11 @@
 </head>
 
 <body>
+  <nav>
+    <a href="index.html" class="active">Home</a>
+    <a href="about.html">About</a>
+  </nav>
+
   <div class="container">
 
     <img class="photo" src="public/sassafras-logo.PNG" alt="Sassafras Initiative" />
