@@ -27,6 +27,12 @@
       align-items: flex-start;
       justify-content: center;
       padding: 80px 24px 80px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
     }
 
     .container {
@@ -35,7 +41,6 @@
       text-align: center;
     }
 
-    /* ── Image ── */
     .photo {
       width: 50%;
       display: block;
@@ -50,6 +55,12 @@
       margin-bottom: 48px;
       aspect-ratio: 1668 / 379;
       background-color: #171617;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #d4d0c8;
+      margin-bottom: 28px;
     }
 
     nav {
@@ -73,59 +84,44 @@
       color: white;
     }
 
-    /* ── Divider ── */
-    hr {
-      border: none;
-      border-top: 1px solid #d4d0c8;
-      margin-bottom: 28px;
-    }
-
-    /* ── Blurb ── */
-    .blurb {
+    .content {
       font-size: 1.05rem;
-      font-style: italic;
+      font-style: normal;
       font-weight: 400;
       line-height: 1.75;
       color: white;
       text-align: left;
     }
 
-    .blurb p {
+    .content h2 {
+      font-family: 'Cardo', Georgia, serif;
+      font-weight: 400;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-style: normal;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .content p {
       margin-bottom: 1.2em;
     }
 
-    .blurb p:last-child {
+    .content section {
+      margin-bottom: 3em;
+    }
+
+    .content section:last-child {
       margin-bottom: 0;
-    }
-
-    .blurb ul {
-      margin: 0.5em 0 1.2em 1.4em;
-      text-align: left;
-    }
-
-    .blurb li {
-      margin-bottom: 0.4em;
-    }
-
-    .blurb .meta {
-      font-style: normal;
-      font-size: 0.9rem;
-      color: #c0bdb8;
-      margin-top: 2em;
-      border-top: 1px solid #3a3838;
-      padding-top: 1.4em;
-    }
-
-    .blurb .meta p {
-      margin-bottom: 0.5em;
     }
   </style>
 </head>
 
 <body>
   <nav>
-    <a href="index.html" class="active">Home</a>
-    <a href="about.html">About</a>
+    <a href="index.html" class="active">About</a>
+    <a href="submissions.html">Submissions</a>
   </nav>
 
   <div class="container">
@@ -136,43 +132,28 @@
 
     <hr />
 
-    <h2 style="font-family:'Cardo',Georgia,serif;font-weight:400;font-size:1.1rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;">Call for Submissions</h2>
+    <div class="content">
 
-    <div class="blurb">
-      <p>Sassafras invites submissions for its inaugural issue, <em>The Tower</em>. Through this issue, we aim to establish our identity as an experimental take on academic publications with a focus on challenging hierarchies within and beyond academia. Central to this is the notion of the 'Ivory Tower', which captures the tendency of academic institutions to enclose knowledge within exclusive spaces, reinforced by paywalls and specialised jargon. We seek new ways of addressing such hierarchies both inside and outside of academia, with the firm belief that knowledge is for everyone.</p>
+      <section>
+        <h2>Who are we?</h2>
+        <p>We are Sassafras, a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which 'legitimate' academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.</p>
+      </section>
 
-      <p>As a complex historical symbol, The Tower evokes images of hubris, grandeur, hierarchy, and exclusion. Where shadows of Towers continue to draw lines across social and spatial boundaries, speaking to how cities, institutions, and governments form and inform themselves and others. Submissions are open to all kinds of exploration and experimentation surrounding the central theme, encouraging contributors to explore issues relating to power dynamics, spatial relationalities (up vs down), social hierarchy, etc. Some sub-themes that have inspired us are:</p>
+      <section>
+        <h2>Why Sassafras?</h2>
+        <p>Sassafras is the name of a plant native to North America. It produces three differently shaped leaves on a stem — a mitten shape, a goose foot, and an ordinary ovate form. It has a distinctive taste and smell (a bit like citrus) and produces deep purple berry stems late summer, and tiny yellow flowers in the spring. The origins of its name are somewhat debated, however it may be derived from Sasaunckpamuck (as it was called by the Nipmuck), while others say it has Spanish and Latin origins in the word 'saxifrage', which means 'stone breaker'.</p>
+        <p>Its leaves, bark, roots, and oils were often ground up and used in cooking or as medicinal cures by indigenous peoples across North America. During the colonial period in the early 1600s, Europe became fascinated by the plant and saw it as a panacea — having the ability to 'purify' blood, heal syphilis, rheumatism, french pox, etc. It became the second largest extracted resource from North American colonies, second only to Tobacco.</p>
+        <p>By the 1960s some studies showed that Safrole (an oil that is present in sassafras stems and roots) may be carcinogenic, and it was quickly banned from commercial use and sale. The study has since been called into question, and many still use parts of the tree in local recipes, teas, and notably gumbo, in which ground Sassafras leaves are a key thickening ingredient.</p>
+        <p>What makes Sassafras both interesting and unusual is its general unknowability alongside its massive influence. Its iterations include key roles in various foods, medicines, magic cures, poison, and illegality (for the sale of its roots). This offers a character that encompasses the many aspects of movement, and what it means to exist through space and time as a constantly changing thing — that is, where your meaning becomes contingent upon your context. This is true for many things of course, but the Sassafras really embodies this state of ambiguity, and is therefore resonant in histories of social politics and migration.</p>
+      </section>
 
-      <ul>
-        <li>The Panopticon — towers of surveillance in our daily lives.</li>
-        <li>The Tower of Babel — the human desire towards reaching 'the divine'.</li>
-        <li>The Berlin TV tower and 'height' as a historical expression of progress.</li>
-        <li>Anti-intellectualism — how do we address the diminishing trust in academia?</li>
-        <li>How the physical framework of the tower as an enclosed/defensive structure helps us frame power in the everyday, and how we attempt to subvert it.</li>
-        <li>…And other such examinations.</li>
-      </ul>
-
-      <p>This list is indicative of the broad ideas that inspire us and is not exclusive. Any interpretations of the symbol of 'The Tower' are welcome.</p>
-
-      <p style="color:#F78719;font-style:normal;margin-top:1.4em;font-size:1.3rem;">Link for submissions forthcoming.</p>
-
-      <div class="meta">
-        <p><strong>Accepted forms:</strong> Articles, poems, short stories, artworks, photography, soundscapes, video essays, etc.</p>
-        <p><strong>Word limit for written content:</strong> 1500–2000 words</p>
-        <p><strong>Length limit for video/audio content:</strong> 20 minutes</p>
-        <p><strong>Text files:</strong> Markdown preferred, Google Docs accepted</p>
-        <p><strong>Image files:</strong> JPEG, 300dpi</p>
-        <p><strong>Video files:</strong> .mp4</p>
-        <p><strong>Audio files:</strong> .wav or .mp3</p>
-        <p>If any files need to be sent in a different format, feel free to reach out and we can figure it out together.</p>
-        <p><strong>Submission deadline (first drafts):</strong> May 7th, 2026</p>
-        <p><strong>Notification of acceptance:</strong> May 15th, 2026</p>
-        <p><strong>Notification of suggested edits:</strong> June 1st, 2026</p>
-        <p><strong>Date of publication:</strong> June 21st, 2026</p>
-      </div>
     </div>
-
   </div>
+  <script>
+    window.addEventListener('load', function () {
+      document.body.classList.add('loaded');
+    });
+  </script>
 </body>
 
 </html>

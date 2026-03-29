@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submissions — Sassafras Initiative</title>
+  <link rel="icon" href="public/sassafras-logo-compressed.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #171617;
+      color: white;
+      font-family: 'Cardo', Georgia, serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 80px 24px 80px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+      text-align: center;
+    }
+
+    .photo {
+      width: 50%;
+      display: block;
+      margin: 0 auto 4px;
+      aspect-ratio: 3616 / 3600;
+      background-color: #171617;
+    }
+
+    .title-img {
+      width: 100%;
+      display: block;
+      margin-bottom: 48px;
+      aspect-ratio: 1668 / 379;
+      background-color: #171617;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #d4d0c8;
+      margin-bottom: 28px;
+    }
+
+    nav {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      color: #c0bdb8;
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: white;
+    }
+
+    .blurb {
+      font-size: 1.05rem;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.75;
+      color: white;
+      text-align: left;
+    }
+
+    .blurb p {
+      margin-bottom: 1.2em;
+    }
+
+    .blurb p:last-child {
+      margin-bottom: 0;
+    }
+
+    .blurb ul {
+      margin: 0.5em 0 1.2em 1.4em;
+      text-align: left;
+    }
+
+    .blurb li {
+      margin-bottom: 0.4em;
+    }
+
+    .blurb .meta {
+      font-style: normal;
+      font-size: 0.9rem;
+      color: #c0bdb8;
+      margin-top: 2em;
+      border-top: 1px solid #3a3838;
+      padding-top: 1.4em;
+    }
+
+    .blurb .meta p {
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="index.html">About</a>
+    <a href="submissions.html" class="active">Submissions</a>
+  </nav>
+
+  <div class="container">
+
+    <img class="photo" src="public/sassafras-logo-compressed.webp" alt="Sassafras Initiative" />
+
+    <img class="title-img" src="public/sassafras-title.png" alt="Sassafras Initiative" />
+
+    <hr />
+
+    <h2 style="font-family:'Cardo',Georgia,serif;font-weight:400;font-size:1.1rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;">Call for Submissions</h2>
+
+    <div class="blurb">
+      <p>Sassafras invites submissions for its inaugural issue, <em>The Tower</em>. Through this issue, we aim to establish our identity as an experimental take on academic publications with a focus on challenging hierarchies within and beyond academia. Central to this is the notion of the 'Ivory Tower', which captures the tendency of academic institutions to enclose knowledge within exclusive spaces, reinforced by paywalls and specialised jargon. We seek new ways of addressing such hierarchies both inside and outside of academia, with the firm belief that knowledge is for everyone.</p>
+
+      <p>As a complex historical symbol, The Tower evokes images of hubris, grandeur, hierarchy, and exclusion. Where shadows of Towers continue to draw lines across social and spatial boundaries, speaking to how cities, institutions, and governments form and inform themselves and others. Submissions are open to all kinds of exploration and experimentation surrounding the central theme, encouraging contributors to explore issues relating to power dynamics, spatial relationalities (up vs down), social hierarchy, etc. Some sub-themes that have inspired us are:</p>
+
+      <ul>
+        <li>The Panopticon — towers of surveillance in our daily lives.</li>
+        <li>The Tower of Babel — the human desire towards reaching 'the divine'.</li>
+        <li>The Berlin TV tower and 'height' as a historical expression of progress.</li>
+        <li>Anti-intellectualism — how do we address the diminishing trust in academia?</li>
+        <li>How the physical framework of the tower as an enclosed/defensive structure helps us frame power in the everyday, and how we attempt to subvert it.</li>
+        <li>…And other such examinations.</li>
+      </ul>
+
+      <p>This list is indicative of the broad ideas that inspire us and is not exclusive. Any interpretations of the symbol of 'The Tower' are welcome.</p>
+
+      <p style="color:#F78719;font-style:normal;margin-top:1.4em;font-size:1.3rem;">Link for submissions forthcoming.</p>
+
+      <div class="meta">
+        <p><strong>Accepted forms:</strong> Articles, poems, short stories, artworks, photography, soundscapes, video essays, etc.</p>
+        <p><strong>Word limit for written content:</strong> 1500–2000 words</p>
+        <p><strong>Length limit for video/audio content:</strong> 20 minutes</p>
+        <p><strong>Text files:</strong> Markdown preferred, Google Docs accepted</p>
+        <p><strong>Image files:</strong> JPEG, 300dpi</p>
+        <p><strong>Video files:</strong> .mp4</p>
+        <p><strong>Audio files:</strong> .wav or .mp3</p>
+        <p>If any files need to be sent in a different format, feel free to reach out and we can figure it out together.</p>
+        <p><strong>Submission deadline (first drafts):</strong> May 7th, 2026</p>
+        <p><strong>Notification of acceptance:</strong> May 15th, 2026</p>
+        <p><strong>Notification of suggested edits:</strong> June 1st, 2026</p>
+        <p><strong>Date of publication:</strong> June 21st, 2026</p>
+      </div>
+    </div>
+
+  </div>
+  <script>
+    window.addEventListener('load', function () {
+      document.body.classList.add('loaded');
+    });
+  </script>
+</body>
+
+</html>
