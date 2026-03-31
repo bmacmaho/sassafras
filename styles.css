@@ -182,6 +182,42 @@ nav a.active {
   margin-bottom: 0.5em;
 }
 
+/* ── subtitle ── */
+
+.subtitle {
+  font-family: 'Cardo', Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: #c0bdb8;
+  text-align: center;
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
+
+/* ── button ── */
+
+.btn {
+  display: inline-block;
+  margin-top: 1.8em;
+  padding: 0.65em 1.6em;
+  font-family: 'Cardo', Georgia, serif;
+  font-size: 1rem;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #F78719;
+  border: 1px solid #F78719;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn:hover {
+  background-color: #F78719;
+  color: #171617;
+}
+
 /* ── shared ── */
 
 .fade-in {
