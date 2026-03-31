@@ -14,3 +14,14 @@ const fadeObserver = new IntersectionObserver((entries) => {
 setTimeout(() => {
   document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
 }, 2000);
+
+const dividerObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animate');
+      dividerObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.divider-deferred').forEach(el => dividerObserver.observe(el));

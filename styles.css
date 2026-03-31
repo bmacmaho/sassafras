@@ -86,6 +86,21 @@ body.loaded {
   to   { transform: scaleX(1); }
 }
 
+.divider-deferred::before {
+  animation-play-state: paused;
+  animation-delay: 0s;
+}
+
+.divider-deferred::after {
+  animation-play-state: paused;
+  animation-delay: 0.1s;
+}
+
+.divider-deferred.animate::before,
+.divider-deferred.animate::after {
+  animation-play-state: running;
+}
+
 nav {
   position: absolute;
   top: 24px;
@@ -180,6 +195,33 @@ nav a.active {
 
 .blurb .meta p {
   margin-bottom: 0.5em;
+}
+
+/* ── blurb headings ── */
+
+.blurb h3 {
+  font-family: 'Cardo', Georgia, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: white;
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 12px;
+}
+
+.blurb h4 {
+  font-family: 'Cardo', Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: #c0bdb8;
+  text-align: left;
+  margin-top: 1.6em;
+  margin-bottom: 0.8em;
 }
 
 /* ── subtitle ── */
