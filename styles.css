@@ -238,6 +238,30 @@ nav a.active {
   margin-bottom: 24px;
 }
 
+/* ── social links ── */
+
+.social-links {
+  margin-top: 2.5em;
+  text-align: center;
+}
+
+.social-links a {
+  display: inline-block;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.social-links a:hover {
+  opacity: 1;
+}
+
+.social-links img {
+  width: 28px;
+  height: 28px;
+  /* Tint white SVG to #F78719 */
+  filter: invert(58%) sepia(97%) saturate(600%) hue-rotate(1deg) brightness(103%) contrast(97%);
+}
+
 /* ── button ── */
 
 .btn {
