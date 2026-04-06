@@ -22,7 +22,7 @@ const alteHaasGrotesk = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Sassafras \u2014 A Journal of Crossings",
+    default: "Sassafras \u2014",
     template: "%s \u2014 Sassafras",
   },
   description:

@@ -69,16 +69,6 @@ export default function AboutPage() {
           >
             ABOUT
           </p>
-          <h1
-            className="font-bold text-foreground leading-tight"
-            style={{
-              fontSize: "clamp(2rem, 6vw, 4.5rem)",
-              letterSpacing: "0.06em",
-              maxWidth: "14ch",
-            }}
-          >
-            A Journal of Crossings
-          </h1>
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
             Sassafras is an independent publication that believes knowledge does
             not belong to any single form. We publish work that crosses

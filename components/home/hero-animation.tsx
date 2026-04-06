@@ -223,16 +223,6 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
             willChange: "transform, opacity",
           }}
         >
-          <p
-            style={{
-              fontSize: "clamp(0.6rem, 1.4vw, 0.78rem)",
-              letterSpacing: "0.28em",
-              opacity: 0.45,
-              textAlign: "center",
-            }}
-          >
-            A JOURNAL OF CROSSINGS
-          </p>
 
           {/* Short rule below subtitle */}
           <div
