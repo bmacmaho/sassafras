@@ -1,19 +1,23 @@
 import type { Metadata } from "next"
-import { Inter, Newsreader } from "next/font/google"
+import localFont from "next/font/local"
 
 import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
 import "./globals.css"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
-
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-newsreader",
-  style: ["normal", "italic"],
+const alteHaasGrotesk = localFont({
+  src: [
+    {
+      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-alte-haas-grotesk",
 })
 
 export const metadata: Metadata = {
@@ -31,11 +35,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
+    <html lang="en" className={alteHaasGrotesk.variable}>
       <body className="font-sans antialiased">
         <SiteHeader />
         <main>{children}</main>
-        <SiteFooter />
       </body>
     </html>
   )

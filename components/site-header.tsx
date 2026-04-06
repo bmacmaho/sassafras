@@ -2,45 +2,62 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import { cn } from "@/lib/utils"
 
-const navLinks = [
-  { href: "/", label: "Home" },
+const NAV_LINKS = [
   { href: "/current-issue", label: "Current Issue" },
-  { href: "/previous-issues", label: "Archive" },
+  { href: "/issues", label: "All Issues" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ]
 
 export function SiteHeader() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const isHome = pathname === "/"
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  const lightText = isHome && !scrolled
 
   return (
-    <header className="border-b border-border">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="flex flex-col" onClick={() => setMobileOpen(false)}>
-          <span className="font-serif text-2xl tracking-tight text-foreground">
-            Sassafras
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-            A Journal of Crossings
-          </span>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-background/95 backdrop-blur-md border-b border-border"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
+        <Link
+          href="/"
+          className={`text-[11px] font-bold tracking-hero transition-colors duration-500 ${
+            lightText ? "text-[oklch(0.93_0.01_75)]" : "text-foreground"
+          }`}
+        >
+          SASSAFRAS
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
-          {navLinks.map((link) => (
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-10">
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={cn(
-                "text-sm uppercase tracking-wider transition-colors hover:text-foreground",
-                pathname === link.href
-                  ? "text-foreground"
-                  : "text-muted-foreground"
-              )}
+              className={`text-[11px] tracking-label transition-all duration-500 hover:opacity-50 ${
+                lightText ? "text-[oklch(0.93_0.01_75)]" : "text-foreground"
+              } ${pathname === link.href ? "opacity-40" : ""}`}
             >
               {link.label}
             </Link>
@@ -48,34 +65,31 @@ export function SiteHeader() {
         </nav>
 
         <button
-          className="md:hidden text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          className={`md:hidden transition-colors duration-500 ${
+            lightText ? "text-[oklch(0.93_0.01_75)]" : "text-foreground"
+          }`}
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Toggle menu"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
 
-      {mobileOpen && (
-        <nav className="border-t border-border px-6 py-6 md:hidden" aria-label="Mobile navigation">
-          <div className="flex flex-col gap-4">
-            {navLinks.map((link) => (
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-background border-b border-border">
+          <nav className="mx-auto max-w-7xl px-6 py-6 flex flex-col gap-5">
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "text-sm uppercase tracking-wider transition-colors hover:text-foreground",
-                  pathname === link.href
-                    ? "text-foreground"
-                    : "text-muted-foreground"
-                )}
+                className="text-[11px] tracking-label text-foreground"
               >
                 {link.label}
               </Link>
             ))}
-          </div>
-        </nav>
+          </nav>
+        </div>
       )}
     </header>
   )
