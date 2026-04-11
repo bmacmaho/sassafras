@@ -1,32 +1,28 @@
 import type { Metadata } from "next"
-import localFont from "next/font/local"
+import { Cardo } from "next/font/google"
 
 import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import "./globals.css"
 
-const alteHaasGrotesk = localFont({
-  src: [
-    {
-      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-alte-haas-grotesk",
+const cardo = Cardo({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cardo",
 })
 
 export const metadata: Metadata = {
   title: {
-    default: "Sassafras \u2014",
-    template: "%s \u2014 Sassafras",
+    default: "Sassafras Initiative",
+    template: "%s — Sassafras",
   },
   description:
-    "An independent publication exploring ideas across media and disciplines. Essays, poetry, audio, video, and visual work.",
+    "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form.",
+  icons: {
+    icon: "/sassafras-logo.PNG",
+    apple: "/sassafras-logo.PNG",
+  },
 }
 
 export default function RootLayout({
@@ -35,10 +31,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={alteHaasGrotesk.variable}>
+    <html lang="en" className={cardo.variable}>
       <body className="font-sans antialiased">
         <SiteHeader />
         <main>{children}</main>
+        <SiteFooter />
       </body>
     </html>
   )

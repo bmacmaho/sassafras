@@ -6,15 +6,22 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <p className="text-[11px] font-bold tracking-hero text-foreground">
-              SASSAFRAS
+            <p
+              className="italic"
+              style={{
+                fontSize: "18px",
+                color: "oklch(0.72 0.16 55)",
+                letterSpacing: "0.08em",
+              }}
+            >
+              sassafras
             </p>
             <p className="mt-1 text-[10px] tracking-label text-muted-foreground">
-              A JOURNAL OF CROSSINGS
+              REIMAGINING ACADEMIC DISCOURSE
             </p>
             <p className="mt-5 max-w-xs text-xs leading-relaxed text-muted-foreground">
-              An independent publication exploring ideas across media and
-              disciplines. Published twice yearly.
+              An interdisciplinary publication bridging research, visual arts,
+              oral histories, and radical experimentation of form. Published independently.
             </p>
           </div>
 
@@ -33,7 +40,7 @@ export function SiteFooter() {
                 About
               </Link>
               <Link href="/contact" className="text-xs text-foreground hover:opacity-50 transition-opacity">
-                Contact
+                Submissions
               </Link>
             </nav>
           </div>
@@ -43,9 +50,14 @@ export function SiteFooter() {
               CONNECT
             </p>
             <div className="flex flex-col gap-3">
-              <span className="text-xs text-foreground cursor-pointer hover:opacity-50 transition-opacity">
+              <a
+                href="https://www.instagram.com/sassafrasinitiative"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-foreground hover:opacity-50 transition-opacity"
+              >
                 Instagram
-              </span>
+              </a>
               <span className="text-xs text-foreground cursor-pointer hover:opacity-50 transition-opacity">
                 Newsletter
               </span>
@@ -69,7 +81,7 @@ export function SiteFooter() {
 
         <div className="mt-12 pt-6 border-t border-border flex flex-col gap-1 sm:flex-row sm:justify-between">
           <p className="text-[10px] text-muted-foreground">
-            &copy; {new Date().getFullYear()} Sassafras Journal. All rights reserved.
+            &copy; {new Date().getFullYear()} Sassafras Initiative. All rights reserved.
           </p>
           <p className="text-[10px] text-muted-foreground">
             Published independently. Open access.

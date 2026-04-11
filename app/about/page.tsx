@@ -1,59 +1,27 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "About — Sassafras",
+  title: "About",
 }
-
-const team = [
-  {
-    name: "Dr. Anya Okafor",
-    role: "Editor-in-Chief",
-    bio: "A cultural anthropologist and former editor at several literary reviews, Anya founded Sassafras with the conviction that academic knowledge should not be trapped in a single format.",
-  },
-  {
-    name: "Leo Ferreira",
-    role: "Creative Director",
-    bio: "Leo brings two decades of editorial design experience, having art-directed publications across Lisbon, London, and São Paulo. He believes every piece of knowledge has a native form.",
-  },
-  {
-    name: "Suki Hayashi",
-    role: "Audio & Media Editor",
-    bio: "A sound artist and producer, Suki oversees all audio and video work. She previously directed the sound department at a public radio station in Osaka.",
-  },
-  {
-    name: "Marco de Luca",
-    role: "Poetry & Literature Editor",
-    bio: "Marco is a poet and translator. His editorial practice is rooted in the belief that poetry is not decoration but a fundamental mode of knowing.",
-  },
-  {
-    name: "Priya Menon",
-    role: "Visual Arts Editor",
-    bio: "Priya curates visual and photographic work for each issue. She is a practising photographer and former gallery curator based in Chennai.",
-  },
-  {
-    name: "James Whitfield",
-    role: "Managing Editor",
-    bio: "James coordinates production and contributor relations across every issue. His background spans literary journalism and independent arts publishing.",
-  },
-]
 
 const howWeWork = [
   {
     label: "01",
-    title: "Thematic Issues",
-    body: "Each issue is organised around a single theme, explored through multiple media and perspectives. We commission and accept submissions that respond to the theme in unexpected ways.",
+    title: "Interdisciplinary Forms",
+    body: "We pilot a series of publications and projects that unite interdisciplinary forms of research and meaning-making, placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft.",
   },
   {
     label: "02",
-    title: "Multi-Format Review",
-    body: "Every submission is reviewed by editors and peers with expertise in the relevant medium. We evaluate audio as audio, poetry as poetry, and visual work as visual work.",
+    title: "Accessible Knowledge",
+    body: "We are critical of the exclusionary parameters within which academic knowledge is produced. Sassafras aims to present academic thought outside of paywalls, expensive monographs, and gated lecture halls.",
   },
   {
     label: "03",
-    title: "Open Access",
-    body: "All work published in Sassafras is freely available online. We believe the barriers between knowledge and the public should be as low as possible. Contributors retain full rights.",
+    title: "Radical Experimentation",
+    body: "We give room for radical experimentation of form. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.",
   },
 ]
 
@@ -62,19 +30,41 @@ export default function AboutPage() {
     <div className="pt-14">
       {/* ── Masthead ── */}
       <section className="border-b border-border px-6 py-20 md:py-28">
-        <div className="mx-auto max-w-7xl">
-          <p
-            className="text-muted-foreground mb-4"
-            style={{ fontSize: "10px", letterSpacing: "0.22em" }}
-          >
-            ABOUT
-          </p>
-          <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            Sassafras is an independent publication that believes knowledge does
-            not belong to any single form. We publish work that crosses
-            boundaries — between disciplines, between media, between ways of
-            knowing.
-          </p>
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:gap-16">
+          <div className="flex-1">
+            <p
+              className="text-muted-foreground mb-4"
+              style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+            >
+              ABOUT
+            </p>
+            <h1
+              className="font-bold text-foreground leading-tight"
+              style={{
+                fontSize: "clamp(2rem, 6vw, 4.5rem)",
+                letterSpacing: "0.06em",
+                maxWidth: "16ch",
+              }}
+            >
+              Who Are We?
+            </h1>
+            <p className="mt-6 max-w-xl text-sm leading-[1.85] text-muted-foreground md:text-base">
+              We are Sassafras, a group of students and recent graduates seeking to
+              reimagine academic discourse and publication. We are critical of the
+              exclusionary parameters within which &apos;legitimate&apos; academic knowledge is
+              produced and disseminated since they are often inaccessible to the cultures,
+              stories, and people that are being researched.
+            </p>
+          </div>
+          <div className="mt-8 md:mt-0 flex-shrink-0">
+            <Image
+              src="/sassafras-logo.PNG"
+              alt="Sassafras botanical illustration"
+              width={200}
+              height={200}
+              className="opacity-80"
+            />
+          </div>
         </div>
       </section>
 
@@ -92,26 +82,22 @@ export default function AboutPage() {
               className="font-bold text-foreground leading-snug"
               style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", letterSpacing: "0.04em" }}
             >
-              Scholarship should be as varied as the world it describes.
+              Bridging the gap between research, visual arts, oral histories, and labour.
             </h2>
           </div>
-          <div className="flex flex-col gap-5 text-sm leading-relaxed text-muted-foreground">
+          <div className="flex flex-col gap-5 text-sm leading-[1.85] text-muted-foreground">
             <p>
-              Academic publishing has long privileged a narrow range of forms:
-              the peer-reviewed article, the monograph, the conference paper.
-              These are valuable. But they are not the only ways to think
-              rigorously, to research deeply, or to share what one has found.
+              Sassafras aims to present academic thought outside of paywalls, expensive
+              monographs, and gated lecture halls. We will do so by piloting a series
+              of publications and projects that unite interdisciplinary forms of research
+              and meaning-making, are accessible, and give room for radical experimentation
+              of form.
             </p>
             <p>
-              Sassafras publishes essays alongside poetry, field recordings
-              alongside photo essays, video work alongside traditional
-              scholarship. We ask contributors not to translate their work into
-              a standard format, but to find the form native to their inquiry.
-            </p>
-            <p>
-              We are peer-reviewed, but our review process honours the medium.
-              A poem is evaluated as a poem. A sound piece as a sound piece.
-              Rigour does not require uniformity.
+              This means placing the essay alongside the performance, the illustration,
+              the home video, the recipe, and the craft. By doing so, Sassafras hopes to
+              imagine new ways of scholarly engagement that enable knowledges to speak
+              to each other in more fluid ways.
             </p>
           </div>
         </div>
@@ -150,38 +136,38 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── People ── */}
+      {/* ── Why Sassafras ── */}
       <section className="border-b border-border px-6 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl">
-          <p
-            className="text-muted-foreground mb-10"
-            style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+        <div className="mx-auto max-w-3xl">
+          <h2
+            className="font-bold text-foreground text-center mb-10"
+            style={{ fontSize: "13px", letterSpacing: "0.15em" }}
           >
-            THE PEOPLE
-          </p>
-          <div className="grid gap-0 md:grid-cols-2">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="border-t border-border py-7 pr-0 md:pr-12 flex flex-col gap-2"
-              >
-                <h3
-                  className="font-bold text-foreground"
-                  style={{ fontSize: "clamp(0.95rem, 2vw, 1.1rem)", letterSpacing: "0.03em" }}
-                >
-                  {member.name}
-                </h3>
-                <p
-                  className="text-muted-foreground"
-                  style={{ fontSize: "9px", letterSpacing: "0.18em" }}
-                >
-                  {member.role.toUpperCase()}
-                </p>
-                <p className="text-sm leading-relaxed text-muted-foreground mt-1">
-                  {member.bio}
-                </p>
-              </div>
-            ))}
+            WHY SASSAFRAS?
+          </h2>
+          <div className="space-y-6 text-sm leading-[1.85] text-muted-foreground">
+            <p>
+              Sassafras is the name of a plant native to North America. It produces three
+              differently shaped leaves on a stem — a mitten shape, a goose foot, and an
+              ordinary ovate form. It has a distinctive taste and smell (a bit like citrus) and
+              produces deep purple berry stems late summer, and tiny yellow flowers in the
+              spring.
+            </p>
+            <p>
+              Its leaves, bark, roots, and oils were often ground up and used in cooking or as
+              medicinal cures by indigenous peoples across North America. During the colonial
+              period in the early 1600s, Europe became fascinated by the plant and saw it as
+              a panacea — having the ability to &apos;purify&apos; blood, heal syphilis, rheumatism,
+              french pox, etc. It became the second largest extracted resource from North
+              American colonies, second only to Tobacco.
+            </p>
+            <p>
+              What makes Sassafras both interesting and unusual is its general unknowability
+              alongside its massive influence. This offers a character that encompasses the
+              many aspects of movement, and what it means to exist through space and time
+              as a constantly changing thing — that is, where your meaning becomes contingent
+              upon your context.
+            </p>
           </div>
         </div>
       </section>

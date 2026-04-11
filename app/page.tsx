@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { getAllIssues, getCurrentIssue } from "@/lib/queries"
 import { HeroAnimation } from "@/components/home/hero-animation"
+import { FullscreenNavOverlay } from "@/components/home/fullscreen-nav-overlay"
 import type { Article } from "@/lib/types"
 import { mediaTypeLabels } from "@/lib/types"
 import { ArrowRight } from "lucide-react"
@@ -23,11 +24,11 @@ function seededShuffle<T>(arr: T[]): T[] {
 }
 
 const MEDIA_COLORS: Record<string, string> = {
-  essay:   "bg-[oklch(0.20_0.02_50)]",
-  poetry:  "bg-[oklch(0.22_0.03_30)]",
-  audio:   "bg-[oklch(0.18_0.03_200)]",
-  video:   "bg-[oklch(0.16_0.04_280)]",
-  visual:  "bg-[oklch(0.20_0.04_100)]",
+  essay:   "bg-[oklch(0.16_0.01_330)]",
+  poetry:  "bg-[oklch(0.18_0.02_30)]",
+  audio:   "bg-[oklch(0.14_0.02_200)]",
+  video:   "bg-[oklch(0.13_0.03_280)]",
+  visual:  "bg-[oklch(0.17_0.03_100)]",
 }
 
 function ExploreCard({
@@ -37,7 +38,7 @@ function ExploreCard({
   article: Article
   large?: boolean
 }) {
-  const bg = MEDIA_COLORS[article.mediaType] ?? "bg-[oklch(0.18_0.02_50)]"
+  const bg = MEDIA_COLORS[article.mediaType] ?? "bg-[oklch(0.16_0.01_330)]"
 
   return (
     <Link
@@ -110,6 +111,9 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* ── 锚点：使返回主页能够直接跳转到导航全黑层，跳过首屏插画 ── */}
+      <div id="nav" className="absolute w-full pointer-events-none" style={{ top: "135vh" }} />
+      
       {/* ── Hero (scroll-driven animation) ── */}
       <HeroAnimation
         issueNumber={currentIssue?.number}
@@ -117,115 +121,8 @@ export default async function HomePage() {
         year={currentIssue?.year}
       />
 
-      {/* ── Explore section ── */}
-      <section className="bg-background">
-        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-          {/* Section header */}
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <p
-                className="text-muted-foreground mb-2"
-                style={{ fontSize: "10px", letterSpacing: "0.22em" }}
-              >
-                EXPLORE
-              </p>
-              <h2
-                className="font-bold text-foreground"
-                style={{ fontSize: "clamp(1.6rem, 4vw, 2.8rem)", letterSpacing: "0.04em" }}
-              >
-                Recent Work
-              </h2>
-            </div>
-            <Link
-              href="/issues"
-              className="hidden sm:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-              style={{ fontSize: "11px", letterSpacing: "0.18em" }}
-            >
-              ALL ISSUES
-              <ArrowRight size={12} />
-            </Link>
-          </div>
-
-          {/* Article grid */}
-          {exploreArticles.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-auto">
-              {exploreArticles.map((article, i) => (
-                <ExploreCard
-                  key={article.slug}
-                  article={article}
-                  large={i === 0 || i === 5}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-24">
-              <p className="text-muted-foreground text-sm">
-                Content coming soon.
-              </p>
-            </div>
-          )}
-
-          <div className="mt-12 flex justify-center sm:hidden">
-            <Link
-              href="/issues"
-              className="flex items-center gap-2 text-foreground border border-border px-6 py-3"
-              style={{ fontSize: "11px", letterSpacing: "0.18em" }}
-            >
-              ALL ISSUES <ArrowRight size={12} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Current issue CTA ── */}
-      {currentIssue && (
-        <section className="border-t border-border bg-[oklch(0.09_0.018_55)] text-[oklch(0.93_0.01_75)]">
-          <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-              <div>
-                <p
-                  style={{ fontSize: "10px", letterSpacing: "0.22em", opacity: 0.45 }}
-                  className="mb-3"
-                >
-                  CURRENTLY READING
-                </p>
-                <p
-                  style={{ fontSize: "10px", letterSpacing: "0.18em", opacity: 0.45 }}
-                  className="mb-4"
-                >
-                  ISSUE NO. {currentIssue.number} &mdash;{" "}
-                  {currentIssue.season?.toUpperCase()} {currentIssue.year}
-                </p>
-                <h2
-                  className="font-bold leading-tight"
-                  style={{
-                    fontSize: "clamp(1.8rem, 5vw, 3.5rem)",
-                    letterSpacing: "0.05em",
-                    maxWidth: "18ch",
-                  }}
-                >
-                  {currentIssue.title}
-                </h2>
-                {currentIssue.description && (
-                  <p
-                    className="mt-4 leading-relaxed"
-                    style={{ fontSize: "13px", opacity: 0.55, maxWidth: "44ch" }}
-                  >
-                    {currentIssue.description}
-                  </p>
-                )}
-              </div>
-              <Link
-                href="/current-issue"
-                className="inline-flex items-center gap-3 border border-[oklch(0.93_0.01_75_/_0.25)] px-7 py-3.5 hover:bg-[oklch(0.93_0.01_75_/_0.06)] transition-colors self-start md:self-auto"
-                style={{ fontSize: "11px", letterSpacing: "0.18em" }}
-              >
-                READ ISSUE <ArrowRight size={12} />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ── 电影感渐变自动全屏导航层 ── */}
+      <FullscreenNavOverlay />
     </div>
   )
 }
