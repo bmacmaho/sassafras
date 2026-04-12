@@ -188,3 +188,21 @@
   background: oklch(0.72 0.16 55 / 0.4);
   animation: dot-fade 3s ease-in-out infinite;
 }
+
+/* ── Book page styles ──────────────────────────────────────────── */
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.6; }
+}
+
+.book-page-face {
+  /* Subtle paper texture */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(0,0,0,0.01) 28px,
+      rgba(0,0,0,0.01) 29px
+    );
+}
