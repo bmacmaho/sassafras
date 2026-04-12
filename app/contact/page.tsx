@@ -36,11 +36,11 @@ export default function ContactPage() {
   return (
     <div className="pt-14">
       {/* ── Masthead ── */}
-      <section className="border-b border-border px-6 py-20 md:py-28">
+      <section className="border-b border-border px-6 py-12 md:py-16">
         <div className="mx-auto max-w-7xl">
           <p
             className="text-muted-foreground mb-4"
-            style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+            style={{ fontSize: "14px", letterSpacing: "0.22em" }}
           >
             SUBMISSIONS
           </p>
@@ -54,7 +54,7 @@ export default function ContactPage() {
           >
             Issue 1 — The Tower
           </h1>
-          <p className="mt-5 max-w-xl text-sm leading-[1.85] text-muted-foreground">
+          <p className="mt-5 max-w-xl text-base leading-[1.85] text-muted-foreground">
             Sassafras invites submissions for its inaugural issue. Through this issue,
             we aim to establish our identity as an experimental take on academic publication
             with a focus on challenging hierarchies within and beyond academia.
@@ -63,9 +63,9 @@ export default function ContactPage() {
       </section>
 
       {/* ── Theme description ── */}
-      <section className="border-b border-border px-6 py-16 md:py-24">
+      <section className="border-b border-border px-6 py-10 md:py-16">
         <div className="mx-auto max-w-3xl">
-          <div className="space-y-6 text-sm leading-[1.85] text-muted-foreground">
+          <div className="space-y-6 text-base leading-[1.85] text-muted-foreground">
             <p>
               Central to this is the notion of the &apos;Ivory Tower&apos;, which captures the tendency
               of academic institutions to enclose knowledge within exclusive spaces, reinforced
@@ -89,22 +89,22 @@ export default function ContactPage() {
       </section>
 
       {/* ── Sub-themes ── */}
-      <section className="border-b border-border px-6 py-16 bg-secondary/20">
+      <section className="border-b border-border px-6 py-10 md:py-16 bg-secondary/20">
         <div className="mx-auto max-w-3xl">
           <p
             className="text-muted-foreground mb-8"
-            style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+            style={{ fontSize: "14px", letterSpacing: "0.22em" }}
           >
             SUB-THEMES THAT INSPIRE US
           </p>
           <div className="space-y-4">
             {subThemes.map((theme, i) => (
               <div key={i} className="border-l-2 border-border pl-5 py-2">
-                <p className="text-sm leading-relaxed text-foreground">{theme}</p>
+                <p className="text-base leading-relaxed text-foreground">{theme}</p>
               </div>
             ))}
           </div>
-          <p className="mt-6 text-sm text-muted-foreground italic">
+          <p className="mt-6 text-base text-muted-foreground italic">
             This list is indicative of the broad ideas that inspire us and is not exclusive.
             Any interpretations of the symbol of &apos;The Tower&apos; are welcome.
           </p>
@@ -112,12 +112,12 @@ export default function ContactPage() {
       </section>
 
       {/* ── Process ── */}
-      <section id="submit" className="border-b border-border px-6 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid gap-16 md:grid-cols-2 md:gap-24">
+      <section id="submit" className="border-b border-border px-6 py-10 md:py-16">
+        <div className="mx-auto max-w-7xl grid gap-10 md:grid-cols-2 md:gap-16">
           <div>
             <p
               className="text-muted-foreground mb-8"
-              style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+              style={{ fontSize: "14px", letterSpacing: "0.22em" }}
             >
               SUBMISSION PROCESS
             </p>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                 >
                   1. Pitch
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-muted-foreground">
                   Send us a brief overview of what you intend to submit. This gives us
                   insight into what we can expect to receive. We will review pitches
                   and provide feedback on a rolling basis.
@@ -142,7 +142,7 @@ export default function ContactPage() {
                 >
                   2. Submission Draft
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-muted-foreground">
                   The main draft should be ready to send in by the submission deadline.
                   Whether you intend to submit an existing work or something from scratch,
                   please make sure it is feasible within the time frame.
@@ -155,7 +155,7 @@ export default function ContactPage() {
                 >
                   3. Finalisation
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-muted-foreground">
                   After selection, we will carefully go over submissions and together work
                   in the final edits and suggestions.
                 </p>
@@ -168,15 +168,15 @@ export default function ContactPage() {
             <div>
               <p
                 className="text-muted-foreground mb-6"
-                style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+                style={{ fontSize: "14px", letterSpacing: "0.22em" }}
               >
                 KEY DATES
               </p>
               <div className="space-y-4">
                 {timeline.map((item) => (
                   <div key={item.label} className="flex justify-between items-baseline border-b border-border pb-3">
-                    <span className="text-sm text-muted-foreground">{item.label}</span>
-                    <span className="text-sm text-foreground font-bold">{item.date}</span>
+                    <span className="text-base text-muted-foreground">{item.label}</span>
+                    <span className="text-base text-foreground font-bold">{item.date}</span>
                   </div>
                 ))}
               </div>
@@ -186,15 +186,15 @@ export default function ContactPage() {
             <div>
               <p
                 className="text-muted-foreground mb-6"
-                style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+                style={{ fontSize: "14px", letterSpacing: "0.22em" }}
               >
                 ACCEPTED FORMATS
               </p>
               <div className="space-y-3">
                 {formats.map((item) => (
                   <div key={item.label} className="flex justify-between items-baseline">
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                    <span className="text-xs text-foreground">{item.detail}</span>
+                    <span className="text-sm text-muted-foreground">{item.label}</span>
+                    <span className="text-sm text-foreground">{item.detail}</span>
                   </div>
                 ))}
               </div>
@@ -204,7 +204,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="px-6 py-16">
+      <section className="px-6 py-10 md:py-14">
         <div className="mx-auto max-w-7xl flex flex-col items-center text-center gap-6">
           <h2
             className="font-bold text-foreground"
@@ -212,7 +212,7 @@ export default function ContactPage() {
           >
             Ready to submit?
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md">
+          <p className="text-base text-muted-foreground max-w-md">
             We accept essays, poems, short films, stories, artworks, photography,
             soundscapes, video essays, and more.
           </p>
@@ -221,7 +221,7 @@ export default function ContactPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border border-border px-7 py-3.5 text-foreground hover:bg-secondary/40 transition-colors"
-            style={{ fontSize: "11px", letterSpacing: "0.18em" }}
+            style={{ fontSize: "15px", letterSpacing: "0.18em" }}
           >
             SUBMIT A PITCH <ArrowRight size={12} />
           </a>

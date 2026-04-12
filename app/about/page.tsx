@@ -29,12 +29,12 @@ export default function AboutPage() {
   return (
     <div className="pt-14">
       {/* ── Masthead ── */}
-      <section className="border-b border-border px-6 py-20 md:py-28">
+      <section className="border-b border-border px-6 py-12 md:py-16">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:gap-16">
           <div className="flex-1">
             <p
               className="text-muted-foreground mb-4"
-              style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+              style={{ fontSize: "14px", letterSpacing: "0.22em" }}
             >
               ABOUT
             </p>
@@ -48,7 +48,7 @@ export default function AboutPage() {
             >
               Who Are We?
             </h1>
-            <p className="mt-6 max-w-xl text-sm leading-[1.85] text-muted-foreground md:text-base">
+            <p className="mt-6 max-w-xl text-base leading-[1.85] text-muted-foreground md:text-base">
               We are Sassafras, a group of students and recent graduates seeking to
               reimagine academic discourse and publication. We are critical of the
               exclusionary parameters within which &apos;legitimate&apos; academic knowledge is
@@ -69,12 +69,12 @@ export default function AboutPage() {
       </section>
 
       {/* ── Mission ── */}
-      <section className="border-b border-border px-6 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid gap-12 md:grid-cols-2 md:gap-20">
+      <section className="border-b border-border px-6 py-10 md:py-16">
+        <div className="mx-auto max-w-7xl grid gap-8 md:grid-cols-2 md:gap-12">
           <div>
             <p
               className="text-muted-foreground mb-4"
-              style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+              style={{ fontSize: "14px", letterSpacing: "0.22em" }}
             >
               OUR MISSION
             </p>
@@ -85,7 +85,7 @@ export default function AboutPage() {
               Bridging the gap between research, visual arts, oral histories, and labour.
             </h2>
           </div>
-          <div className="flex flex-col gap-5 text-sm leading-[1.85] text-muted-foreground">
+          <div className="flex flex-col gap-5 text-base leading-[1.85] text-muted-foreground">
             <p>
               Sassafras aims to present academic thought outside of paywalls, expensive
               monographs, and gated lecture halls. We will do so by piloting a series
@@ -104,11 +104,11 @@ export default function AboutPage() {
       </section>
 
       {/* ── How We Work ── */}
-      <section className="border-b border-border px-6 py-16 bg-secondary/20">
+      <section className="border-b border-border px-6 py-10 md:py-16 bg-secondary/20">
         <div className="mx-auto max-w-7xl">
           <p
             className="text-muted-foreground mb-10"
-            style={{ fontSize: "10px", letterSpacing: "0.22em" }}
+            style={{ fontSize: "14px", letterSpacing: "0.22em" }}
           >
             HOW WE WORK
           </p>
@@ -117,7 +117,7 @@ export default function AboutPage() {
               <div key={item.label} className="border-t border-border pt-6 flex flex-col gap-3">
                 <span
                   className="font-bold text-muted-foreground"
-                  style={{ fontSize: "10px", letterSpacing: "0.1em" }}
+                  style={{ fontSize: "14px", letterSpacing: "0.1em" }}
                 >
                   {item.label}
                 </span>
@@ -127,7 +127,7 @@ export default function AboutPage() {
                 >
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-muted-foreground">
                   {item.body}
                 </p>
               </div>
@@ -137,15 +137,15 @@ export default function AboutPage() {
       </section>
 
       {/* ── Why Sassafras ── */}
-      <section className="border-b border-border px-6 py-16 md:py-24">
+      <section className="border-b border-border px-6 py-10 md:py-16">
         <div className="mx-auto max-w-3xl">
           <h2
             className="font-bold text-foreground text-center mb-10"
-            style={{ fontSize: "13px", letterSpacing: "0.15em" }}
+            style={{ fontSize: "15px", letterSpacing: "0.15em" }}
           >
             WHY SASSAFRAS?
           </h2>
-          <div className="space-y-6 text-sm leading-[1.85] text-muted-foreground">
+          <div className="space-y-6 text-base leading-[1.85] text-muted-foreground">
             <p>
               Sassafras is the name of a plant native to North America. It produces three
               differently shaped leaves on a stem — a mitten shape, a goose foot, and an
@@ -173,7 +173,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="px-6 py-16">
+      <section className="px-6 py-10 md:py-14">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <h2
@@ -182,7 +182,7 @@ export default function AboutPage() {
             >
               Interested in contributing?
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground max-w-md">
+            <p className="mt-2 text-base text-muted-foreground max-w-md">
               We welcome submissions in any medium. If your work engages with
               our upcoming themes, we would love to hear from you.
             </p>
@@ -190,7 +190,7 @@ export default function AboutPage() {
           <Link
             href="/contact#submit"
             className="inline-flex items-center gap-2 border border-border px-7 py-3.5 text-foreground hover:bg-secondary/40 transition-colors self-start"
-            style={{ fontSize: "11px", letterSpacing: "0.18em" }}
+            style={{ fontSize: "15px", letterSpacing: "0.18em" }}
           >
             GET IN TOUCH <ArrowRight size={12} />
           </Link>
