@@ -11,189 +11,118 @@ const howWeWork = [
   {
     label: "01",
     title: "Interdisciplinary Forms",
-    body: "We pilot a series of publications and projects that unite interdisciplinary forms of research and meaning-making, placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft.",
+    body: "We pilot a series of publications and projects that unite interdisciplinary forms of research and meaning-making, placing the essay alongside the performance, the illustration, and the craft.",
   },
   {
     label: "02",
     title: "Accessible Knowledge",
-    body: "We are critical of the exclusionary parameters within which academic knowledge is produced. Sassafras aims to present academic thought outside of paywalls, expensive monographs, and gated lecture halls.",
+    body: "We are critical of the exclusionary parameters within which academic knowledge is produced. Sassafras aims to present academic thought outside of gated lecture halls.",
   },
   {
     label: "03",
     title: "Radical Experimentation",
-    body: "We give room for radical experimentation of form. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.",
+    body: "We give room for radical experimentation of form. We imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.",
   },
 ]
 
 export default function AboutPage() {
   return (
-    <div className="pt-14">
-      {/* ── Masthead ── */}
-      <section className="border-b border-border px-6 py-12 md:py-16">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:gap-16">
-          <div className="flex-1">
-            <p
-              className="text-muted-foreground mb-4"
-              style={{ fontSize: "14px", letterSpacing: "0.22em" }}
-            >
-              ABOUT
-            </p>
-            <h1
-              className="font-bold text-foreground leading-tight"
-              style={{
-                fontSize: "clamp(2rem, 6vw, 4.5rem)",
-                letterSpacing: "0.06em",
-                maxWidth: "16ch",
-              }}
-            >
-              Who Are We?
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-[1.85] text-muted-foreground md:text-base">
-              We are Sassafras, a group of students and recent graduates seeking to
-              reimagine academic discourse and publication. We are critical of the
-              exclusionary parameters within which &apos;legitimate&apos; academic knowledge is
-              produced and disseminated since they are often inaccessible to the cultures,
-              stories, and people that are being researched.
-            </p>
-          </div>
-          <div className="mt-8 md:mt-0 flex-shrink-0">
-            <Image
-              src="/sassafras-logo.PNG"
-              alt="Sassafras botanical illustration"
-              width={200}
-              height={200}
-              className="opacity-80"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Mission ── */}
-      <section className="border-b border-border px-6 py-10 md:py-16">
-        <div className="mx-auto max-w-7xl grid gap-8 md:grid-cols-2 md:gap-12">
-          <div>
-            <p
-              className="text-muted-foreground mb-4"
-              style={{ fontSize: "14px", letterSpacing: "0.22em" }}
-            >
-              OUR MISSION
-            </p>
-            <h2
-              className="font-bold text-foreground leading-snug"
-              style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", letterSpacing: "0.04em" }}
-            >
-              Bridging the gap between research, visual arts, oral histories, and labour.
-            </h2>
-          </div>
-          <div className="flex flex-col gap-5 text-base leading-[1.85] text-muted-foreground">
-            <p>
-              Sassafras aims to present academic thought outside of paywalls, expensive
-              monographs, and gated lecture halls. We will do so by piloting a series
-              of publications and projects that unite interdisciplinary forms of research
-              and meaning-making, are accessible, and give room for radical experimentation
-              of form.
-            </p>
-            <p>
-              This means placing the essay alongside the performance, the illustration,
-              the home video, the recipe, and the craft. By doing so, Sassafras hopes to
-              imagine new ways of scholarly engagement that enable knowledges to speak
-              to each other in more fluid ways.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How We Work ── */}
-      <section className="border-b border-border px-6 py-10 md:py-16 bg-secondary/20">
+    <div className="pt-24 min-h-screen bg-black">
+      {/* ── Consolidated Masthead & Identity ── */}
+      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
         <div className="mx-auto max-w-7xl">
-          <p
-            className="text-muted-foreground mb-10"
-            style={{ fontSize: "14px", letterSpacing: "0.22em" }}
-          >
-            HOW WE WORK
-          </p>
-          <div className="grid gap-8 md:grid-cols-3">
-            {howWeWork.map((item) => (
-              <div key={item.label} className="border-t border-border pt-6 flex flex-col gap-3">
-                <span
-                  className="font-bold text-muted-foreground"
-                  style={{ fontSize: "14px", letterSpacing: "0.1em" }}
-                >
-                  {item.label}
-                </span>
-                <h3
-                  className="font-bold text-foreground"
-                  style={{ fontSize: "clamp(0.95rem, 2vw, 1.1rem)", letterSpacing: "0.03em" }}
-                >
-                  {item.title}
-                </h3>
-                <p className="text-base leading-relaxed text-muted-foreground">
-                  {item.body}
+          <div className="flex flex-col lg:flex-row gap-16 items-start lg:items-center">
+            <div className="flex-1 space-y-8">
+              <header>
+                <p className="text-[11px] tracking-[0.3em] text-white/40 uppercase mb-4 font-sans">
+                  About the Initiative
+                </p>
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[0.95]">
+                  Sassafras
+                </h1>
+              </header>
+              <div className="space-y-6 max-w-2xl">
+                <p className="text-xl leading-[1.6] text-white/90 italic">
+                  "We are a group of students and recent graduates seeking to reimagine academic discourse and publication."
+                </p>
+                <p className="text-sm leading-[1.85] text-white/60">
+                  Critical of the exclusionary parameters within which academic knowledge is produced and disseminated, 
+                  Sassafras aims to present academic thought outside of paywalls and gated lecture halls.
+                  We Bridge the gap between research, visual arts, oral histories, and labour.
                 </p>
               </div>
-            ))}
+            </div>
+            <div className="relative w-48 h-48 md:w-64 md:h-64 opacity-20 lg:opacity-40 grayscale invert">
+              <Image 
+                src="/sassafras-logo.PNG" 
+                alt="Sassafras" 
+                fill 
+                className="object-contain"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Why Sassafras ── */}
-      <section className="border-b border-border px-6 py-10 md:py-16">
-        <div className="mx-auto max-w-3xl">
-          <h2
-            className="font-bold text-foreground text-center mb-10"
-            style={{ fontSize: "15px", letterSpacing: "0.15em" }}
-          >
-            WHY SASSAFRAS?
-          </h2>
-          <div className="space-y-6 text-base leading-[1.85] text-muted-foreground">
-            <p>
-              Sassafras is the name of a plant native to North America. It produces three
-              differently shaped leaves on a stem — a mitten shape, a goose foot, and an
-              ordinary ovate form. It has a distinctive taste and smell (a bit like citrus) and
-              produces deep purple berry stems late summer, and tiny yellow flowers in the
-              spring.
-            </p>
-            <p>
-              Its leaves, bark, roots, and oils were often ground up and used in cooking or as
-              medicinal cures by indigenous peoples across North America. During the colonial
-              period in the early 1600s, Europe became fascinated by the plant and saw it as
-              a panacea — having the ability to &apos;purify&apos; blood, heal syphilis, rheumatism,
-              french pox, etc. It became the second largest extracted resource from North
-              American colonies, second only to Tobacco.
-            </p>
-            <p>
-              What makes Sassafras both interesting and unusual is its general unknowability
-              alongside its massive influence. This offers a character that encompasses the
-              many aspects of movement, and what it means to exist through space and time
-              as a constantly changing thing — that is, where your meaning becomes contingent
-              upon your context.
-            </p>
+      {/* ── Compact How We Work & Why Sassafras ── */}
+      <section className="px-8 md:px-12 py-16 md:py-24">
+        <div className="mx-auto max-w-7xl grid md:grid-cols-12 gap-16 md:gap-24">
+          
+          {/* Methodology (Left) */}
+          <div className="md:col-span-7 space-y-12">
+            <h2 className="text-[10px] tracking-[0.4em] text-white/30 uppercase font-sans">Our Methodology</h2>
+            <div className="grid gap-10">
+              {howWeWork.map((item) => (
+                <div key={item.label} className="group border-l border-white/10 pl-8 relative">
+                  <span className="absolute left-0 top-0 -translate-x-1/2 bg-black text-[9px] text-[#ceda9a] py-1 px-2 font-sans border border-white/10">
+                    {item.label}
+                  </span>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-[13px] leading-[1.7] text-white/50">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Botanical Context (Right) */}
+          <div className="md:col-span-5 space-y-10">
+            <div className="bg-white/[0.02] border border-white/10 p-8 md:p-12 space-y-8">
+              <h2 className="text-[10px] tracking-[0.4em] text-[#ceda9a] uppercase font-sans">Etymology</h2>
+              <h3 className="text-2xl font-bold text-white">Why Sassafras?</h3>
+              <div className="space-y-6 text-[13px] leading-[1.8] text-white/50 italic font-serif">
+                <p>
+                  A plant native to North America, Sassafras produces three differently shaped leaves on a single stem. 
+                  Once ground into medicinal cures by indigenous peoples, it became a colonial "panacea" — the second largest resource extracted after tobacco.
+                </p>
+                <p>
+                  Its unknowability alongside massive influence offers a character that encompasses movement, contingent meaning, and the fluid nature of context.
+                </p>
+              </div>
+            </div>
+            
+            {/* CTA Aligned */}
+            <div className="pt-4">
+              <Link
+                href="/contact#submit"
+                className="group flex items-center justify-between border border-white/10 px-8 py-5 hover:bg-white hover:text-black transition-all duration-500"
+              >
+                <span className="text-[11px] tracking-[0.25em] uppercase font-sans">Contribute</span>
+                <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="px-6 py-10 md:py-14">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <h2
-              className="font-bold text-foreground"
-              style={{ fontSize: "clamp(1.2rem, 3vw, 1.8rem)", letterSpacing: "0.04em" }}
-            >
-              Interested in contributing?
-            </h2>
-            <p className="mt-2 text-base text-muted-foreground max-w-md">
-              We welcome submissions in any medium. If your work engages with
-              our upcoming themes, we would love to hear from you.
-            </p>
-          </div>
-          <Link
-            href="/contact#submit"
-            className="inline-flex items-center gap-2 border border-border px-7 py-3.5 text-foreground hover:bg-secondary/40 transition-colors self-start"
-            style={{ fontSize: "15px", letterSpacing: "0.18em" }}
-          >
-            GET IN TOUCH <ArrowRight size={12} />
-          </Link>
+      {/* ── Minimalist Bottom Bar ── */}
+      <section className="px-8 md:px-12 py-12 border-t border-white/[0.03]">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-6 opacity-30 text-[9px] tracking-[0.25em] uppercase font-sans">
+           <div className="flex gap-10">
+             <span>Est. 2024</span>
+             <span>Berlin // London // Global</span>
+           </div>
+           <p>Reimagining Academic Discourse</p>
         </div>
       </section>
     </div>

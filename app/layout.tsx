@@ -31,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={cardo.variable}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${cardo.variable}`}>
+      <body className="font-serif antialiased bg-black text-white">
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
