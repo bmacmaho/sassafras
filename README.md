@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-hello
-=======
-
->>>>>>> brotchenn/main
