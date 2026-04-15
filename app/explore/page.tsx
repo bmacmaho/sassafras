@@ -229,32 +229,35 @@ export default function ExplorePage() {
     <div className="pt-24 min-h-screen bg-black text-white selection:bg-[#ceda9a] font-serif overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
         
-        <header className="mb-16 relative z-50">
+        <header className="relative z-50 mb-20 border-b border-white/[0.05] pb-12">
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
-             <div className="flex flex-col">
-                <p className="text-muted-foreground/50 mb-3 text-[10px] tracking-[0.3em] uppercase font-sans">
-                  Digital Gallery
-                </p>
-                <h1 className="font-bold text-foreground leading-none font-title text-[clamp(2.5rem,7vw,5rem)] tracking-[0.04em]">
-                  Explore
-                </h1>
-             </div>
+            <div className="space-y-6">
+              <p className="text-[11px] tracking-[0.3em] text-[#ceda9a] uppercase font-sans">
+                Digital Gallery
+              </p>
+              <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white leading-none uppercase">
+                Explore
+              </h1>
+            </div>
              
-             <div className="flex gap-8 text-[12px] tracking-[0.2em] uppercase font-sans pb-2 md:pb-3 border-b border-white/10">
+          <div className="flex flex-col gap-6 items-end">
+             <div className="flex gap-10 text-[11px] tracking-[0.25em] uppercase font-sans">
                 <button 
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`transition-colors duration-300 ${showFilters ? 'text-white' : 'text-[#ceda9a]'}`}
+                  className={`transition-all duration-300 flex items-center gap-3 ${showFilters ? 'text-white' : 'text-[#ceda9a]'}`}
                 >
+                  <span className={`w-2 h-2 rounded-full ${showFilters ? 'bg-white' : 'bg-[#ceda9a] animate-pulse'}`} />
                   FILTERS {activeFilters.length > 0 && `(${activeFilters.length})`}
                 </button>
                 <button 
                   onClick={handleRandomize}
                   disabled={isRandomizing}
-                  className={`hover:text-white transition-all duration-300 ${isRandomizing ? 'opacity-30 cursor-wait' : ''}`}
+                  className={`hover:text-white transition-all duration-300 ${isRandomizing ? 'opacity-30 cursor-wait' : 'text-white/40'}`}
                 >
                   {isRandomizing ? 'SHUFFLING...' : 'RANDOMIZE'}
                 </button>
              </div>
+          </div>
           </div>
 
           {showFilters && (

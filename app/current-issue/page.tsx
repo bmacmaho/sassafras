@@ -468,19 +468,32 @@ export default function CurrentIssuePage() {
 
   return (
     <div
-      className="pt-14 min-h-screen"
-      style={{
-        background: "radial-gradient(ellipse at center, #1e1a18 0%, #0f0d0c 50%, #080706 100%)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        padding: "60px 20px 40px",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className="pt-24 min-h-screen bg-black"
     >
+      {/* ── Masthead ── */}
+      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+          <div className="space-y-6">
+            <p className="text-[11px] tracking-[0.3em] text-[#ceda9a] uppercase font-sans">
+              Issue No. 1
+            </p>
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white leading-none uppercase">
+              The Tower
+            </h1>
+          </div>
+          <div className="max-w-md space-y-4">
+            <p className="text-lg leading-[1.6] text-white/90 italic">
+              "Challenging the Ivory Tower as an encloser of knowledge."
+            </p>
+            <p className="text-sm leading-[1.8] text-white/50 font-sans">
+              Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FlipBook Container ── */}
+      <div className="flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden min-h-[80vh]">
       {/* Ambient glow */}
       <div
         style={{
@@ -495,23 +508,11 @@ export default function CurrentIssuePage() {
         }}
       />
 
-      {/* Page label */}
-      <p
-        style={{
-          fontSize: 10,
-          letterSpacing: "0.3em",
-          color: "rgba(255,255,255,0.25)",
-          marginBottom: 32,
-          fontFamily: "var(--font-cardo), Georgia, serif",
-        }}
-      >
-        CURRENT ISSUE
-      </p>
-
       {/* The Book */}
       <ClientOnly>
         <FlipBook pages={pages} width={460} height={650} />
       </ClientOnly>
+      </div>
     </div>
   )
 }

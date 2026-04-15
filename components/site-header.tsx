@@ -25,9 +25,9 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] border-b border-white/5 shadow-2xl bg-black">
       <div className="mx-auto max-w-7xl px-4 h-16 sm:h-20 flex items-center justify-center relative">
-        
+
         {/* 返回直接跳转至导航黑幕的花卉图标 */}
-        <Link 
+        <Link
           href="/#nav"
           className="absolute left-6 md:left-8 transition-opacity hover:opacity-60"
         >
@@ -39,7 +39,7 @@ export function SiteHeader() {
             className="object-contain"
           />
         </Link>
-        
+
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:gap-12 md:gap-16 text-center">
           {NAV_LINKS.map((link) => (
             <Link
