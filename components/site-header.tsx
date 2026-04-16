@@ -23,7 +23,7 @@ export function SiteHeader() {
 
   // 对于非首页页面，保留一个极简的深色固定导航栏
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] border-b border-white/5 shadow-2xl bg-black">
+    <header className="sticky top-8 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] border-b border-white/5 shadow-2xl bg-black">
       <div className="mx-auto max-w-7xl px-4 h-16 sm:h-20 flex items-center justify-center relative">
 
         {/* 返回直接跳转至导航黑幕的花卉图标 */}
