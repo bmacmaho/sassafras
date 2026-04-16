@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   description:
     "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form.",
   icons: {
-    icon: "/sassafras-logo.PNG",
-    apple: "/sassafras-logo.PNG",
+    icon: "/sassafras-logo-compressed.webp",
+    apple: "/sassafras-logo-compressed.webp",
   },
 }
 
