@@ -18,7 +18,7 @@ export function SiteFooter() {
           <div className="space-y-6">
             <div className="flex items-center gap-3">
                <div className="w-8 h-8 relative opacity-80">
-                  <Image src="/sassafras-logo.PNG" alt="Sassafras" fill className="object-contain invert" />
+                  <Image src="/sassafras-logo.png" alt="Sassafras" fill className="object-contain invert" />
                </div>
                <span 
                 className="text-2xl tracking-[0.05em] italic text-white/90 font-title"

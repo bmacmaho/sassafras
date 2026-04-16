@@ -84,7 +84,7 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
           }}
         >
           <Image
-            src="/sassafras-logo.PNG"
+            src="/sassafras-logo.png"
             alt="Sassafras botanical illustration"
             fill
             className="object-contain"

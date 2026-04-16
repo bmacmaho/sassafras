@@ -108,7 +108,7 @@ export default function AboutPage() {
             {/* Logo display */}
             <div className="flex justify-center md:justify-end opacity-20 hover:opacity-40 transition-opacity">
               <Image 
-                src="/sassafras-logo.PNG" 
+                src="/sassafras-logo.png" 
                 alt="Sassafras" 
                 width={200}
                 height={200}

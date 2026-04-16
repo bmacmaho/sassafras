@@ -32,7 +32,7 @@ export function SiteHeader() {
           className="absolute left-6 md:left-8 transition-opacity hover:opacity-60"
         >
           <Image
-            src="/sassafras-logo.PNG"
+            src="/sassafras-logo.png"
             alt="Home"
             width={38}
             height={38}
