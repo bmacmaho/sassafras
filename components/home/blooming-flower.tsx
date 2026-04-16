@@ -24,12 +24,11 @@ export function BloomingFlower({ className, variant = "sassafras" }: { className
                   className="transition-all duration-[1.4s] ease-[cubic-bezier(0.23,1,0.32,1)] origin-center scale-0 opacity-0 group-hover:scale-110 group-hover:opacity-80"
                   style={{ transitionDelay: `${i * 50}ms` }}
                 />
-                {/* Tip dots like the 'star' variant */}
                 <circle 
                   cx={i % 2 === 0 ? 82 : 18} cy={72 - i * 4.5} r="0.6"
                   fill="currentColor"
                   className="transition-all duration-700 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100"
-                  style={{ transitionOrigin: 'center', transitionDelay: `${i * 50 + 600}ms` }}
+                  style={{ transformOrigin: 'center', transitionDelay: `${i * 50 + 600}ms` }}
                 />
               </g>
             ))}
