@@ -1,6 +1,13 @@
+"use client"
+
+import { usePathname } from "next/navigation"
 import { SiteHeader } from "@/components/site-header"
 
 export function PageWrapper({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+
+  if (pathname === "/") return <>{children}</>
+
   return (
     <div style={{ backgroundColor: "rgb(112, 150, 234)" }} className="p-8">
       <div className="relative">
