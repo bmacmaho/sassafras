@@ -1,6 +1,20 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Alte Haas Grotesk Bold';
+  src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -44,7 +58,7 @@
 @layer base {
   * {
     border-color: var(--border);
-    font-family: var(--font-cardo), Georgia, serif !important;
+    font-family: var(--font-cardo), Georgia, serif;
   }
   
   html, body {
@@ -107,6 +121,10 @@
 }
 
 @keyframes pulse-gentle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+
+.font-alte-haas {
+  font-family: 'Alte Haas Grotesk', Papyrus, fantasy;
+}
 
 .book-page-face {
   background-image:
