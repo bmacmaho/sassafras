@@ -29,7 +29,7 @@ export function BloomingFlower({ className, variant = "sassafras" }: { className
                   cx={i % 2 === 0 ? 82 : 18} cy={72 - i * 4.5} r="0.6"
                   fill="currentColor"
                   className="transition-all duration-700 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100"
-                  style={{ transitionOrigin: 'center', transitionDelay: `${i * 50 + 600}ms` }}
+                  style={{ transformOrigin: 'center', transitionDelay: `${i * 50 + 600}ms` }}
                 />
               </g>
             ))}
