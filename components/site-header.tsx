@@ -99,6 +99,7 @@ export function SiteHeader() {
   if (pathname === "/") return null
 
   const currentColor = getPageColor(pathname)
+  const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
 
   return (
     <>
@@ -148,10 +149,12 @@ export function SiteHeader() {
           ].map((edge, i) => (
             <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
           ))}
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center">
             <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
-            <span className="font-alte-haas text-lg tracking-widest transition-opacity duration-300" style={{ color: "#1a1a1a", opacity: searchOpen ? 0 : 1 }}>SASSAFRAS</span>
           </Link>
+          <div className="absolute left-1/2 -translate-x-1/2 transition-opacity duration-300 pointer-events-none" style={{ opacity: searchOpen ? 0 : 1 }}>
+            <Image src="/sassafras-text-logo.png" alt="Sassafras" width={140} height={32} className="object-contain" />
+          </div>
           <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-3" style={{ zIndex: 10 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
             <button
@@ -192,22 +195,20 @@ export function SiteHeader() {
 
           {/* Minimised: logo + title — independent of nav slide */}
           {scrolled && (
-            <div className="flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
-              <Link href="/" className="flex items-center">
-                <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
-              </Link>
-              <span
-                className="font-alte-haas text-lg tracking-widest"
-                style={{
-                  color: "#1a1a1a",
-                  opacity: menuOpen ? 0 : 1,
-                  transition: "opacity 0.3s ease",
-                  pointerEvents: "none",
-                }}
-              >
-                SASSAFRAS
-              </span>
-            </div>
+            <>
+              <div className="flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
+                <Link href="/" className="flex items-center flex-shrink-0">
+                  <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
+                </Link>
+                <span
+                  className="font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
+                  style={{ color: "#1a1a1a", opacity: menuOpen ? 0 : 1 }}
+                >{pageLabel}</span>
+              </div>
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center pointer-events-none transition-opacity duration-300" style={{ opacity: menuOpen ? 0 : 1 }}>
+                <Image src="/sassafras-text-logo.png" alt="Sassafras" width={160} height={36} className="object-contain" />
+              </div>
+            </>
           )}
 
           {/* Desktop nav */}
@@ -275,6 +276,14 @@ export function SiteHeader() {
             )}
           </button>
 
+          {/* Text logo — top centre of maximised header */}
+          <div
+            className="absolute inset-x-0 top-6 flex justify-center pointer-events-none transition-opacity duration-300"
+            style={{ opacity: menuOpen || scrolled ? 0 : 1 }}
+          >
+            <Image src="/sassafras-text-logo.png" alt="Sassafras" width={160} height={36} className="object-contain" />
+          </div>
+
           {/* Logo — fades out when scrolled */}
           <Link
             href="/"
@@ -300,7 +309,7 @@ export function SiteHeader() {
                 transition: "opacity 0.3s ease",
               }}
             >
-              SASSAFRAS
+              {pageLabel}
             </span>
           </Link>
         </header>
