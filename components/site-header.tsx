@@ -6,6 +6,38 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 
+function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const toggle = () => {
+    if (!open) setTimeout(() => inputRef.current?.focus(), 50)
+    onToggle()
+  }
+
+  return (
+    <div
+      className="flex items-center transition-all duration-300"
+      style={{ border: open ? `1px solid ${color}` : "1px solid transparent" }}
+    >
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{ width: open ? "160px" : "0", opacity: open ? 1 : 0 }}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          className="font-alte-haas text-sm tracking-[0.1em] bg-transparent outline-none px-3 w-full"
+          style={{ color: "black" }}
+        />
+      </div>
+      <button onClick={toggle} className="relative flex items-center justify-center bg-transparent border-none cursor-pointer p-0">
+        <Image src="/search-icon/search-closed.png" alt="Search" width={48} height={48} className={`object-contain transition-opacity ${open ? "duration-700" : "duration-0"}`} style={{ opacity: open ? 0 : 1 }} />
+        <Image src="/search-icon/search-open.png" alt="Search" width={48} height={48} className="object-contain absolute transition-opacity duration-300" style={{ opacity: open ? 1 : 0 }} />
+      </button>
+    </div>
+  )
+}
+
 function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = pathname.startsWith(href)
@@ -45,6 +77,7 @@ export function SiteHeader() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const transitioningRef = useRef(false)
 
   useEffect(() => {
@@ -116,9 +149,11 @@ export function SiteHeader() {
             <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
           ))}
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={36} height={36} className="object-contain" />
+            <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
             <span className="font-alte-haas text-lg tracking-widest" style={{ color: "#1a1a1a" }}>SASSAFRAS</span>
           </Link>
+          <div className="flex items-center gap-3">
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center"
@@ -134,6 +169,7 @@ export function SiteHeader() {
               </svg>
             )}
           </button>
+          </div>
         </header>
 
         {/* Desktop header */}
@@ -158,7 +194,7 @@ export function SiteHeader() {
           {scrolled && (
             <div className="flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
               <Link href="/" className="flex items-center">
-                <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={36} height={36} className="object-contain" />
+                <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
               </Link>
               <span
                 className="font-alte-haas text-lg tracking-widest"
@@ -179,14 +215,17 @@ export function SiteHeader() {
             className={`flex absolute inset-x-0 h-full flex-row ${scrolled ? "items-center" : "items-start"} justify-between transition-transform duration-500 ease-in-out`}
             style={{
               transform: menuOpen ? "translateX(0)" : "translateX(110%)",
-              paddingLeft: scrolled ? "7rem" : "4rem",
-              paddingRight: "5rem",
+              paddingLeft: scrolled ? "7rem" : "6rem",
+              paddingRight:  scrolled ? "5rem" :"2rem",
               top: scrolled ? 0 : "2rem",
             }}
           >
-            {NAV_LINKS.map((link) => (
-              <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
-            ))}
+            <div className={`flex ${scrolled ? "items-center" : "items-start"} gap-10 xl:gap-24`}>
+              {NAV_LINKS.map((link) => (
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+              ))}
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
           </nav>
 
           {/* Menu trigger — MENU text (maximised) or hamburger/X icon (minimised) */}
