@@ -468,7 +468,7 @@ export default function CurrentIssuePage() {
 
   return (
     <div
-      className="pt-24 min-h-screen bg-black"
+      className="min-h-screen bg-black"
     >
       {/* ── Masthead ── */}
       <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">

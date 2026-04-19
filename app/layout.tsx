@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Cardo } from "next/font/google"
 
+import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { PageWrapper } from "@/components/page-wrapper"
 import "./globals.css"
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cardo.variable}`}>
       <body className="font-serif antialiased bg-black text-white">
+        <SiteHeader />
         <PageWrapper>
           <main>{children}</main>
         </PageWrapper>

@@ -226,7 +226,7 @@ export default function ExplorePage() {
   if (!mounted) return null
 
   return (
-    <div className="pt-24 min-h-screen bg-black text-white selection:bg-[#ceda9a] font-serif overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white selection:bg-[#ceda9a] font-serif overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
         
         <header className="relative z-50 mb-20 border-b border-white/[0.05] pb-12">
