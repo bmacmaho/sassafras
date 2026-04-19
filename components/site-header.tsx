@@ -21,7 +21,7 @@ function SearchBox({ color, open, onToggle }: { color: string; open: boolean; on
     >
       <div
         className="overflow-hidden transition-all duration-300 ease-out"
-        style={{ width: open ? "160px" : "0", opacity: open ? 1 : 0 }}
+        style={{ width: open ? "120px" : "0", opacity: open ? 1 : 0 }}
       >
         <input
           ref={inputRef}
@@ -140,7 +140,7 @@ export function SiteHeader() {
       <div className="sticky top-0 z-50 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
 
         {/* Mobile slim bar */}
-        <header className="lg:hidden px-6 flex items-center justify-between relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
+        <header className="lg:hidden px-6 flex items-center relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
           {[
             { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
             { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
@@ -150,25 +150,25 @@ export function SiteHeader() {
           ))}
           <Link href="/" className="flex items-center gap-3">
             <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
-            <span className="font-alte-haas text-lg tracking-widest" style={{ color: "#1a1a1a" }}>SASSAFRAS</span>
+            <span className="font-alte-haas text-lg tracking-widest transition-opacity duration-300" style={{ color: "#1a1a1a", opacity: searchOpen ? 0 : 1 }}>SASSAFRAS</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-3" style={{ zIndex: 10 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center"
-            style={{ color: "rgb(43, 52, 133)", zIndex: 10 }}
-          >
-            {menuOpen ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
-              </svg>
-            )}
-          </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center flex-shrink-0"
+              style={{ color: "rgb(43, 52, 133)" }}
+            >
+              {menuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+                </svg>
+              )}
+            </button>
           </div>
         </header>
 
