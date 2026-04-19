@@ -93,17 +93,52 @@ export function SiteHeader() {
             key={link.href}
             href={link.href}
             onClick={() => setMenuOpen(false)}
-            className="font-alte-haas text-2xl tracking-[0.25em] text-white hover:text-[#fbfaf1] transition-colors"
+            className="group relative font-alte-haas text-2xl tracking-[0.25em] text-white"
           >
             {link.label}
+            <span
+              className="block h-[1px] bg-white transition-all duration-300 ease-out origin-center scale-x-0 group-hover:scale-x-100"
+            />
           </Link>
         ))}
       </div>
 
       {/* Header */}
-      <div className="sticky top-0 z-40 px-8 pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
+      <div className="sticky top-0 z-40 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
+
+        {/* Mobile slim bar */}
+        <header className="lg:hidden px-6 flex items-center justify-between relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
+          {[
+            { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
+            { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
+            { style: { top: 0, left: 0, right: 0, height: 5, maskImage: "linear-gradient(to bottom, black, transparent)" } },
+          ].map((edge, i) => (
+            <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
+          ))}
+          <Link href="/" className="flex items-center gap-3">
+            <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={36} height={36} className="object-contain" />
+            <span className="font-alte-haas text-lg tracking-widest" style={{ color: "#1a1a1a" }}>SASSAFRAS</span>
+          </Link>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center"
+            style={{ color: "rgb(43, 52, 133)", zIndex: 10 }}
+          >
+            {menuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+              </svg>
+            )}
+          </button>
+        </header>
+
+        {/* Desktop header */}
         <header
-          className="px-8 relative overflow-hidden flex flex-col"
+          className="hidden lg:flex px-8 relative overflow-hidden flex-col"
           style={{
             backgroundColor: "#fbfaf1",
             minHeight: scrolled ? "72px" : "192px",
@@ -121,7 +156,7 @@ export function SiteHeader() {
 
           {/* Minimised: logo + title — independent of nav slide */}
           {scrolled && (
-            <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
+            <div className="flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
               <Link href="/" className="flex items-center">
                 <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={36} height={36} className="object-contain" />
               </Link>
@@ -141,7 +176,7 @@ export function SiteHeader() {
 
           {/* Desktop nav */}
           <nav
-            className={`hidden lg:flex absolute inset-x-0 h-full flex-row ${scrolled ? "items-center" : "items-start"} justify-between transition-transform duration-500 ease-in-out`}
+            className={`flex absolute inset-x-0 h-full flex-row ${scrolled ? "items-center" : "items-start"} justify-between transition-transform duration-500 ease-in-out`}
             style={{
               transform: menuOpen ? "translateX(0)" : "translateX(110%)",
               paddingLeft: scrolled ? "7rem" : "4rem",

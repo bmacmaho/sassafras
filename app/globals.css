@@ -63,7 +63,8 @@
   
   html, body {
     background-color: var(--background);
-    color: var(--text-body); /* Set global color to body text color */
+    color: var(--text-body);
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {

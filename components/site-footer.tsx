@@ -3,7 +3,7 @@ import Link from "next/link"
 export function SiteFooter() {
   return (
     <footer className="font-alte-haas w-full bg-[#c7d65c] px-6 pt-6 pb-8">
-      <p className="font-alte-haas text-5xl tracking-[0.5em] font-thin mb-12" style={{ color: "#fbfaf1" }}>SASSAFRAS</p>
+      <p className="font-alte-haas text-[clamp(1.5rem,8vw,3rem)] tracking-[0.5em] font-thin mb-12" style={{ color: "#fbfaf1" }}>SASSAFRAS</p>
       <div className="flex items-end justify-between">
         <div className="flex gap-3">
         <Link href="https://substack.com" target="_blank" aria-label="Substack" className="border border-white/60 rounded p-1.5 text-white hover:bg-white/10 transition-colors">
