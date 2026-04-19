@@ -3,7 +3,66 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
+
+function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const toggle = () => {
+    if (!open) setTimeout(() => inputRef.current?.focus(), 50)
+    onToggle()
+  }
+
+  return (
+    <div
+      className="flex items-center transition-all duration-300"
+      style={{ border: open ? `1px solid ${color}` : "1px solid transparent" }}
+    >
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{ width: open ? "120px" : "0", opacity: open ? 1 : 0 }}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          className="font-alte-haas text-sm tracking-[0.1em] bg-transparent outline-none px-3 w-full"
+          style={{ color: "black" }}
+        />
+      </div>
+      <button onClick={toggle} className="relative flex items-center justify-center bg-transparent border-none cursor-pointer p-0">
+        <Image src="/search-icon/search-closed.png" alt="Search" width={48} height={48} className={`object-contain transition-opacity ${open ? "duration-700" : "duration-0"}`} style={{ opacity: open ? 0 : 1 }} />
+        <Image src="/search-icon/search-open.png" alt="Search" width={48} height={48} className="object-contain absolute transition-opacity duration-300" style={{ opacity: open ? 1 : 0 }} />
+      </button>
+    </div>
+  )
+}
+
+function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
+  const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
+  const isActive = pathname.startsWith(href)
+  return (
+    <Link
+      href={href}
+      className="group relative font-alte-haas text-sm tracking-[0.1em] xl:tracking-[0.25em] transition-colors text-center"
+      style={{ color: isActive ? linkColor : "black" }}
+      onMouseEnter={e => (e.currentTarget.style.color = linkColor)}
+      onMouseLeave={e => (e.currentTarget.style.color = isActive ? linkColor : "black")}
+    >
+      {label}
+      <span
+        className="block h-[1px] transition-all duration-300 ease-out origin-center"
+        style={{ backgroundColor: linkColor, transform: isActive ? "scaleX(1)" : "scaleX(0)" }}
+        ref={el => {
+          if (!el) return
+          const parent = el.parentElement!
+          parent.addEventListener("mouseenter", () => (el.style.transform = "scaleX(1)"))
+          parent.addEventListener("mouseleave", () => { if (!isActive) el.style.transform = "scaleX(0)" })
+        }}
+      />
+    </Link>
+  )
+}
 
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
@@ -17,67 +76,252 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const transitioningRef = useRef(false)
+  const menuOpenRef = useRef(menuOpen)
+  useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpenRef.current) return
+    const timer = setTimeout(() => setMenuOpen(false), 3000)
+    return () => clearTimeout(timer)
+  }, [pathname])
+
+  useEffect(() => {
+    const handler = () => {
+      if (transitioningRef.current) return
+      setScrolled(prev => {
+        const next = (!prev && window.scrollY > 60) ? true : (prev && window.scrollY < 20) ? false : prev
+        if (next !== prev) {
+          transitioningRef.current = true
+          setTimeout(() => { transitioningRef.current = false }, 600)
+        }
+        return next
+      })
+    }
+    window.addEventListener("scroll", handler, { passive: true })
+    return () => window.removeEventListener("scroll", handler)
+  }, [])
 
   if (pathname === "/") return null
 
-  return (
-    <header className="sticky top-8 px-8 pb-8 pt-8 relative overflow-hidden flex flex-col" style={{ backgroundColor: "#fbfaf1", minHeight: "192px" }}>
+  const currentColor = getPageColor(pathname)
+  const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
 
-      {/* Nav sliding in from right */}
-      <nav
-        className="absolute top-8 right-16 h-full flex flex-row gap-10 pr-8 transition-transform duration-500 ease-in-out"
-        style={{ transform: menuOpen ? "translateX(0)" : "translateX(120%)" }}
+  return (
+    <>
+      {/* Mobile fullscreen overlay */}
+      <div
+        className="lg:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
+        style={{
+          backgroundColor: currentColor,
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+        }}
       >
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="absolute top-8 right-8 bg-transparent border-none cursor-pointer"
+          style={{ color: "rgb(43, 52, 133)" }}
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="4" y1="4" x2="20" y2="20"/>
+            <line x1="20" y1="4" x2="4" y2="20"/>
+          </svg>
+        </button>
         {NAV_LINKS.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="group relative font-alte-haas text-base tracking-[0.25em] text-black transition-colors hover:text-[rgb(112,150,234)]"
+            onClick={() => setMenuOpen(false)}
+            className="group relative font-alte-haas text-2xl tracking-[0.25em] text-white"
           >
             {link.label}
-            <span className="block h-[1px] bg-black group-hover:bg-[rgb(112,150,234)] scale-x-0 group-hover:scale-x-100 transition-all duration-300 ease-out origin-center" />
+            <span
+              className="block h-[1px] bg-white transition-all duration-300 ease-out origin-center scale-x-0 group-hover:scale-x-100"
+            />
           </Link>
         ))}
-      </nav>
+      </div>
 
-      {/* MENU button */}
-      <button
-        onClick={() => setMenuOpen(!menuOpen)}
-        className="font-alte-haas absolute right-8 bottom-8 text-xl tracking-[0.3em] cursor-pointer select-none bg-transparent border-none p-0"
-        style={{
-          color: "rgb(75, 76, 152)",
-          writingMode: "vertical-rl" as const,
-          transform: "rotate(180deg)",
-          zIndex: 10,
-        }}
-      >
-        ME
-        <span
-          className="font-alte-haas"
+      {/* Header */}
+      <div className="sticky top-0 z-50 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
+
+        {/* Mobile slim bar */}
+        <header className="lg:hidden px-6 flex items-center relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
+          {[
+            { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
+            { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
+            { style: { top: 0, left: 0, right: 0, height: 5, maskImage: "linear-gradient(to bottom, black, transparent)" } },
+          ].map((edge, i) => (
+            <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
+          ))}
+          <Link href="/" className="flex items-center">
+            <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
+          </Link>
+          <div className="absolute left-1/2 -translate-x-1/2 transition-opacity duration-300 pointer-events-none" style={{ opacity: searchOpen ? 0 : 1 }}>
+            <Image src="/sassafras-text-logo.png" alt="Sassafras" width={140} height={32} className="object-contain" />
+          </div>
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-3" style={{ zIndex: 10 }}>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center flex-shrink-0"
+              style={{ color: "rgb(43, 52, 133)" }}
+            >
+              {menuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+                </svg>
+              )}
+            </button>
+          </div>
+        </header>
+
+        {/* Desktop header */}
+        <header
+          className="hidden lg:flex px-8 relative overflow-hidden flex-col"
           style={{
-            display: "inline-block",
-            transformOrigin: "top right",
-            transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
-            transition: "transform 0.4s ease",
+            backgroundColor: "#fbfaf1",
+            minHeight: scrolled ? "72px" : "192px",
+            transition: "min-height 0.4s ease",
           }}
         >
-          NU
-        </span>
-      </button>
+          {/* Blurred edges */}
+          {[
+            { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
+            { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
+            { style: { top: 0, left: 0, right: 0, height: 5, maskImage: "linear-gradient(to bottom, black, transparent)" } },
+          ].map((edge, i) => (
+            <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
+          ))}
 
-      {/* Logo */}
-      <Link href="/" className="flex items-end gap-4 mt-auto">
-        <Image
-          src="/sassafras-logo-compressed.webp"
-          alt="Sassafras"
-          width={64}
-          height={64}
-          className="object-contain mx-4"
-        />
-        <span className="font-alte-haas text-3xl tracking-widest" style={{ color: "#1a1a1a" }}>
-          SASSAFRAS
-        </span>
-      </Link>
-    </header>
+          {/* Minimised: logo + title — independent of nav slide */}
+          {scrolled && (
+            <>
+              <div className="flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
+                <Link href="/" className="flex items-center flex-shrink-0">
+                  <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={48} height={48} className="object-contain" />
+                </Link>
+                <span
+                  className="font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
+                  style={{ color: "#1a1a1a", opacity: menuOpen ? 0 : 1 }}
+                >{pageLabel}</span>
+              </div>
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center pointer-events-none transition-opacity duration-300" style={{ opacity: menuOpen ? 0 : 1 }}>
+                <Image src="/sassafras-text-logo.png" alt="Sassafras" width={160} height={36} className="object-contain" />
+              </div>
+            </>
+          )}
+
+          {/* Desktop nav */}
+          <nav
+            className={`flex absolute inset-x-0 h-full flex-row ${scrolled ? "items-center" : "items-start"} justify-between transition-transform duration-500 ease-in-out`}
+            style={{
+              transform: menuOpen ? "translateX(0)" : "translateX(110%)",
+              paddingLeft: scrolled ? "7rem" : "6rem",
+              paddingRight: scrolled ? "5rem" : "2rem",
+              top: scrolled ? 0 : "2rem",
+            }}
+          >
+            <div className={`flex ${scrolled ? "items-center" : "items-start"} gap-10 xl:gap-24`}>
+              {NAV_LINKS.map((link) => (
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+              ))}
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+          </nav>
+
+          {/* Menu trigger — MENU text (maximised) or hamburger/X icon (minimised) */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="absolute right-8 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center"
+            style={{
+              color: "rgb(43, 52, 133)",
+              zIndex: 10,
+              bottom: scrolled ? "auto" : "2rem",
+              top: scrolled ? "50%" : "auto",
+              transform: scrolled ? "translateY(-50%)" : "none",
+              transition: "top 0.4s ease, bottom 0.4s ease, transform 0.4s ease",
+            }}
+          >
+            {scrolled ? (
+              menuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="4" y1="4" x2="20" y2="20"/>
+                  <line x1="20" y1="4" x2="4" y2="20"/>
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="7" x2="21" y2="7"/>
+                  <line x1="3" y1="12" x2="21" y2="12"/>
+                  <line x1="3" y1="17" x2="21" y2="17"/>
+                </svg>
+              )
+            ) : (
+              <span
+                className="font-alte-haas text-xl tracking-[0.3em] select-none"
+                style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
+              >
+                ME
+                <span
+                  className="font-alte-haas"
+                  style={{
+                    display: "inline-block",
+                    transformOrigin: "top right",
+                    transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
+                    transition: "transform 0.4s ease",
+                  }}
+                >
+                  NU
+                </span>
+              </span>
+            )}
+          </button>
+
+          {/* Text logo — top centre of maximised header */}
+          <div
+            className="absolute inset-x-0 top-6 flex justify-center pointer-events-none transition-opacity duration-300"
+            style={{ opacity: menuOpen || scrolled ? 0 : 1 }}
+          >
+            <Image src="/sassafras-text-logo.png" alt="Sassafras" width={160} height={36} className="object-contain" />
+          </div>
+
+          {/* Logo — fades out when scrolled */}
+          <Link
+            href="/"
+            className="flex items-end gap-4 mt-auto pb-8"
+            style={{
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: scrolled ? "none" : "auto",
+              transition: "opacity 0.3s ease",
+            }}
+          >
+            <Image
+              src="/sassafras-logo-compressed.webp"
+              alt="Sassafras"
+              width={64}
+              height={64}
+              className="object-contain mx-4"
+            />
+            <span
+              className="font-alte-haas text-3xl tracking-widest"
+              style={{
+                color: "#1a1a1a",
+                opacity: scrolled ? 0 : 1,
+                transition: "opacity 0.3s ease",
+              }}
+            >
+              {pageLabel}
+            </span>
+          </Link>
+        </header>
+      </div>
+    </>
   )
 }

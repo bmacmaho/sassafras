@@ -27,7 +27,7 @@ const howWeWork = [
 
 export default function AboutPage() {
   return (
-    <div className="pt-24 min-h-screen bg-black">
+    <div className="min-h-screen bg-black">
       {/* ── Consolidated Masthead & Identity ── */}
       <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
@@ -52,10 +52,10 @@ export default function AboutPage() {
 
       {/* ── Compact How We Work & Why Sassafras ── */}
       <section className="px-8 md:px-12 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-12 gap-16 md:gap-24">
-          
+        <div className="mx-auto max-w-7xl grid xl:grid-cols-12 gap-16 xl:gap-24">
+
           {/* Methodology (Left) */}
-          <div className="md:col-span-7 space-y-12">
+          <div className="xl:col-span-7 space-y-12">
             <h2 className="text-[10px] tracking-[0.4em] text-white/30 uppercase font-sans flex items-center gap-4">
               <span className="w-8 h-[1px] bg-white/10" /> Methodology
             </h2>
@@ -73,7 +73,7 @@ export default function AboutPage() {
           </div>
 
           {/* Botanical Context (Right) */}
-          <div className="md:col-span-5 space-y-12">
+          <div className="xl:col-span-5 space-y-12">
             <div className="bg-white/[0.02] border border-white/5 p-10 relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-1 h-full bg-[#ceda9a]/20 group-hover:bg-[#ceda9a]/40 transition-colors" />
               <h2 className="text-[10px] tracking-[0.4em] text-[#ceda9a] uppercase font-sans mb-8">Context</h2>

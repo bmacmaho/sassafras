@@ -14,7 +14,7 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
 
 export default function IssuesPage() {
   return (
-    <div className="pt-24 min-h-screen bg-black">
+    <div className="min-h-screen bg-black">
       {/* ── Masthead ── */}
       <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
