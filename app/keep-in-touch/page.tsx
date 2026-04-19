@@ -1,93 +1,60 @@
 import type { Metadata } from "next"
-import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Keep in Touch | Sassafras",
-  description: "Join our newsletter and connect with Sassafras.",
+  title: "Support Us | Sassafras",
+  description: "Get involved and volunteer with Sassafras.",
 }
 
 export default function KeepInTouchPage() {
   return (
-    <div className="pt-24 min-h-screen bg-black">
-      {/* ── Masthead ── */}
-      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
-          <div className="space-y-6">
-            <p className="text-[11px] tracking-[0.3em] text-[#ceda9a] uppercase font-sans">
-              Connect
-            </p>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white leading-none">
-              Keep in Touch
-            </h1>
-          </div>
-          <div className="max-w-md space-y-4">
-            <p className="text-lg leading-[1.6] text-white/90">
-              Join the conversation and stay updated on the latest issues.
-            </p>
-          </div>
+    <div className="pt-24 pb-32 min-h-[80vh] px-8 md:px-12 flex flex-col items-center">
+      
+      <div className="w-full max-w-4xl pt-10">
+        <h1 className="text-4xl md:text-5xl font-sans mb-10">Support Us</h1>
+        
+        {/* Dashed hand-drawn feeling container */}
+        <div className="border-4 border-dashed border-[#555] rounded-[40px] md:rounded-[60px] p-10 md:p-16 relative">
+          <p className="font-serif italic text-xl md:text-2xl leading-relaxed text-[#333] max-w-2xl">
+            Sassafras is an independent, volunteer-led initiative. We believe in open access and radical experimentation of form. You can help us sustain this space and fund future issues by getting involved or making a contribution.
+          </p>
         </div>
-      </section>
 
-      {/* ── Content ── */}
-      <section className="px-8 md:px-12 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid lg:grid-cols-2 gap-20">
+        {/* Buttons section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mt-20 pt-4">
           
-          {/* Newsletter Section */}
-          <div className="space-y-12">
-            <div className="space-y-8">
-               <h2 className="text-[10px] tracking-[0.4em] text-white/30 uppercase font-sans flex items-center gap-4">
-                 <span className="w-8 h-[1px] bg-white/10" /> Newsletter
-               </h2>
-               <div className="space-y-6">
-                 <p className="text-[14px] leading-relaxed text-white/70 max-w-md">
-                   Subscribe to our newsletter to receive updates on new issues, call for submissions, and other news. We promise not to spam your inbox.
-                 </p>
-                 <form className="flex flex-col gap-4 max-w-md">
-                   <input 
-                     type="email" 
-                     placeholder="EMAIL ADDRESS" 
-                     className="bg-white/[0.03] border border-white/10 px-6 py-4 text-[11px] tracking-wider text-white focus:outline-none focus:border-[#ceda9a] transition-colors font-sans uppercase"
-                     required
-                   />
-                   <button 
-                     type="submit"
-                     className="bg-white text-black px-8 py-5 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-[#ceda9a] transition-all duration-500"
-                   >
-                     Subscribe
-                   </button>
-                 </form>
-               </div>
+          {/* Donate Container */}
+          <div className="flex flex-col items-center text-center">
+            <button className="bg-[#9ba9e6] border border-[#333] text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
+              Donate
+            </button>
+            <div className="mt-6 flex flex-col items-center gap-2">
+              <svg width="24" height="40" viewBox="0 0 24 40" fill="none" stroke="#b2ce63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
+                <path d="M12 4v24M6 22l6 6 6-6"/>
+              </svg>
+              <p className="font-serif italic text-sm md:text-base text-[#a2bd5c] max-w-[200px]">
+                Lets discuss how to set this up.
+              </p>
             </div>
           </div>
 
-          {/* Contact Section */}
-          <div className="space-y-12">
-            <div className="space-y-8">
-               <h2 className="text-[10px] tracking-[0.4em] text-white/30 uppercase font-sans flex items-center gap-4">
-                 <span className="w-8 h-[1px] bg-white/10" /> Direct Contact
-               </h2>
-               <div className="space-y-8">
-                 <p className="text-[14px] leading-relaxed text-white/70 max-w-md">
-                   For general inquiries, editorial questions, or collaboration proposals, please reach out to us directly via email.
-                 </p>
-                 <div className="pt-4">
-                    <a 
-                      href="mailto:contact@sassafrasinitiative.example.com" 
-                      className="group flex items-center justify-between border border-white/10 px-8 py-6 hover:bg-white hover:text-black transition-all duration-500"
-                    >
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="text-[12px] font-bold uppercase tracking-[0.3em]">Email Sassafras</span>
-                        <span className="text-[9px] opacity-40 italic font-sans">contact@sassafrasinitiative.example.com</span>
-                      </div>
-                      <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform" />
-                    </a>
-                 </div>
-               </div>
+          {/* Volunteer Container */}
+          <div className="flex flex-col items-center text-center">
+            <button className="bg-[#bdca60] border border-[#333] text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
+              Volunteer
+            </button>
+            <div className="mt-6 flex flex-col items-center gap-2">
+              <svg width="24" height="40" viewBox="0 0 24 40" fill="none" stroke="#b2ce63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
+                <path d="M12 4v24M6 22l6 6 6-6"/>
+              </svg>
+              <p className="font-serif italic text-sm md:text-base text-[#a2bd5c] max-w-[200px]">
+                can maybe lead to a google form
+              </p>
             </div>
           </div>
 
         </div>
-      </section>
+
+      </div>
     </div>
   )
 }

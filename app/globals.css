@@ -4,34 +4,36 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* ── Live-site palette ── */
-  --background: oklch(0.12 0.005 330); /* Slightly deeper black */
-  --foreground: oklch(1 0 0);          /* Pure white for titles */
-  --text-body: oklch(0.85 0.005 75);   /* Scholarly grey for body text */
-  --card: oklch(0.18 0.008 330);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.18 0.008 330);
-  --popover-foreground: oklch(1 0 0);
-  --primary: oklch(1 0 0);
-  --primary-foreground: oklch(0.15 0.005 330);
-  --secondary: oklch(0.22 0.008 330);
-  --secondary-foreground: oklch(0.85 0.005 75);
-  --muted: oklch(0.22 0.008 330);
-  --muted-foreground: oklch(0.65 0.01 75);
+  /* ── Live-site palette (Soft Contemporary Art Space Vibe) ── */
+  --background: #fcfaf2; /* Cream/Off-white */
+  --foreground: #222222; /* Soft black */
+  --text-body: #444444;   /* Softer grey for body text */
+  --card: #fcfaf2;
+  --card-foreground: #222222;
+  --popover: oklch(0.98 0.01 90);
+  --popover-foreground: oklch(0.15 0.01 330);
+  --primary: oklch(0.15 0.01 330);
+  --primary-foreground: oklch(0.98 0.01 90);
+  --secondary: oklch(0.92 0.01 90);
+  --secondary-foreground: oklch(0.25 0.01 330);
+  --muted: oklch(0.92 0.01 90);
+  --muted-foreground: oklch(0.45 0.01 75);
   --accent: oklch(0.72 0.16 55);
-  --accent-foreground: oklch(0.15 0.005 330);
+  --accent-foreground: oklch(0.98 0.01 90);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.25 0.01 330);
-  --input: oklch(0.25 0.01 330);
+  --destructive-foreground: oklch(0.98 0.01 90);
+  --border: oklch(0.85 0.01 90);
+  --input: oklch(0.85 0.01 90);
   --ring: oklch(0.72 0.16 55);
-  --radius: 0.125rem;
+  --radius: 0.25rem;
+  --frame-color: #6a8cff; /* Vibe blue border */
+  --frame-color-article: #8d9c6b; /* Olive green border */
 }
 
 @theme inline {
-  --font-sans: var(--font-cardo), Georgia, serif;
-  --font-serif: var(--font-cardo), Georgia, serif;
-  --font-title: var(--font-cardo), Georgia, serif;
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-title: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-mono: 'Geist Mono', monospace;
 
   --color-background: var(--background);
@@ -44,26 +46,42 @@
 @layer base {
   * {
     border-color: var(--border);
-    font-family: var(--font-cardo), Georgia, serif !important;
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif !important;
   }
   
   html, body {
     background-color: var(--background);
-    color: var(--text-body); /* Set global color to body text color */
+    color: var(--text-body);
+    margin: 0;
+    padding: 0;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--foreground) !important; /* Force headings to pure white */
-  }
-
-  body {
-    -webkit-font-smoothing: antialiased;
+  /* ── Viewport Frame ── */
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 12px solid #c5d940;
+    pointer-events: none;
+    z-index: 9999;
   }
 }
 
 /* Animations... */
 @keyframes slow-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes slow-spin-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes nav-line-flow {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(0%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-nav-line-flow {
+  animation: nav-line-flow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
 @keyframes float-gentle { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-14px); } }
 @keyframes float-gentle-delayed { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 @keyframes scroll-line { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }

@@ -55,72 +55,51 @@ export default async function ArticlePage({
   return (
     <div>
       {/* ── Article header ── */}
-      <div className="pt-20 pb-10 px-6 border-b border-border">
-        <div className="mx-auto max-w-3xl">
-          {/* Back link */}
-          <Link
-            href={issueHref}
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
-            style={{ fontSize: "10px", letterSpacing: "0.18em" }}
-          >
-            <ArrowLeft size={10} />
-            {isCurrentIssue
-              ? `ISSUE ${data.issue.number}: ${data.issue.title}`
-              : "ALL ISSUES"}
-          </Link>
-
-          {/* Media type badge */}
-          <div className="mb-5">
-            <span
-              className="border border-border text-muted-foreground"
-              style={{ fontSize: "9px", letterSpacing: "0.14em", padding: "3px 8px" }}
-            >
-              {mediaTypeLabels[data.mediaType]?.toUpperCase()}
-            </span>
-          </div>
-
-          <h1
-            className="font-bold text-foreground leading-tight mb-4"
-            style={{
-              fontSize: "clamp(1.7rem, 4.5vw, 3rem)",
-              letterSpacing: "0.03em",
-            }}
-          >
-            {data.title}
-          </h1>
-
-          {data.excerpt && (
-            <p
-              className="leading-relaxed text-muted-foreground mb-6"
-              style={{ fontSize: "clamp(0.9rem, 2vw, 1.05rem)" }}
-            >
-              {data.excerpt}
-            </p>
-          )}
-
-          <div className="pt-5 border-t border-border">
-            <p
-              className="font-bold text-foreground"
-              style={{ fontSize: "13px", letterSpacing: "0.04em" }}
-            >
-              {data.author}
-            </p>
-            {data.authorBio && (
-              <p
-                className="mt-1 text-muted-foreground leading-relaxed"
-                style={{ fontSize: "12px", maxWidth: "52ch" }}
+      <div className="pt-20 pb-10 px-6 border-b border-border shadow-sm">
+        <div className="mx-auto max-w-3xl flex items-start gap-6">
+          {/* Black Square Decoration */}
+          <div className="w-16 h-16 md:w-24 md:h-24 bg-black flex-shrink-0"></div>
+          
+          <div className="flex-1">
+            <div className="mb-4 flex flex-col items-start gap-4">
+              {/* Back link */}
+              <Link
+                href={issueHref}
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                style={{ fontSize: "10px", letterSpacing: "0.18em" }}
               >
-                {data.authorBio}
+                <ArrowLeft size={10} />
+                {isCurrentIssue
+                  ? `ISSUE ${data.issue.number}: ${data.issue.title}`
+                  : "ALL ISSUES"}
+              </Link>
+            </div>
+
+            <h1
+              className="font-sans text-3xl md:text-5xl font-medium leading-tight mb-2 uppercase"
+            >
+              {data.title}
+            </h1>
+
+            <div className="mt-2">
+              <p
+                className="font-serif italic text-foreground text-lg md:text-xl font-medium"
+              >
+                {data.author}
               </p>
-            )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── Article body ── */}
       <div className="px-6 py-14">
-        <div className="mx-auto max-w-3xl">
-          <ArticleBody article={data} />
+        <div className="mx-auto max-w-4xl p-10 md:p-16 lg:p-24 bg-[#DCE4EC] border-[8px] md:border-[16px] border-white/50 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          {/* Frosted vignette effect */}
+          <div className="absolute inset-0 shadow-[inset_0_0_40px_20px_rgba(255,255,255,0.7)] pointer-events-none"></div>
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <ArticleBody article={data} />
+          </div>
         </div>
       </div>
 

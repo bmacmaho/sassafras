@@ -5,12 +5,12 @@ import { useEffect, useRef } from "react"
 import { BloomingFlower } from "./blooming-flower"
 
 const NAV_LINKS = [
-  { href: "/contact", label: "SUBMISSIONS", variant: "lily" },
+  { href: "/submissions", label: "SUBMISSIONS", variant: "lily" },
   { href: "/current-issue", label: "CURRENT ISSUE", variant: "sassafras" },
   { href: "/issues", label: "ALL ISSUES", variant: "fern" },
   { href: "/explore", label: "EXPLORE", variant: "daisy" },
-  { href: "/keep-in-touch", label: "KEEP IN TOUCH", variant: "bell" },
   { href: "/about", label: "ABOUT", variant: "star" },
+  { href: "/contact", label: "CONTACT", variant: "bell" },
 ] as const
 
 export function FullscreenNavOverlay() {
@@ -61,31 +61,25 @@ export function FullscreenNavOverlay() {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-black"
+      className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-white/95 backdrop-blur-md"
       style={{ opacity: 0, pointerEvents: "none", willChange: "opacity" }}
     >
-      <nav className="flex flex-col items-center gap-10 md:gap-14 w-full text-center">
+      <nav className="flex flex-col items-center justify-center w-full text-center h-full gap-2 md:gap-4">
         {NAV_LINKS.map((link) => (
-          <div key={link.href} className="relative group flex items-center justify-center">
-            {/* Blooming Flower on the left */}
-            <BloomingFlower className="absolute -left-16 sm:-left-32 md:-left-40" variant={link.variant} />
-
-            <Link
-              href={link.href}
-              className="text-[17px] sm:text-[20px] md:text-[24px] font-serif uppercase tracking-[0.3em] transition-colors text-white/80 hover:text-white"
-            >
-              <span className="relative z-10">{link.label}</span>
-              <span className="absolute -bottom-4 left-1/2 w-0 h-[1px] bg-white transition-all duration-300 ease-out group-hover:w-[120%] group-hover:-translate-x-1/2 opacity-40"></span>
-            </Link>
-
-            {/* Blooming Flower on the right */}
-            <BloomingFlower className="absolute -right-16 sm:-right-32 md:-right-40 scale-x-[-1]" variant={link.variant} />
-          </div>
+          <Link
+            key={link.href}
+            href={link.href}
+            className="group w-full max-w-5xl text-center hover:bg-[#f5f5f5] transition-colors py-2 md:py-4 rounded-xl"
+          >
+            <span className="text-3xl sm:text-5xl md:text-[5rem] font-black font-sans uppercase tracking-tighter transition-colors text-[#222] group-hover:text-[#666] leading-none">
+              {link.label}
+            </span>
+          </Link>
         ))}
       </nav>
 
-      <div className="absolute bottom-16 flex justify-center w-full">
-        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] text-white/40 tracking-[0.3em] uppercase cursor-pointer hover:text-white transition-colors">
+      <div className="absolute bottom-8 flex justify-center w-full">
+        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-sm font-bold tracking-widest uppercase cursor-pointer text-[#666] hover:text-[#222] transition-colors">
           INSTAGRAM
         </a>
       </div>

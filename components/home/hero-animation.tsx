@@ -67,19 +67,19 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
     <div ref={containerRef} className="relative" style={{ height: "250vh" }}>
       {/* Sticky full-screen hero */}
       <div
-        className="sticky top-0 h-screen overflow-hidden select-none flex flex-col items-center justify-center"
+        className="sticky top-0 h-screen overflow-hidden select-none flex flex-col items-center justify-center font-sans tracking-tighter"
         style={{
-          backgroundColor: "oklch(0.12 0.005 330)",
-          color: "oklch(0.95 0.005 75)",
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
         }}
       >
         {/* ── Botanical illustration ── */}
         <div
           ref={logoRef}
-          className="relative animate-fade-in"
+          className="relative animate-fade-in p-8 rounded-sm"
           style={{
-            width: "min(40vw, 280px)",
-            height: "min(40vw, 280px)",
+            width: "min(35vw, 240px)",
+            height: "min(35vw, 240px)",
             willChange: "transform, opacity",
           }}
         >
@@ -92,31 +92,25 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
           />
         </div>
 
-        {/* ── Title (orange handwritten logo) ── */}
+        {/* ── Title (Brutalist Typography) ── */}
         <div
           ref={titleRef}
-          className="mt-2 sm:mt-6 animate-fade-in animate-fade-in-delay-1 relative"
+          className="mt-6 sm:mt-12 animate-fade-in animate-fade-in-delay-1 relative z-10 flex flex-col items-center"
           style={{ 
-            width: "min(70vw, 500px)",
-            height: "clamp(4rem, 10vw, 6.5rem)",
             willChange: "transform, opacity" 
           }}
         >
-          <Image
-            src="/sassafras-text-logo.png"
-            alt="sassafras handwritten logo"
-            fill
-            className="object-contain"
-            priority
-          />
+           <h2 className="text-[8vw] leading-none font-black text-[#222] m-0 drop-shadow-sm">
+             SASSAFRAS
+           </h2>
         </div>
 
         {/* ── Animated divider ── */}
         <div
           ref={dividerRef}
-          className="mt-10 divider-animated"
+          className="mt-8 divider-animated bg-[#e5e5e5] h-1 rounded-none"
           style={{
-            width: "min(60vw, 420px)",
+            width: "min(80vw, 600px)",
             willChange: "opacity",
           }}
         />
@@ -124,32 +118,34 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
         {/* ── Issue info below divider ── */}
         <div
           ref={issueInfoRef}
-          className="mt-8 text-center animate-fade-in animate-fade-in-delay-2"
+          className="mt-12 flex gap-12 text-black/60 font-medium uppercase tracking-[0.3em] animate-fade-in animate-fade-in-delay-2"
           style={{ willChange: "transform, opacity" }}
         >
-          <p style={{ fontSize: "10px", letterSpacing: "0.22em", opacity: 0.5 }}>
-            ISSUE NO. 1
-          </p>
-          <p
-            className="mt-1"
-            style={{ fontSize: "10px", letterSpacing: "0.22em", opacity: 0.5 }}
-          >
-            JUNE 2026
-          </p>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] opacity-40 tracking-widest">EDITION</span>
+            <p className="text-lg md:text-xl font-light">
+              NO. 01
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] opacity-40 tracking-widest">RELEASE</span>
+            <p className="text-lg md:text-xl font-light">
+              JUNE 2026
+            </p>
+          </div>
         </div>
-
-
 
         {/* ── Scroll hint ── */}
         <div
           ref={scrollHintRef}
-          className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none"
+          className="absolute bottom-16 flex flex-col items-center pointer-events-none"
         >
           <div style={{ animation: "float-arrow 3s ease-in-out infinite" }}>
-            <ChevronDown size={64} strokeWidth={0.7} />
+            <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-[#888]"></div>
           </div>
         </div>
       </div>
     </div>
   )
 }
+
