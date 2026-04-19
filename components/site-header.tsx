@@ -104,8 +104,7 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", handler)
   }, [])
 
-  if (pathname === "/") return null
-
+  const isHome = pathname === "/"
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
 
@@ -115,7 +114,7 @@ export function SiteHeader() {
       <div
         className="lg:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
         style={{
-          backgroundColor: currentColor,
+          backgroundColor: isHome ? "#fbfaf1" : currentColor,
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? "auto" : "none",
         }}
@@ -130,19 +129,24 @@ export function SiteHeader() {
             <line x1="20" y1="4" x2="4" y2="20"/>
           </svg>
         </button>
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            onClick={() => setMenuOpen(false)}
-            className="group relative font-alte-haas text-2xl tracking-[0.25em] text-white"
-          >
-            {link.label}
-            <span
-              className="block h-[1px] bg-white transition-all duration-300 ease-out origin-center scale-x-0 group-hover:scale-x-100"
-            />
-          </Link>
-        ))}
+        {NAV_LINKS.map((link) => {
+          const linkAccent = PAGE_COLORS[link.href] ?? DEFAULT_COLOR
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="group relative font-alte-haas text-2xl tracking-[0.25em]"
+              style={{ color: isHome ? linkAccent : "white" }}
+            >
+              {link.label}
+              <span
+                className="block h-[1px] transition-all duration-300 ease-out origin-center scale-x-0 group-hover:scale-x-100"
+                style={{ backgroundColor: isHome ? linkAccent : "white" }}
+              />
+            </Link>
+          )
+        })}
       </div>
 
       {/* Header */}

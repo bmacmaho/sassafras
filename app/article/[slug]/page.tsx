@@ -80,7 +80,7 @@ export default async function ArticlePage({
           </div>
 
           <h1
-            className="font-bold text-foreground leading-tight mb-4"
+            className="font-bold leading-tight mb-4"
             style={{
               fontSize: "clamp(1.7rem, 4.5vw, 3rem)",
               letterSpacing: "0.03em",

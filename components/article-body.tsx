@@ -44,7 +44,7 @@ function PoetryBody({ body }: { body: string }) {
                 return (
                   <h3
                     key={sti}
-                    className="mt-4 text-center text-xs uppercase tracking-[0.4em] text-muted-foreground"
+                    className="mt-4 text-center text-xs uppercase tracking-[0.4em] text-muted-foreground font-alte-haas"
                   >
                     {lines[0]}
                   </h3>
@@ -109,14 +109,14 @@ function AudioBody({ body }: { body: string }) {
           </div>
         </div>
         <div className="border-t border-border px-6 py-3">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-alte-haas">
             Field recording with narration
           </p>
         </div>
       </div>
 
       {/* Transcript / essay */}
-      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-alte-haas">
         Accompanying text
       </p>
       <div className="flex flex-col gap-6">
@@ -147,14 +147,14 @@ function VideoBody({ body }: { body: string }) {
           >
             <Play className="ml-1 h-6 w-6" />
           </button>
-          <p className="text-xs uppercase tracking-widest text-[oklch(0.97_0.005_75)]/60">
+          <p className="text-xs uppercase tracking-widest text-[oklch(0.97_0.005_75)]/60 font-alte-haas">
             Video essay
           </p>
         </div>
       </div>
 
       {/* Director's note */}
-      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-alte-haas">
         {"Director\u2019s note"}
       </p>
       <div className="flex flex-col gap-6">
@@ -196,7 +196,7 @@ function VisualBody({ body }: { body: string }) {
           </div>
         ))}
       </div>
-      <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground">
+      <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground font-alte-haas">
         Selected photographs from the series
       </p>
 

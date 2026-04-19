@@ -1,16 +1,14 @@
 import type { Metadata } from "next"
-import { Cardo } from "next/font/google"
+import { Inter } from "next/font/google"
 
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { PageWrapper } from "@/components/page-wrapper"
 import "./globals.css"
 
-const cardo = Cardo({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-cardo",
+  variable: "--font-inter",
 })
 
 export const metadata: Metadata = {
@@ -32,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cardo.variable}`}>
+    <html lang="en" className={`${inter.variable}`}>
       <body className="font-serif antialiased bg-black text-white">
         <SiteHeader />
         <PageWrapper>

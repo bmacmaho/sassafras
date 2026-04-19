@@ -46,7 +46,7 @@ export function ArticleCard({
           >
             {article.title}
           </h3>
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground font-alte-haas">
             {article.author}
           </p>
           <p

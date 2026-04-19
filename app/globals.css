@@ -9,7 +9,7 @@
 }
 
 @font-face {
-  font-family: 'Alte Haas Grotesk Bold';
+  font-family: 'Alte Haas Grotesk';
   src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
@@ -43,9 +43,9 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-cardo), Georgia, serif;
-  --font-serif: var(--font-cardo), Georgia, serif;
-  --font-title: var(--font-cardo), Georgia, serif;
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-title: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-mono: 'Geist Mono', monospace;
 
   --color-background: var(--background);
@@ -58,7 +58,7 @@
 @layer base {
   * {
     border-color: var(--border);
-    font-family: var(--font-cardo), Georgia, serif;
+    font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   }
   
   html, body {
@@ -67,8 +67,14 @@
     overflow-x: clip;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--foreground) !important; /* Force headings to pure white */
+  h1, h2 {
+    color: var(--page-color, var(--foreground));
+    font-family: 'Alte Haas Grotesk', Papyrus, fantasy;
+    font-weight: 700;
+  }
+
+  h3, h4, h5, h6 {
+    color: var(--foreground);
   }
 
   body {

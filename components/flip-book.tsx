@@ -495,7 +495,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     letterSpacing: "0.3em",
                     opacity: 0.5,
                     marginBottom: 18,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                   }}
                 >
                   THE SASSAFRAS INITIATIVE
@@ -506,7 +506,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     fontWeight: 700,
                     letterSpacing: "0.08em",
                     lineHeight: 1.15,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                     maxWidth: "16ch",
                   }}
                 >
@@ -526,7 +526,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     fontStyle: "italic",
                     opacity: 0.7,
                     letterSpacing: "0.05em",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                   }}
                 >
                   The Tower
@@ -537,7 +537,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     letterSpacing: "0.25em",
                     opacity: 0.35,
                     marginTop: 28,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                   }}
                 >
                   JUNE 2026
@@ -566,7 +566,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     letterSpacing: "0.2em",
                     opacity: 0.3,
                     color: "#e8ddd0",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                     animation: "pulse-gentle 2s ease-in-out infinite",
                   }}
                 >
@@ -597,7 +597,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     letterSpacing: "0.3em",
                     opacity: 0.4,
                     marginBottom: 20,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                   }}
                 >
                   THE SASSAFRAS INITIATIVE PRESENTS
@@ -609,7 +609,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                     opacity: 0.6,
                     fontStyle: "italic",
                     maxWidth: "28ch",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
+                    fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
                   }}
                 >
                   An interdisciplinary publication seeking to reimagine academic discourse

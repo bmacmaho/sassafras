@@ -46,7 +46,7 @@ export function BookCoverLink({
             <p className="text-[1rem] italic opacity-70 tracking-[0.05em] text-[#e8ddd0] font-serif mt-2 mb-8">
               {title}
             </p>
-            <p className="text-[6.5px] tracking-[0.25em] text-white/30 font-serif uppercase">
+            <p className="text-[6.5px] tracking-[0.25em] text-white/30 font-alte-haas uppercase">
               {date}
             </p>
           </div>
@@ -60,7 +60,7 @@ export function BookCoverLink({
       
       {/* Information below the book */}
       <div className="mt-8 flex flex-col items-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-         <p className="text-[9px] tracking-[0.2em] text-muted-foreground uppercase mb-2">
+         <p className="text-[9px] tracking-[0.2em] text-muted-foreground uppercase mb-2 font-alte-haas">
             {season}
          </p>
          {status && (

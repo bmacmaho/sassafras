@@ -72,7 +72,7 @@ export function FullscreenNavOverlay() {
 
             <Link
               href={link.href}
-              className="text-[17px] sm:text-[20px] md:text-[24px] font-serif uppercase tracking-[0.3em] transition-colors text-white/80 hover:text-white"
+              className="text-[17px] sm:text-[20px] md:text-[24px] font-alte-haas uppercase tracking-[0.3em] transition-colors text-white/80 hover:text-white"
             >
               <span className="relative z-10">{link.label}</span>
               <span className="absolute -bottom-4 left-1/2 w-0 h-[1px] bg-white transition-all duration-300 ease-out group-hover:w-[120%] group-hover:-translate-x-1/2 opacity-40"></span>
@@ -85,7 +85,7 @@ export function FullscreenNavOverlay() {
       </nav>
 
       <div className="absolute bottom-16 flex justify-center w-full">
-        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] text-white/40 tracking-[0.3em] uppercase cursor-pointer hover:text-white transition-colors">
+        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-[10px] sm:text-[11px] text-white/40 tracking-[0.3em] uppercase cursor-pointer hover:text-white transition-colors font-alte-haas">
           INSTAGRAM
         </a>
       </div>

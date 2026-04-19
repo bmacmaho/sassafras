@@ -29,7 +29,7 @@ export function ContactForm() {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="name"
-          className="text-xs uppercase tracking-wider text-muted-foreground"
+          className="text-xs uppercase tracking-wider text-muted-foreground font-alte-haas"
         >
           Name
         </label>
@@ -45,7 +45,7 @@ export function ContactForm() {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="email"
-          className="text-xs uppercase tracking-wider text-muted-foreground"
+          className="text-xs uppercase tracking-wider text-muted-foreground font-alte-haas"
         >
           Email
         </label>
@@ -61,7 +61,7 @@ export function ContactForm() {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="subject"
-          className="text-xs uppercase tracking-wider text-muted-foreground"
+          className="text-xs uppercase tracking-wider text-muted-foreground font-alte-haas"
         >
           Subject
         </label>
@@ -81,7 +81,7 @@ export function ContactForm() {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="message"
-          className="text-xs uppercase tracking-wider text-muted-foreground"
+          className="text-xs uppercase tracking-wider text-muted-foreground font-alte-haas"
         >
           Message
         </label>
@@ -96,7 +96,7 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="mt-2 self-start border border-foreground bg-foreground px-6 py-2.5 text-xs uppercase tracking-wider text-background transition-colors hover:bg-accent hover:border-accent"
+        className="mt-2 self-start border border-foreground bg-foreground px-6 py-2.5 text-xs uppercase tracking-wider text-background transition-colors hover:bg-accent hover:border-accent font-alte-haas"
       >
         Send message
       </button>

@@ -20,7 +20,7 @@ const pageContainer: CSSProperties = {
   padding: "40px 36px",
   display: "flex",
   flexDirection: "column",
-  fontFamily: "var(--font-cardo), Georgia, serif",
+  fontFamily: "var(--font-inter), Arial, Helvetica, sans-serif",
   color: "#2a2420",
   position: "relative",
   boxSizing: "border-box",
@@ -467,25 +467,23 @@ export default function CurrentIssuePage() {
   const pages = buildPages()
 
   return (
-    <div
-      className="min-h-screen bg-black"
-    >
+    <div className="min-h-screen bg-[#fcfaf2]">
       {/* ── Masthead ── */}
-      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-white/[0.05]">
+      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-black/[0.05]">
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
           <div className="space-y-6">
-            <p className="text-[11px] tracking-[0.3em] text-[#ceda9a] uppercase font-sans">
+            <p className="text-[11px] tracking-[0.3em] text-[#555] uppercase font-alte-haas">
               Issue No. 1
             </p>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white leading-none uppercase">
+            <h1 className="text-5xl md:text-8xl font-bold tracking-tight leading-none">
               The Tower
             </h1>
           </div>
           <div className="max-w-md space-y-4">
-            <p className="text-lg leading-[1.6] text-white/90 italic">
+            <p className="text-lg leading-[1.6] text-[#222]/90 italic">
               "Challenging the Ivory Tower as an encloser of knowledge."
             </p>
-            <p className="text-sm leading-[1.8] text-white/50 font-sans">
+            <p className="text-sm leading-[1.8] text-[#555] font-sans">
               Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry.
             </p>
           </div>

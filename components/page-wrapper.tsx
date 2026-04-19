@@ -11,7 +11,7 @@ export function PageWrapper({ children }: { children: React.ReactNode }) {
   const color = getPageColor(pathname)
 
   return (
-    <div style={{ backgroundColor: color, transition: "background-color 0.8s ease" }} className="relative z-40 px-4 pb-4 lg:px-8 lg:pb-8">
+    <div style={{ backgroundColor: color, "--page-color": color, transition: "background-color 0.8s ease" } as React.CSSProperties} className="relative z-40 px-4 pb-4 lg:px-8 lg:pb-8">
       <div className="relative">
         <div style={{ isolation: "isolate" }}>
           {children}

@@ -21,7 +21,7 @@ export function MediaBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-sm border border-border bg-secondary px-2 py-0.5 text-[11px] uppercase tracking-widest text-muted-foreground",
+        "inline-flex items-center gap-1.5 rounded-sm border border-border bg-secondary px-2 py-0.5 text-[11px] uppercase tracking-widest text-muted-foreground font-alte-haas",
         className
       )}
     >

@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { getAllIssues, getCurrentIssue } from "@/lib/queries"
 import { HeroAnimation } from "@/components/home/hero-animation"
-import { FullscreenNavOverlay } from "@/components/home/fullscreen-nav-overlay"
 import type { Article } from "@/lib/types"
 import { mediaTypeLabels } from "@/lib/types"
 import { ArrowRight } from "lucide-react"
@@ -111,18 +110,11 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── 锚点：使返回主页能够直接跳转到导航全黑层，跳过首屏插画 ── */}
-      <div id="nav" className="absolute w-full pointer-events-none" style={{ top: "135vh" }} />
-      
-      {/* ── Hero (scroll-driven animation) ── */}
       <HeroAnimation
         issueNumber={currentIssue?.number}
         season={currentIssue?.season}
         year={currentIssue?.year}
       />
-
-      {/* ── 电影感渐变自动全屏导航层 ── */}
-      <FullscreenNavOverlay />
     </div>
   )
 }
