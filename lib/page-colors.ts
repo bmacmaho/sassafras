@@ -6,7 +6,7 @@ export const PAGE_COLORS: Record<string, string> = {
   "/contact":       "rgb(220, 100, 120)",
   "/keep-in-touch": "rgb( 90, 195, 180)",
   "/article":       "rgb(112, 150, 234)",
-  "/":              "#fbfaf1",
+  "/":              "rgb( 90, 195, 180)",
 }
 
 export const DEFAULT_COLOR = "#fbfaf1"

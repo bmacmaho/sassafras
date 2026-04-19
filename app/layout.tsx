@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <body className="font-serif antialiased bg-black text-white">
+      <body className="antialiased">
         <SiteHeader />
         <PageWrapper>
           <main>{children}</main>

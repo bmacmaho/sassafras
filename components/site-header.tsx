@@ -80,7 +80,10 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false)
   const transitioningRef = useRef(false)
   const menuOpenRef = useRef(menuOpen)
+  const homeDismissedRef = useRef(false)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+
+  const isHome = pathname === "/"
 
   useEffect(() => {
     if (!menuOpenRef.current) return
@@ -90,9 +93,21 @@ export function SiteHeader() {
 
   useEffect(() => {
     const handler = () => {
+      const sy = window.scrollY
+
+      if (isHome) {
+        if (sy <= 20) {
+          homeDismissedRef.current = false
+          setMenuOpen(false)
+        } else if (sy > 100 && !homeDismissedRef.current) {
+          setMenuOpen(true)
+        }
+        return
+      }
+
       if (transitioningRef.current) return
       setScrolled(prev => {
-        const next = (!prev && window.scrollY > 60) ? true : (prev && window.scrollY < 20) ? false : prev
+        const next = (!prev && sy > 60) ? true : (prev && sy < 20) ? false : prev
         if (next !== prev) {
           transitioningRef.current = true
           setTimeout(() => { transitioningRef.current = false }, 600)
@@ -102,17 +117,16 @@ export function SiteHeader() {
     }
     window.addEventListener("scroll", handler, { passive: true })
     return () => window.removeEventListener("scroll", handler)
-  }, [])
+  }, [isHome])
 
-  const isHome = pathname === "/"
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
 
   return (
     <>
-      {/* Mobile fullscreen overlay */}
+      {/* Fullscreen overlay — all screen sizes on home, mobile-only elsewhere */}
       <div
-        className="lg:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
+        className={`${isHome ? "" : "lg:hidden "}fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500`}
         style={{
           backgroundColor: isHome ? "#fbfaf1" : currentColor,
           opacity: menuOpen ? 1 : 0,
@@ -120,7 +134,7 @@ export function SiteHeader() {
         }}
       >
         <button
-          onClick={() => setMenuOpen(false)}
+          onClick={() => { if (isHome) homeDismissedRef.current = true; setMenuOpen(false) }}
           className="absolute top-8 right-8 bg-transparent border-none cursor-pointer"
           style={{ color: "rgb(43, 52, 133)" }}
         >
@@ -149,8 +163,8 @@ export function SiteHeader() {
         })}
       </div>
 
-      {/* Header */}
-      <div className="sticky top-0 z-50 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
+      {/* Header — hidden on home */}
+      {!isHome && <div className="sticky top-0 z-50 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
 
         {/* Mobile slim bar */}
         <header className="lg:hidden px-6 flex items-center relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
@@ -325,7 +339,7 @@ export function SiteHeader() {
             </span>
           </Link>
         </header>
-      </div>
+      </div>}
     </>
   )
 }

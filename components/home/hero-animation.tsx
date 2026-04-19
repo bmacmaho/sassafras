@@ -69,8 +69,8 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
       <div
         className="sticky top-0 h-screen overflow-hidden select-none flex flex-col items-center justify-center"
         style={{
-          backgroundColor: "oklch(0.12 0.005 330)",
-          color: "oklch(0.95 0.005 75)",
+          backgroundColor: "#fbfaf1",
+          color: "black",
         }}
       >
         {/* ── Botanical illustration ── */}
