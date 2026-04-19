@@ -69,7 +69,7 @@ export function FullscreenNavOverlay() {
           <Link
             key={link.href}
             href={link.href}
-            className="group w-full max-w-5xl text-center hover:bg-[#f5f5f5] transition-colors py-2 md:py-4 rounded-xl"
+            className="group w-full max-w-5xl text-center transition-colors py-2 md:py-4"
           >
             <span className="text-3xl sm:text-5xl md:text-[5rem] font-black font-sans uppercase tracking-tighter transition-colors text-[#222] group-hover:text-[#666] leading-none">
               {link.label}

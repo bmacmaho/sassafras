@@ -48,7 +48,7 @@ export function SiteHeader() {
       <header 
         className={`fixed top-0 left-0 right-0 z-[100] px-6 py-4 md:px-12 md:py-6 flex flex-row justify-between items-center overflow-hidden transition-all duration-700 ${
           isVisible 
-            ? "translate-y-0 opacity-100 bg-white/80 backdrop-blur-md border-b border-black/5 shadow-sm" 
+            ? "translate-y-0 opacity-100 bg-[#fcfaf2]/90 backdrop-blur-md border-b border-black/5 shadow-sm" 
             : "-translate-y-full opacity-0 pointer-events-none bg-transparent"
         }`}
       >
@@ -69,7 +69,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-8">
           {/* Expanding Navigation */}
           <nav 
-            className={`flex flex-wrap items-center gap-x-6 gap-y-2 uppercase text-[12px] font-bold tracking-[0.15em] text-black transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={`flex flex-wrap items-center gap-x-6 gap-y-2 uppercase font-mono text-[11px] font-bold tracking-[0.15em] text-black transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isMenuOpen 
                 ? "opacity-100 translate-x-0 pointer-events-auto" 
                 : "opacity-0 translate-x-12 pointer-events-none"
@@ -84,11 +84,11 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <div className="relative flex items-center border border-black px-4 py-1.5 transition-all duration-300 focus-within:bg-black/5">
+            <div className="relative flex items-center border border-black px-4 py-1.5 transition-all duration-300">
               <input 
                 type="text"
                 placeholder="Search..."
-                className="w-24 md:w-32 bg-transparent border-none outline-none text-[11px] font-sans tracking-widest text-black placeholder:text-black/30"
+                className="w-24 md:w-32 bg-transparent border-none outline-none font-mono text-[11px] tracking-widest text-black placeholder:text-black/30"
               />
               <Search className="w-3.5 h-3.5 text-black" />
             </div>
@@ -99,8 +99,7 @@ export function SiteHeader() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="flex flex-col items-center group cursor-pointer relative"
           >
-            {/* Background Hover Circle */}
-            <div className="absolute inset-0 bg-[#c5d940]/10 rounded-full scale-0 group-hover:scale-150 transition-transform duration-700 blur-xl pointer-events-none" />
+            {/* No Background Hover Circle per request */}
             
             <div className="relative font-bold leading-[0.8] text-[#1a2b6d] flex flex-col items-center z-10">
               <div className="flex gap-1 text-[32px]">

@@ -118,7 +118,7 @@ export default function SubmissionsPage() {
                 href="https://docs.google.com/forms/d/..."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group w-full flex items-center justify-between border border-black bg-black text-white px-10 py-6 hover:bg-[#c5d940] hover:text-black transition-all duration-500"
+                className="group w-full flex items-center justify-between border border-black bg-transparent text-black px-10 py-6 hover:bg-black hover:text-white transition-all duration-500"
               >
                 <div className="flex flex-col items-start gap-1">
                   <span className="text-[12px] font-bold uppercase tracking-[0.3em]">Submit Proposal</span>

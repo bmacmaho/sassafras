@@ -61,7 +61,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right: Contact Form */}
-            <div className="bg-white p-10 md:p-16 shadow-[20px_20px_0px_#c5d940] border border-black/5">
+            <div className="bg-transparent p-10 md:p-16 shadow-[20px_20px_0px_#c5d940] border border-black/10">
               <div className="mb-10 space-y-2">
                 <h2 className="text-2xl font-bold tracking-tight">Send a message</h2>
                 <p className="text-sm text-[#888]">Fields marked with * are required.</p>

@@ -121,13 +121,13 @@ export function HeroAnimation({ issueNumber, season, year }: HeroAnimationProps)
           className="mt-12 flex gap-12 text-black/60 font-medium uppercase tracking-[0.3em] animate-fade-in animate-fade-in-delay-2"
           style={{ willChange: "transform, opacity" }}
         >
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 font-mono">
             <span className="text-[10px] opacity-40 tracking-widest">EDITION</span>
             <p className="text-lg md:text-xl font-light">
               NO. 01
             </p>
           </div>
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 font-mono">
             <span className="text-[10px] opacity-40 tracking-widest">RELEASE</span>
             <p className="text-lg md:text-xl font-light">
               JUNE 2026

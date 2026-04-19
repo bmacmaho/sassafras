@@ -5,9 +5,12 @@
 
 :root {
   /* ── Live-site palette (Soft Contemporary Art Space Vibe) ── */
-  --background: #fcfaf2; /* Cream/Off-white */
-  --foreground: #222222; /* Soft black */
-  --text-body: #444444;   /* Softer grey for body text */
+  --background: #fcfaf2;
+  /* Cream/Off-white */
+  --foreground: #222222;
+  /* Soft black */
+  --text-body: #444444;
+  /* Softer grey for body text */
   --card: #fcfaf2;
   --card-foreground: #222222;
   --popover: oklch(0.98 0.01 90);
@@ -26,15 +29,17 @@
   --input: oklch(0.85 0.01 90);
   --ring: oklch(0.72 0.16 55);
   --radius: 0.25rem;
-  --frame-color: #6a8cff; /* Vibe blue border */
-  --frame-color-article: #8d9c6b; /* Olive green border */
+  --frame-color: #6a8cff;
+  /* Vibe blue border */
+  --frame-color-article: #8d9c6b;
+  /* Olive green border */
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
-  --font-serif: var(--font-inter), Arial, Helvetica, sans-serif;
-  --font-title: var(--font-inter), Arial, Helvetica, sans-serif;
-  --font-mono: 'Geist Mono', monospace;
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-title: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -46,14 +51,29 @@
 @layer base {
   * {
     border-color: var(--border);
-    font-family: var(--font-inter), Arial, Helvetica, sans-serif !important;
   }
-  
-  html, body {
+
+  html,
+  body {
     background-color: var(--background);
     color: var(--text-body);
     margin: 0;
     padding: 0;
+  }
+
+  a,
+  button {
+    background-color: transparent;
+  }
+
+  html,
+  body,
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 4C18.2 4 20 6.6 20 10C20 13.4 18.2 16 16 16C13.8 16 12 13.4 12 10C12 6.6 13.8 4 16 4ZM16 28C18.2 28 20 25.4 20 22C20 18.6 18.2 16 16 16C13.8 16 12 18.6 12 22C12 25.4 13.8 28 16 28ZM28 16C28 13.8 25.4 12 22 12C18.6 12 16 13.8 16 16C16 18.2 18.6 20 22 20C25.4 20 28 18.2 28 16ZM4 16C4 13.8 6.6 12 10 12C13.4 12 16 13.8 16 16C16 18.2 13.4 20 10 20C6.6 20 4 18.2 4 16Z' fill='%23c5d940' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23222'/%3E%3C/svg%3E") 16 16, auto !important;
   }
 
   /* ── Viewport Frame ── */
@@ -71,42 +91,207 @@
 }
 
 /* Animations... */
-@keyframes slow-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes slow-spin-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slow-spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
 @keyframes nav-line-flow {
-  0% { transform: translateY(-100%); }
-  50% { transform: translateY(0%); }
-  100% { transform: translateY(100%); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  50% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
 }
 
 .animate-nav-line-flow {
   animation: nav-line-flow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
-@keyframes float-gentle { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-14px); } }
-@keyframes float-gentle-delayed { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-@keyframes scroll-line { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
-@keyframes float-arrow { 0%, 100% { transform: translateY(0); opacity: 0.2; } 50% { transform: translateY(16px); opacity: 0.8; } }
-@keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-@keyframes fade-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes dot-fade { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.6; } }
-@keyframes line-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-.hero-circle { animation: slow-spin 30s linear infinite; }
-.hero-circle-inner { animation: slow-spin-reverse 20s linear infinite; }
+@keyframes float-gentle {
 
-.tracking-hero { letter-spacing: 0.22em; }
-.tracking-label { letter-spacing: 0.18em; }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
 
-.animate-fade-up { animation: fade-up 0.8s ease both; }
-.animate-fade-in { animation: fade-in 1s ease both; }
+  50% {
+    transform: translateY(-14px);
+  }
+}
 
-.animate-fade-up-delay-1 { animation-delay: 0.1s; }
-.animate-fade-up-delay-2 { animation-delay: 0.2s; }
-.animate-fade-up-delay-3 { animation-delay: 0.35s; }
-.animate-fade-in-delay-1 { animation-delay: 0.3s; }
-.animate-fade-in-delay-2 { animation-delay: 0.6s; }
-.animate-fade-in-delay-3 { animation-delay: 0.9s; }
+@keyframes float-gentle-delayed {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes float-arrow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translateY(16px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dot-fade {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes line-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-circle {
+  animation: slow-spin 30s linear infinite;
+}
+
+.hero-circle-inner {
+  animation: slow-spin-reverse 20s linear infinite;
+}
+
+.tracking-hero {
+  letter-spacing: 0.22em;
+}
+
+.tracking-label {
+  letter-spacing: 0.18em;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease both;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease both;
+}
+
+.animate-fade-up-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.animate-fade-up-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.animate-fade-up-delay-3 {
+  animation-delay: 0.35s;
+}
+
+.animate-fade-in-delay-1 {
+  animation-delay: 0.3s;
+}
+
+.animate-fade-in-delay-2 {
+  animation-delay: 0.6s;
+}
+
+.animate-fade-in-delay-3 {
+  animation-delay: 0.9s;
+}
 
 .divider-animated {
   height: 1px;
@@ -124,15 +309,23 @@
   animation: dot-fade 3s ease-in-out infinite;
 }
 
-@keyframes pulse-gentle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+@keyframes pulse-gentle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
 
 .book-page-face {
   background-image:
-    repeating-linear-gradient(
-      0deg,
+    repeating-linear-gradient(0deg,
       transparent,
       transparent 28px,
-      rgba(0,0,0,0.01) 28px,
-      rgba(0,0,0,0.01) 29px
-    );
+      rgba(0, 0, 0, 0.01) 28px,
+      rgba(0, 0, 0, 0.01) 29px);
 }

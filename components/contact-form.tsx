@@ -96,7 +96,7 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="mt-2 self-start border border-foreground bg-foreground px-6 py-2.5 text-xs uppercase tracking-wider text-background transition-colors hover:bg-accent hover:border-accent"
+        className="mt-2 self-start border border-black bg-transparent px-8 py-3.5 text-xs uppercase tracking-widest text-black transition-all hover:bg-black hover:text-white"
       >
         Send message
       </button>

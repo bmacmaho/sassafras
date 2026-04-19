@@ -24,7 +24,7 @@ export default function KeepInTouchPage() {
           
           {/* Donate Container */}
           <div className="flex flex-col items-center text-center">
-            <button className="bg-[#9ba9e6] border border-[#333] text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
+            <button className="bg-transparent border border-black text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:bg-black hover:text-white transition-all shadow-sm">
               Donate
             </button>
             <div className="mt-6 flex flex-col items-center gap-2">
@@ -39,7 +39,7 @@ export default function KeepInTouchPage() {
 
           {/* Volunteer Container */}
           <div className="flex flex-col items-center text-center">
-            <button className="bg-[#bdca60] border border-[#333] text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
+            <button className="bg-transparent border border-black text-black font-sans uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:bg-black hover:text-white transition-all shadow-sm">
               Volunteer
             </button>
             <div className="mt-6 flex flex-col items-center gap-2">

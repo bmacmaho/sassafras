@@ -94,7 +94,7 @@ export default function AboutPage() {
                 <div className="pt-4 border-t border-black/5">
                   <Link
                     href="/contact"
-                    className="group flex items-center justify-between border border-black bg-black text-white px-8 py-5 hover:bg-white hover:text-black transition-all duration-500"
+                    className="group flex items-center justify-between border border-black bg-transparent text-black px-8 py-5 hover:bg-black hover:text-white transition-all duration-500"
                   >
                     <div className="flex flex-col items-start">
                       <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Contribute</span>
