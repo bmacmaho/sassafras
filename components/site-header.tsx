@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 
 function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
@@ -44,6 +44,24 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const transitioningRef = useRef(false)
+
+  useEffect(() => {
+    const handler = () => {
+      if (transitioningRef.current) return
+      setScrolled(prev => {
+        const next = (!prev && window.scrollY > 60) ? true : (prev && window.scrollY < 20) ? false : prev
+        if (next !== prev) {
+          transitioningRef.current = true
+          setTimeout(() => { transitioningRef.current = false }, 600)
+        }
+        return next
+      })
+    }
+    window.addEventListener("scroll", handler, { passive: true })
+    return () => window.removeEventListener("scroll", handler)
+  }, [])
 
   if (pathname === "/") return null
 
@@ -62,10 +80,13 @@ export function SiteHeader() {
       >
         <button
           onClick={() => setMenuOpen(false)}
-          className="font-alte-haas absolute top-8 right-8 text-xl tracking-[0.3em] bg-transparent border-none cursor-pointer"
-          style={{ color: currentColor }}
+          className="absolute top-8 right-8 bg-transparent border-none cursor-pointer"
+          style={{ color: "rgb(43, 52, 133)" }}
         >
-          CLOSE
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="4" y1="4" x2="20" y2="20"/>
+            <line x1="20" y1="4" x2="4" y2="20"/>
+          </svg>
         </button>
         {NAV_LINKS.map((link) => (
           <Link
@@ -81,7 +102,15 @@ export function SiteHeader() {
 
       {/* Header */}
       <div className="sticky top-0 z-40 px-8 pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
-        <header className="px-8 pb-8 pt-8 relative overflow-hidden flex flex-col" style={{ backgroundColor: "#fbfaf1", minHeight: "192px" }}>
+        <header
+          className="px-8 relative overflow-hidden flex flex-col"
+          style={{
+            backgroundColor: "#fbfaf1",
+            minHeight: scrolled ? "72px" : "192px",
+            transition: "min-height 0.4s ease",
+          }}
+        >
+          {/* Blurred edges */}
           {[
             { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
             { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
@@ -90,43 +119,98 @@ export function SiteHeader() {
             <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
           ))}
 
-          {/* Desktop nav sliding in from right */}
+          {/* Minimised: logo + title — independent of nav slide */}
+          {scrolled && (
+            <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 items-center gap-3 z-10">
+              <Link href="/" className="flex items-center">
+                <Image src="/sassafras-logo-compressed.webp" alt="Sassafras" width={36} height={36} className="object-contain" />
+              </Link>
+              <span
+                className="font-alte-haas text-lg tracking-widest"
+                style={{
+                  color: "#1a1a1a",
+                  opacity: menuOpen ? 0 : 1,
+                  transition: "opacity 0.3s ease",
+                  pointerEvents: "none",
+                }}
+              >
+                SASSAFRAS
+              </span>
+            </div>
+          )}
+
+          {/* Desktop nav */}
           <nav
-            className="hidden lg:flex absolute inset-x-0 top-8 h-full pr-20 pl-16 flex-row items-start justify-between transition-transform duration-500 ease-in-out"
-            style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
+            className={`hidden lg:flex absolute inset-x-0 h-full flex-row ${scrolled ? "items-center" : "items-start"} justify-between transition-transform duration-500 ease-in-out`}
+            style={{
+              transform: menuOpen ? "translateX(0)" : "translateX(110%)",
+              paddingLeft: scrolled ? "7rem" : "4rem",
+              paddingRight: "5rem",
+              top: scrolled ? 0 : "2rem",
+            }}
           >
             {NAV_LINKS.map((link) => (
               <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
             ))}
           </nav>
 
-          {/* MENU button */}
+          {/* Menu trigger — MENU text (maximised) or hamburger/X icon (minimised) */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="font-alte-haas absolute right-8 bottom-8 text-xl tracking-[0.3em] cursor-pointer select-none bg-transparent border-none p-0"
+            className="absolute right-8 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center"
             style={{
               color: "rgb(43, 52, 133)",
-              writingMode: "vertical-rl" as const,
-              transform: "rotate(180deg)",
               zIndex: 10,
+              bottom: scrolled ? "auto" : "2rem",
+              top: scrolled ? "50%" : "auto",
+              transform: scrolled ? "translateY(-50%)" : "none",
+              transition: "top 0.4s ease, bottom 0.4s ease, transform 0.4s ease",
             }}
           >
-            ME
-            <span
-              className="font-alte-haas"
-              style={{
-                display: "inline-block",
-                transformOrigin: "top right",
-                transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
-                transition: "transform 0.4s ease",
-              }}
-            >
-              NU
-            </span>
+            {scrolled ? (
+              menuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="4" y1="4" x2="20" y2="20"/>
+                  <line x1="20" y1="4" x2="4" y2="20"/>
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="7" x2="21" y2="7"/>
+                  <line x1="3" y1="12" x2="21" y2="12"/>
+                  <line x1="3" y1="17" x2="21" y2="17"/>
+                </svg>
+              )
+            ) : (
+              <span
+                className="font-alte-haas text-xl tracking-[0.3em] select-none"
+                style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
+              >
+                ME
+                <span
+                  className="font-alte-haas"
+                  style={{
+                    display: "inline-block",
+                    transformOrigin: "top right",
+                    transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
+                    transition: "transform 0.4s ease",
+                  }}
+                >
+                  NU
+                </span>
+              </span>
+            )}
           </button>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-end gap-4 mt-auto">
+          {/* Logo — fades out when scrolled */}
+          <Link
+            href="/"
+            className="flex items-end gap-4 mt-auto pb-8"
+            style={{
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: scrolled ? "none" : "auto",
+              transition: "opacity 0.3s ease",
+            }}
+          >
             <Image
               src="/sassafras-logo-compressed.webp"
               alt="Sassafras"
@@ -134,7 +218,14 @@ export function SiteHeader() {
               height={64}
               className="object-contain mx-4"
             />
-            <span className="font-alte-haas text-3xl tracking-widest" style={{ color: "#1a1a1a" }}>
+            <span
+              className="font-alte-haas text-3xl tracking-widest"
+              style={{
+                color: "#1a1a1a",
+                opacity: scrolled ? 0 : 1,
+                transition: "opacity 0.3s ease",
+              }}
+            >
               SASSAFRAS
             </span>
           </Link>
