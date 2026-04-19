@@ -4,6 +4,33 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
+
+function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
+  const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
+  const isActive = pathname.startsWith(href)
+  return (
+    <Link
+      href={href}
+      className="group relative font-alte-haas text-sm tracking-[0.1em] xl:tracking-[0.25em] transition-colors"
+      style={{ color: isActive ? linkColor : "black" }}
+      onMouseEnter={e => (e.currentTarget.style.color = linkColor)}
+      onMouseLeave={e => (e.currentTarget.style.color = isActive ? linkColor : "black")}
+    >
+      {label}
+      <span
+        className="block h-[1px] transition-all duration-300 ease-out origin-center"
+        style={{ backgroundColor: linkColor, transform: isActive ? "scaleX(1)" : "scaleX(0)" }}
+        ref={el => {
+          if (!el) return
+          const parent = el.parentElement!
+          parent.addEventListener("mouseenter", () => (el.style.transform = "scaleX(1)"))
+          parent.addEventListener("mouseleave", () => { if (!isActive) el.style.transform = "scaleX(0)" })
+        }}
+      />
+    </Link>
+  )
+}
 
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
@@ -20,13 +47,15 @@ export function SiteHeader() {
 
   if (pathname === "/") return null
 
+  const currentColor = getPageColor(pathname)
+
   return (
     <>
       {/* Mobile fullscreen overlay */}
       <div
         className="lg:hidden fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
         style={{
-          backgroundColor: "rgb(112, 150, 234)",
+          backgroundColor: currentColor,
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? "auto" : "none",
         }}
@@ -34,7 +63,7 @@ export function SiteHeader() {
         <button
           onClick={() => setMenuOpen(false)}
           className="font-alte-haas absolute top-8 right-8 text-xl tracking-[0.3em] bg-transparent border-none cursor-pointer"
-          style={{ color: "rgb(75, 76, 152)" }}
+          style={{ color: currentColor }}
         >
           CLOSE
         </button>
@@ -51,9 +80,15 @@ export function SiteHeader() {
       </div>
 
       {/* Header */}
-      <div className="sticky top-0 z-40 px-8 pt-8" style={{ backgroundColor: "rgb(112, 150, 234)" }}>
+      <div className="sticky top-0 z-40 px-8 pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
         <header className="px-8 pb-8 pt-8 relative overflow-hidden flex flex-col" style={{ backgroundColor: "#fbfaf1", minHeight: "192px" }}>
-          <div className="absolute inset-0 pointer-events-none z-50" style={{ background: `linear-gradient(to right, rgb(112, 150, 234) 0%, transparent 5px), linear-gradient(to left, rgb(112, 150, 234) 0%, transparent 5px), linear-gradient(to bottom, rgb(112, 150, 234) 0%, transparent 5px)` }} />
+          {[
+            { style: { top: 0, left: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to right, black, transparent)" } },
+            { style: { top: 0, right: 0, bottom: 0, width: 5, maskImage: "linear-gradient(to left, black, transparent)" } },
+            { style: { top: 0, left: 0, right: 0, height: 5, maskImage: "linear-gradient(to bottom, black, transparent)" } },
+          ].map((edge, i) => (
+            <div key={i} className="absolute pointer-events-none z-50" style={{ ...edge.style, backgroundColor: currentColor, transition: "background-color 0.8s ease" }} />
+          ))}
 
           {/* Desktop nav sliding in from right */}
           <nav
@@ -61,14 +96,7 @@ export function SiteHeader() {
             style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
           >
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`group relative font-alte-haas text-sm tracking-[0.1em] xl:tracking-[0.25em] transition-colors hover:text-[rgb(112,150,234)] ${pathname === link.href ? "text-[rgb(112,150,234)]" : "text-black"}`}
-              >
-                {link.label}
-                <span className={`block h-[1px] transition-all duration-300 ease-out origin-center ${pathname === link.href ? "scale-x-100 bg-[rgb(112,150,234)]" : "scale-x-0 bg-black group-hover:bg-[rgb(112,150,234)] group-hover:scale-x-100"}`} />
-              </Link>
+              <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
             ))}
           </nav>
 
@@ -77,7 +105,7 @@ export function SiteHeader() {
             onClick={() => setMenuOpen(!menuOpen)}
             className="font-alte-haas absolute right-8 bottom-8 text-xl tracking-[0.3em] cursor-pointer select-none bg-transparent border-none p-0"
             style={{
-              color: "rgb(75, 76, 152)",
+              color: "rgb(43, 52, 133)",
               writingMode: "vertical-rl" as const,
               transform: "rotate(180deg)",
               zIndex: 10,
