@@ -71,7 +71,7 @@ export function SiteHeader() {
     <>
       {/* Mobile fullscreen overlay */}
       <div
-        className="lg:hidden fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
+        className="lg:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500"
         style={{
           backgroundColor: currentColor,
           opacity: menuOpen ? 1 : 0,
@@ -104,7 +104,7 @@ export function SiteHeader() {
       </div>
 
       {/* Header */}
-      <div className="sticky top-0 z-40 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
+      <div className="sticky top-0 z-50 px-4 pt-4 lg:px-8 lg:pt-8" style={{ backgroundColor: currentColor, transition: "background-color 0.8s ease" }}>
 
         {/* Mobile slim bar */}
         <header className="lg:hidden px-6 flex items-center justify-between relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
