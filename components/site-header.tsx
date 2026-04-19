@@ -44,7 +44,7 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
   return (
     <Link
       href={href}
-      className="group relative font-alte-haas text-sm tracking-[0.1em] xl:tracking-[0.25em] transition-colors"
+      className="group relative font-alte-haas text-sm tracking-[0.1em] xl:tracking-[0.25em] transition-colors text-center"
       style={{ color: isActive ? linkColor : "black" }}
       onMouseEnter={e => (e.currentTarget.style.color = linkColor)}
       onMouseLeave={e => (e.currentTarget.style.color = isActive ? linkColor : "black")}
@@ -79,6 +79,14 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const transitioningRef = useRef(false)
+  const menuOpenRef = useRef(menuOpen)
+  useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpenRef.current) return
+    const timer = setTimeout(() => setMenuOpen(false), 3000)
+    return () => clearTimeout(timer)
+  }, [pathname])
 
   useEffect(() => {
     const handler = () => {
@@ -217,7 +225,7 @@ export function SiteHeader() {
             style={{
               transform: menuOpen ? "translateX(0)" : "translateX(110%)",
               paddingLeft: scrolled ? "7rem" : "6rem",
-              paddingRight:  scrolled ? "5rem" :"2rem",
+              paddingRight: scrolled ? "5rem" : "2rem",
               top: scrolled ? 0 : "2rem",
             }}
           >
