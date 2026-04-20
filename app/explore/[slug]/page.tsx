@@ -43,7 +43,7 @@ export default async function ExploreDetailPage({ params }: { params: Promise<{ 
           <p style={{ fontSize: "10px", letterSpacing: "0.22em" }} className="text-accent mb-4 uppercase">
             {item.medium} Submission
           </p>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-foreground mb-6 tracking-wider leading-[1.1]">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl mb-6 tracking-wider leading-[1.1]">
             {item.title}
           </h1>
           <p className="text-sm tracking-[0.15em] text-muted-foreground/70 uppercase mb-16">

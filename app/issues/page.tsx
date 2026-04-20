@@ -37,7 +37,7 @@ export default function IssuesPage() {
       {/* ── Issues grid ── */}
       <section className="px-8 md:px-12 py-16 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-alte-haas flex items-center gap-4 mb-16">
+          <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas flex items-center gap-4 mb-16">
             <span className="w-8 h-[1px] bg-black/10" /> Published
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 md:gap-20">

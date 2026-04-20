@@ -26,28 +26,12 @@ export default function KeepInTouchPage() {
               <button className="bg-[#9ba9e6] border border-[#333] text-black font-alte-haas uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
                 Donate
               </button>
-              <div className="mt-6 flex flex-col items-center gap-2">
-                <svg width="24" height="40" viewBox="0 0 24 40" fill="none" stroke="#b2ce63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
-                  <path d="M12 4v24M6 22l6 6 6-6"/>
-                </svg>
-                <p className="font-serif italic text-sm md:text-base text-[#a2bd5c] max-w-[200px]">
-                  Lets discuss how to set this up.
-                </p>
-              </div>
             </div>
 
             <div className="flex flex-col items-center text-center">
               <button className="bg-[#bdca60] border border-[#333] text-black font-alte-haas uppercase tracking-[0.2em] px-12 py-4 rounded-[40px] text-sm md:text-base hover:scale-105 transition-transform shadow-sm">
                 Volunteer
               </button>
-              <div className="mt-6 flex flex-col items-center gap-2">
-                <svg width="24" height="40" viewBox="0 0 24 40" fill="none" stroke="#b2ce63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
-                  <path d="M12 4v24M6 22l6 6 6-6"/>
-                </svg>
-                <p className="font-serif italic text-sm md:text-base text-[#a2bd5c] max-w-[200px]">
-                  can maybe lead to a google form
-                </p>
-              </div>
             </div>
           </div>
         </div>

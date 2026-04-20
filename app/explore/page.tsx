@@ -390,7 +390,7 @@ export default function ExplorePage() {
 
               <div className="w-full md:w-1/3 space-y-8">
                 <div>
-                  <h2 className="text-4xl font-bold text-black mb-2 leading-tight font-alte-haas uppercase">
+                  <h2 className="text-4xl font-bold mb-2 leading-tight font-alte-haas uppercase">
                     {selectedWork.title}
                   </h2>
                   <p className="text-[#555] text-sm tracking-[0.2em] uppercase font-alte-haas">

@@ -56,7 +56,7 @@ export default function AboutPage() {
 
           {/* Methodology (Left) */}
           <div className="xl:col-span-7 space-y-12">
-            <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-alte-haas flex items-center gap-4">
+            <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas flex items-center gap-4">
               <span className="w-8 h-[1px] bg-black/10" /> Methodology
             </h2>
             <div className="grid gap-10">
@@ -76,7 +76,7 @@ export default function AboutPage() {
           <div className="xl:col-span-5 space-y-12">
             <div className="bg-black/[0.02] border border-black/5 p-10 relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-1 h-full bg-[#ccc] group-hover:bg-[#888] transition-colors" />
-              <h2 className="text-[10px] tracking-[0.4em] text-[#555] uppercase font-alte-haas mb-8">Context</h2>
+              <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas mb-8">Context</h2>
               <div className="space-y-8">
                 <div className="space-y-4">
                   <h3 className="text-2xl font-bold text-[#222]">Why Sassafras?</h3>

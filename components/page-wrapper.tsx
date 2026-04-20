@@ -1,17 +1,25 @@
 "use client"
 
+import { useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { getPageColor } from "@/lib/page-colors"
 
 export function PageWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-
-  if (pathname === "/") return <>{children}</>
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const color = getPageColor(pathname)
 
+  useEffect(() => {
+    if (wrapperRef.current) {
+      wrapperRef.current.style.setProperty("--page-color", color)
+    }
+  }, [color])
+
+  if (pathname === "/") return <>{children}</>
+
   return (
-    <div style={{ backgroundColor: color, "--page-color": color, transition: "background-color 0.8s ease" } as React.CSSProperties} className="relative z-40 px-4 pb-4 lg:px-8 lg:pb-8">
+    <div ref={wrapperRef} style={{ backgroundColor: color, "--page-color": color, transition: "background-color 0.8s ease" } as React.CSSProperties} className="relative z-40 px-4 pb-4 lg:px-8 lg:pb-8">
       <div className="relative">
         <div style={{ isolation: "isolate" }}>
           {children}

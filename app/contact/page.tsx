@@ -53,7 +53,7 @@ export default function SubmissionsPage() {
           {/* Themes & Inspiration (Left) */}
           <div className="space-y-16">
             <div className="space-y-8">
-              <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-alte-haas flex items-center gap-4">
+              <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas flex items-center gap-4">
                 <span className="w-8 h-[1px] bg-black/10" /> Sub-Themes
               </h2>
               <div className="grid gap-6">
@@ -80,7 +80,7 @@ export default function SubmissionsPage() {
           {/* Process & Timeline (Right) */}
           <div className="space-y-16">
             <div className="space-y-10">
-              <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-alte-haas flex items-center gap-4">
+              <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas flex items-center gap-4">
                 <span className="w-8 h-[1px] bg-black/10" /> Process
               </h2>
               <div className="space-y-10">
@@ -99,7 +99,7 @@ export default function SubmissionsPage() {
 
             <div className="space-y-8 bg-black/[0.03] p-10 relative overflow-hidden">
               <Clock className="absolute top-[-20px] right-[-20px] w-32 h-32 opacity-[0.03] rotate-12" />
-              <h2 className="text-[10px] tracking-[0.4em] text-[#555] uppercase font-alte-haas mb-6">Key Dates</h2>
+              <h2 className="text-[10px] tracking-[0.4em] uppercase font-alte-haas mb-6">Key Dates</h2>
               <div className="space-y-6 relative z-10">
                 {timeline.map((item) => (
                   <div key={item.label} className="flex flex-col md:flex-row md:justify-between md:items-baseline border-b border-black/5 pb-4 gap-2">
