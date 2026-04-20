@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { PageWrapper } from "@/components/page-wrapper"
+import { MouseGlow } from "@/components/mouse-glow"
 import "./globals.css"
 
 const inter = Inter({
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="antialiased">
+        <MouseGlow />
         <SiteHeader />
         <PageWrapper>
           <main>{children}</main>
