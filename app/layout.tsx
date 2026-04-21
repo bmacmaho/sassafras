@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+
 import localFont from "next/font/local"
 
 const geistSans = localFont({
@@ -16,6 +17,7 @@ const geistMono = localFont({
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { MouseGlow } from "@/components/mouse-glow"
+import { PageFrame } from "@/components/page-frame"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -38,13 +40,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="font-sans antialiased text-[#222] transition-colors duration-1000 bg-[#fefefe]">
-        <div className="flex-1 bg-white relative flex flex-col border-[12px] md:border-[16px] border-[#f0f0f0] min-h-screen">
+      <body className="font-mono antialiased text-[#222] transition-colors duration-1000">
+        <PageFrame>
           <MouseGlow />
           <SiteHeader />
-          <main className="flex-1 flex flex-col">{children}</main>
+          <main className="flex-1 flex flex-col px-6 sm:px-12 md:px-16 lg:px-24 xl:px-32 pb-32 md:pb-56 w-full max-w-[1920px] mx-auto">{children}</main>
           <SiteFooter />
-        </div>
+        </PageFrame>
       </body>
     </html>
   )

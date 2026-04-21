@@ -34,3 +34,18 @@ export const mediaTypeLabels: Record<MediaType, string> = {
   video: "Video",
   visual: "Visual",
 }
+
+export interface Artwork {
+  id: number;
+  slug: string;
+  title: string;
+  author: string;
+  image: string;
+  medium: string;
+  theme: string;
+  year: string;
+  description?: string;
+  aspectRatio: number;
+  pos: { x: number; y: number; width: number; height: number };
+  float: { delay: string; dur: string };
+}

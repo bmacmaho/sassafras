@@ -55,7 +55,7 @@ export default async function ArticlePage({
   return (
     <div>
       {/* ── Article header ── */}
-      <div className="pt-20 pb-10 px-6 border-b border-border shadow-sm">
+      <div className="pt-44 pb-10 px-6 border-b border-border shadow-sm">
         <div className="mx-auto max-w-3xl flex items-start gap-6">
           {/* Black Square Decoration */}
           <div className="w-16 h-16 md:w-24 md:h-24 bg-black flex-shrink-0"></div>

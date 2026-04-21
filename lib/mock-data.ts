@@ -1,4 +1,4 @@
-import type { Article, Issue } from "./types"
+import type { Article, Issue, Artwork } from "./types"
 
 // ── Mock Articles ──────────────────────────────────────────────────────────────
 
@@ -244,4 +244,119 @@ export const mockIssues: Issue[] = [
     isCurrent: false,
     articles: issue2Articles,
   },
+]
+
+export const artworks: Artwork[] = [
+  {
+    id: 1,
+    slug: "the-starry-jellyfish",
+    title: "The Starry Jellyfish",
+    author: "N. Eleni",
+    image: "/explore_jellyfish_new.jpg",
+    medium: "Digital Illustration",
+    theme: "Surrealism",
+    year: "2026",
+    description: "A cosmic exploration of bioluminescence, where the depths of the ocean meet the vastness of the galaxy.",
+    aspectRatio: 673 / 1024,
+    pos: { x: 50, y: 5, width: 220, height: 0 }, 
+    float: { delay: "0s", dur: "8s" }
+  },
+  {
+    id: 2,
+    slug: "nocturnal-flight",
+    title: "Nocturnal Flight",
+    author: "C. Valmont",
+    image: "/explore_charcoal_new.jpg",
+    medium: "Charcoal on Paper",
+    theme: "Mythology",
+    year: "2026",
+    description: "Captured in the raw texture of charcoal, this piece evokes the silent, powerful movement of mythic wings across a darkened landscape.",
+    aspectRatio: 1024 / 654,
+    pos: { x: 15, y: 15, width: 280, height: 0 },
+    float: { delay: "1.5s", dur: "10s" }
+  },
+  {
+    id: 3,
+    slug: "vibrant-symmetry",
+    title: "Vibrant Symmetry",
+    author: "M. Rivera",
+    image: "/explore_botanical_new.jpg",
+    medium: "Gouache",
+    theme: "Botanical",
+    year: "2025",
+    description: "A study in organic balance, utilizing the opaque richness of gouache to highlight the intricate patterns found in nature.",
+    aspectRatio: 718 / 1024,
+    pos: { x: 80, y: 25, width: 200, height: 0 },
+    float: { delay: "0.8s", dur: "7s" }
+  },
+  {
+    id: 4,
+    slug: "radiant-core",
+    title: "Radiant Core",
+    author: "K. Sato",
+    image: "/explore_flower_new.jpg",
+    medium: "Digital Art",
+    theme: "Abstract",
+    year: "2026",
+    description: "An explosion of light and color that centers on the energetic pulse of creation.",
+    aspectRatio: 936 / 981,
+    pos: { x: 45, y: 45, width: 240, height: 0 },
+    float: { delay: "2.1s", dur: "9s" }
+  },
+  {
+    id: 5,
+    slug: "contrapuntal-motion",
+    title: "Contrapuntal Motion",
+    author: "E. Fischer",
+    image: "/explore_struggle_new.jpg",
+    medium: "Linocut Print",
+    theme: "Human Condition",
+    year: "2025",
+    description: "The stark contrast of linocut captures the rhythmic struggle and harmony of human experience.",
+    aspectRatio: 764 / 776,
+    pos: { x: 10, y: 55, width: 220, height: 0 },
+    float: { delay: "1.1s", dur: "7.5s" }
+  },
+  {
+    id: 6,
+    slug: "of-gardens-an-essay",
+    title: "Of Gardens: An Essay",
+    author: "Francis Bacon",
+    image: "/explore_gardens_new.jpg",
+    medium: "Typography",
+    theme: "History",
+    year: "2024",
+    description: "A typographic reimagining of Francis Bacon's reflections on the beauty and order of nature.",
+    aspectRatio: 1024 / 916,
+    pos: { x: 75, y: 70, width: 280, height: 0 },
+    float: { delay: "0.3s", dur: "12s" }
+  },
+  {
+    id: 7,
+    slug: "amber-current",
+    title: "Amber Current",
+    author: "J. Thorne",
+    image: "/explore_resin_new.jpg",
+    medium: "Resin Art",
+    theme: "Fluidity",
+    year: "2026",
+    description: "Frozen in time, this resin piece captures the dynamic flow of golden currents.",
+    aspectRatio: 1024 / 890,
+    pos: { x: 35, y: 78, width: 260, height: 0 },
+    float: { delay: "2.1s", dur: "6s" }
+  },
+  {
+    id: 8,
+    slug: "the-snowy-divide",
+    title: "The Snowy Divide",
+    author: "Eric Walker",
+    image: "/explore_landscape_new.jpg",
+    medium: "Photography",
+    theme: "Nature",
+    year: "2026",
+    description: "A stark photographic capture of winter's quiet isolation and the sharp lines of the landscape.",
+    aspectRatio: 1024 / 768,
+    pos: { x: 65, y: 50, width: 280, height: 0 },
+    float: { delay: "1.2s", dur: "9s" }
+  }
 ]

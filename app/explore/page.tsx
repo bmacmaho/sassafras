@@ -3,124 +3,14 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { Search } from "lucide-react"
-
-interface Artwork {
-  id: number;
-  title: string;
-  author: string;
-  image: string;
-  medium: string;
-  theme: string;
-  year: string;
-  aspectRatio: number;
-  pos: { x: number; y: number; width: number; height: number };
-  float: { delay: string; dur: string };
-}
-
-const initialArtworks: Artwork[] = [
-  {
-    id: 1,
-    title: "The Starry Jellyfish",
-    author: "N. Eleni",
-    image: "/explore_jellyfish_new.jpg",
-    medium: "Digital Illustration",
-    theme: "Surrealism",
-    year: "2026",
-    aspectRatio: 673 / 1024,
-    pos: { x: 50, y: 5, width: 220, height: 0 }, 
-    float: { delay: "0s", dur: "8s" }
-  },
-  {
-    id: 2,
-    title: "Nocturnal Flight",
-    author: "C. Valmont",
-    image: "/explore_charcoal_new.jpg",
-    medium: "Charcoal on Paper",
-    theme: "Mythology",
-    year: "2026",
-    aspectRatio: 1024 / 654,
-    pos: { x: 15, y: 15, width: 280, height: 0 },
-    float: { delay: "1.5s", dur: "10s" }
-  },
-  {
-    id: 3,
-    title: "Vibrant Symmetry",
-    author: "M. Rivera",
-    image: "/explore_botanical_new.jpg",
-    medium: "Gouache",
-    theme: "Botanical",
-    year: "2025",
-    aspectRatio: 718 / 1024,
-    pos: { x: 80, y: 25, width: 200, height: 0 },
-    float: { delay: "0.8s", dur: "7s" }
-  },
-  {
-    id: 4,
-    title: "Radiant Core",
-    author: "K. Sato",
-    image: "/explore_flower_new.jpg",
-    medium: "Digital Art",
-    theme: "Abstract",
-    year: "2026",
-    aspectRatio: 936 / 981,
-    pos: { x: 45, y: 45, width: 240, height: 0 },
-    float: { delay: "2.1s", dur: "9s" }
-  },
-  {
-    id: 5,
-    title: "Contrapuntal Motion",
-    author: "E. Fischer",
-    image: "/explore_struggle_new.jpg",
-    medium: "Linocut Print",
-    theme: "Human Condition",
-    year: "2025",
-    aspectRatio: 764 / 776,
-    pos: { x: 10, y: 55, width: 220, height: 0 },
-    float: { delay: "1.1s", dur: "7.5s" }
-  },
-  {
-    id: 6,
-    title: "Of Gardens: An Essay",
-    author: "Francis Bacon",
-    image: "/explore_gardens_new.jpg",
-    medium: "Typography",
-    theme: "History",
-    year: "2024",
-    aspectRatio: 1024 / 916,
-    pos: { x: 75, y: 70, width: 280, height: 0 },
-    float: { delay: "0.3s", dur: "12s" }
-  },
-  {
-    id: 7,
-    title: "Amber Current",
-    author: "J. Thorne",
-    image: "/explore_resin_new.jpg",
-    medium: "Resin Art",
-    theme: "Fluidity",
-    year: "2026",
-    aspectRatio: 1024 / 890,
-    pos: { x: 35, y: 78, width: 260, height: 0 },
-    float: { delay: "2.1s", dur: "6s" }
-  },
-  {
-    id: 8,
-    title: "The Snowy Divide",
-    author: "Eric Walker",
-    image: "/explore_landscape_new.jpg",
-    medium: "Photography",
-    theme: "Nature",
-    year: "2026",
-    aspectRatio: 1024 / 768,
-    pos: { x: 65, y: 50, width: 280, height: 0 },
-    float: { delay: "1.2s", dur: "9s" }
-  }
-]
+import Link from "next/link"
+import { artworks as initialArtworks } from "@/lib/mock-data"
+import { Artwork } from "@/lib/types"
 
 
 export default function ExplorePage() {
   const [artworks, setArtworks] = useState<Artwork[]>(initialArtworks)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
-  const [selectedWorkId, setSelectedWorkId] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [activeFilters, setActiveFilters] = useState<{ type: string, value: string }[]>([])
@@ -221,12 +111,10 @@ export default function ExplorePage() {
     return categoryMatch && searchMatch
   })
 
-  const selectedWork = artworks.find(a => a.id === selectedWorkId)
-
   if (!mounted) return null
 
   return (
-    <div className="pt-24 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+    <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
         
         <header className="relative z-50 mb-20 border-b border-black/[0.05] pb-12">
@@ -317,27 +205,26 @@ export default function ExplorePage() {
         </div>
 
         {/* ── Visual Gallery Container ── */}
-        <div ref={galleryRef} className="relative w-full min-h-[1600px] mt-20">
+        <div ref={galleryRef} className="relative w-full min-h-screen mt-20">
           <div 
             className="absolute inset-0 pointer-events-none opacity-[0.6]"
             style={{ 
               backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.08) 1px, transparent 1px)`,
               backgroundSize: '100px 100px',
               height: '100%',
-              minHeight: '2200px'
             }}
           />
 
           {/* ── Artworks Layout ── */}
           {filteredArtworks.map((artwork) => (
-            <div
+            <Link
               key={artwork.id}
-              className={`absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${isRandomizing ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}
+              href={`/explore/${artwork.slug}`}
+              className={`absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] block ${isRandomizing ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}
               style={{
                 left: `${artwork.pos.x}%`,
                 top: `${artwork.pos.y}%`,
                 width: `${artwork.pos.width}px`,
-                // Correct frame size: aspect-ratio ensures the frame matches the image perfectly
                 aspectRatio: artwork.aspectRatio,
                 zIndex: hoveredId === artwork.id ? 50 : 10,
                 animation: `float-gentle ${artwork.float.dur} ease-in-out infinite`,
@@ -345,7 +232,6 @@ export default function ExplorePage() {
               }}
               onMouseEnter={() => setHoveredId(artwork.id)}
               onMouseLeave={() => setHoveredId(null)}
-              onClick={() => setSelectedWorkId(artwork.id)}
             >
               <div className={`absolute left-0 -top-10 w-full transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100 -translate-y-2' : 'opacity-0 translate-y-0'}`}>
                 <div className="py-2 text-center">
@@ -371,79 +257,10 @@ export default function ExplorePage() {
                   unoptimized
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
-        {selectedWorkId && selectedWork && (
-          <div 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12 animate-in fade-in duration-500"
-            onClick={() => setSelectedWorkId(null)}
-          >
-            <div className="absolute inset-0 bg-white/95 backdrop-blur-sm" />
-            <div 
-              className="relative z-10 max-w-6xl w-full flex flex-col md:flex-row gap-8 items-center bg-white border border-black/10 p-6 md:p-10 shadow-2xl animate-in zoom-in-95 duration-500"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button 
-                onClick={() => setSelectedWorkId(null)}
-                className="absolute top-6 right-6 text-black/40 hover:text-black text-3xl font-sans"
-              >
-                ×
-              </button>
-
-              <div className="w-full md:w-2/3 relative border border-black/5" style={{ aspectRatio: selectedWork.aspectRatio }}>
-                 <Image
-                    src={selectedWork.image}
-                    alt={selectedWork.title}
-                    fill
-                    style={{ objectFit: 'contain' }}
-                    className="p-4"
-                    unoptimized
-                  />
-              </div>
-
-              <div className="w-full md:w-1/3 space-y-8">
-                <div>
-                   <h2 className="text-4xl font-bold text-black mb-2 leading-tight font-sans uppercase">
-                     {selectedWork.title}
-                   </h2>
-                   <p className="text-[#555] text-sm tracking-[0.2em] uppercase font-sans">
-                     {selectedWork.author}
-                   </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-y-6 border-t border-black/10 pt-8">
-                   <div>
-                     <p className="text-[10px] text-black/40 uppercase tracking-widest mb-1 font-sans">Medium</p>
-                     <p className="text-sm text-black/80">{selectedWork.medium}</p>
-                   </div>
-                   <div>
-                     <p className="text-[10px] text-black/40 uppercase tracking-widest mb-1 font-sans">Theme</p>
-                     <p className="text-sm text-black/80">{selectedWork.theme}</p>
-                   </div>
-                   <div>
-                     <p className="text-[10px] text-black/40 uppercase tracking-widest mb-1 font-sans">Year</p>
-                     <p className="text-sm text-black/80">{selectedWork.year}</p>
-                   </div>
-                   <div>
-                     <p className="text-[10px] text-black/40 uppercase tracking-widest mb-1 font-sans">Status</p>
-                     <p className="text-sm text-[#555]">Active Collection</p>
-                   </div>
-                </div>
-
-                <div className="pt-8">
-                   <button 
-                    onClick={() => setSelectedWorkId(null)}
-                    className="w-full border border-black/10 hover:bg-black hover:text-white transition-all py-4 text-[10px] tracking-[0.3em] uppercase font-sans"
-                   >
-                     Return to Gallery
-                   </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
 

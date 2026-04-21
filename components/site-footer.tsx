@@ -7,8 +7,29 @@ import { usePathname } from "next/navigation"
 export function SiteFooter() {
   const pathname = usePathname()
   
+  let matchColor = "#f0f0f0" // default
+  
+  if (pathname === "/") {
+    matchColor = "#c5d940" // Green
+  } else if (pathname === "/about") {
+    matchColor = "#303a8f" // Blue
+  } else if (pathname?.startsWith("/explore")) {
+    matchColor = "#f39c12" // Orange
+  } else if (pathname === "/submissions") {
+    matchColor = "#e74c3c" // Red
+  } else if (pathname === "/contact" || pathname === "/keep-in-touch") {
+    matchColor = "#9b59b6" // Purple
+  } else if (pathname?.startsWith("/article") || pathname?.startsWith("/issues")) {
+    matchColor = "#16a085" // Teal
+  } else if (pathname === "/current-issue") {
+    matchColor = "#27ae60" // Dark green
+  }
+  
   return (
-    <footer className="relative bg-[#c5d940] px-8 py-8 md:px-14 md:py-12 text-black flex flex-col justify-between">
+    <footer 
+      className="relative px-8 py-8 md:px-14 md:py-12 text-black flex flex-col justify-between transition-colors duration-[1500ms] ease-in-out"
+      style={{ backgroundColor: matchColor }}
+    >
       <div className="flex flex-col gap-8">
         <h2 
           className="text-4xl md:text-5xl font-medium tracking-[0.4em] uppercase text-black"

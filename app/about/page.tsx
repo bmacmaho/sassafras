@@ -1,11 +1,38 @@
-import type { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, X } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "About",
-}
+const peopleData = [
+  { 
+    id: 1, name: "Javiera Bilbao", role: "Project Manager", ml: "5%", mt: "0px", 
+    bio: "Javiera directs the initiative's operational strategy, ensuring that Sassafras remains at the vanguard of redefining accessible academic discourse." 
+  },
+  { 
+    id: 2, name: "Javiera Bilbao", role: "Project Manager", ml: "45%", mt: "0px",
+    bio: "Coordinating cross-disciplinary efforts, Javiera builds the frameworks that connect artists, researchers, and audiences seamlessly."
+  },
+  { 
+    id: 3, name: "Javiera Bilbao", role: "Project Manager", ml: "20%", mt: "0px",
+    bio: "Focused on outreach and scholarly engagement, Javiera pioneers new networking models for our contributors."
+  },
+  { 
+    id: 4, name: "Javiera Bilbao", role: "Project Manager", ml: "65%", mt: "0px",
+    bio: "Managing the editorial pipeline, she ensures every publication gives space for radical experimentation in form."
+  },
+  { 
+    id: 5, name: "Anna Phaidra", role: "Visual Design", ml: "8%", mt: "40px", isImage: true,
+    bio: "Anna is the creative backbone of Sassafras, merging raw brutalist aesthetics with highly refined typography to craft an entirely unique reading experience."
+  },
+  { 
+    id: 6, name: "Javiera Bilbao", role: "Project Manager", ml: "42%", mt: "0px",
+    bio: "With a keen eye for logistics, Javiera oversees the distribution and physical prints of our publications."
+  }
+]
+
+
 
 const howWeWork = [
   {
@@ -26,109 +53,92 @@ const howWeWork = [
 ]
 
 export default function AboutPage() {
+  const [activePerson, setActivePerson] = useState<typeof peopleData[0] | null>(null)
+
   return (
-    <div className="pt-24 min-h-screen bg-[#fcfaf2] text-[#222]">
-      {/* ── Consolidated Masthead & Identity ── */}
-      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-black/[0.05]">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
-          <div className="space-y-6">
-            <p className="text-[11px] tracking-[0.3em] text-[#555] uppercase font-sans">
-              About the Initiative
-            </p>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-[#222] leading-none">
-              Sassafras
-            </h1>
-          </div>
-          <div className="max-w-md space-y-4">
-            <p className="text-xl leading-[1.6] text-[#222]/90 italic">
-              "We reimagine academic discourse and publication."
-            </p>
-            <p className="text-sm leading-[1.8] text-[#555] font-sans">
-              Critical of the exclusionary parameters within which academic knowledge is produced and disseminated, Sassafras aims to present academic thought outside of paywalls and gated lecture halls.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Compact How We Work & Why Sassafras ── */}
-      <section className="px-8 md:px-12 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-12 gap-16 md:gap-24">
+    <div className="pt-44 pb-48 min-h-screen bg-[#fcfaf2] text-[#222]">
+      <div className="mx-auto max-w-5xl px-8 md:px-12">
+        
+        {/* -- ABOUT SECTION -- */}
+        <section className="mb-24">
+          <h1 className="text-4xl md:text-[56px] font-normal tracking-tight mb-2">About</h1>
+          <div className="w-full h-[4px] border-t-[3px] border-b-[1px] border-double border-[#aaa] opacity-60 mb-8" />
           
-          {/* Methodology (Left) */}
-          <div className="md:col-span-7 space-y-12">
-            <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-sans flex items-center gap-4">
-              <span className="w-8 h-[1px] bg-black/10" /> Methodology
-            </h2>
-            <div className="grid gap-10">
-              {howWeWork.map((item) => (
-                <div key={item.label} className="flex gap-8 items-start">
-                  <span className="text-[10px] text-[#888] font-mono mt-1 opacity-50">/{item.label}</span>
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-bold text-[#222]">{item.title}</h3>
-                    <p className="text-[14px] leading-relaxed text-[#555]">{item.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="text-[17px] md:text-[20px] leading-[1.6] text-[#333] tracking-wide text-justify font-serif">
+            <p>
+              We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which 'legitimate' academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.
+            </p>
+          </div>
+        </section>
+
+        {/* -- PEOPLE SECTION -- */}
+        <section className="relative">
+          <h1 className="text-4xl md:text-[56px] font-normal tracking-tight mb-2">People</h1>
+          <div className="w-full h-[4px] border-t-[3px] border-b-[1px] border-double border-[#aaa] opacity-60 mb-16" />
+          
+          <div className="space-y-10 md:space-y-12 text-[#444] text-[15px] max-w-3xl">
+            {peopleData.map((person) => (
+              <div 
+                key={person.id}
+                onClick={() => setActivePerson(person)}
+                className="flex items-center gap-2 transition-transform duration-300 hover:-translate-y-1 hover:text-black cursor-pointer"
+                style={{ marginLeft: person.ml, marginTop: person.mt !== "0px" ? person.mt : undefined }}
+              >
+                {person.isImage ? (
+                  <Image 
+                    src="/sassafras-logo.png" 
+                    alt={person.name} 
+                    width={16} 
+                    height={16} 
+                    className="object-cover bg-black p-0.5"
+                  />
+                ) : (
+                  <span className="inline-block w-4 h-4 bg-[#c5d940]" />
+                )}
+                <span className="font-mono">
+                  {person.name} <span className="opacity-50">| {person.role}</span>
+                </span>
+              </div>
+            ))}
           </div>
 
-          {/* Botanical Context (Right) */}
-          <div className="md:col-span-5 space-y-12">
-            <div className="bg-black/[0.02] border border-black/5 p-10 relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-1 h-full bg-[#ccc] group-hover:bg-[#888] transition-colors" />
-              <h2 className="text-[10px] tracking-[0.4em] text-[#555] uppercase font-sans mb-8">Context</h2>
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-[#222]">Why Sassafras?</h3>
-                  <div className="space-y-6 text-[14px] leading-relaxed text-[#555] font-serif italic">
-                    <p>
-                      A plant native to North America, Sassafras produces three differently shaped leaves on a single stem. 
-                      Once ground into medicinal cures by indigenous peoples, it became a colonial "panacea" — the second largest resource extracted after tobacco.
-                    </p>
-                    <p>
-                      Its unknowability alongside massive influence offers a character that encompasses movement, contingent meaning, and the fluid nature of context.
-                    </p>
+          {/* Person Modal/Popup */}
+          {activePerson && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#fcfaf2]/80 backdrop-blur-sm" onClick={() => setActivePerson(null)}>
+              <div 
+                className="bg-white border-[3px] border-black p-8 max-w-md w-full shadow-[8px_8px_0_0_#c5d940] relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button 
+                  onClick={() => setActivePerson(null)}
+                  className="absolute top-4 right-4 hover:rotate-90 transition-transform duration-300"
+                >
+                  <X className="w-6 h-6 text-black" />
+                </button>
+                <div className="flex items-center gap-3 mb-6">
+                  {activePerson.isImage ? (
+                    <Image src="/sassafras-logo.png" alt="" width={24} height={24} className="bg-black p-1" />
+                  ) : (
+                    <div className="w-6 h-6 bg-[#c5d940]" />
+                  )}
+                  <div>
+                    <h3 className="font-bold text-xl leading-none text-black">{activePerson.name}</h3>
+                    <p className="text-sm font-mono text-black/60 mt-1">{activePerson.role}</p>
                   </div>
                 </div>
-
-                <div className="pt-4 border-t border-black/5">
-                  <Link
-                    href="/contact"
-                    className="group flex items-center justify-between border border-black bg-transparent text-black px-8 py-5 hover:bg-black hover:text-white transition-all duration-500"
-                  >
-                    <div className="flex flex-col items-start">
-                      <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Contribute</span>
-                    </div>
-                    <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </Link>
-                </div>
+                <p className="text-black/80 leading-relaxed font-serif text-[15px]">
+                  {activePerson.bio}
+                </p>
               </div>
             </div>
+          )}
 
-            {/* Logo display */}
-            <div className="flex justify-center md:justify-end opacity-40 hover:opacity-100 transition-opacity">
-              <Image 
-                src="/sassafras-logo.png" 
-                alt="Sassafras" 
-                width={200}
-                height={200}
-                className="object-contain grayscale"
-              />
-            </div>
+          {/* Decorative flying figures from screenshot illustration (optional brutalist styling effect) */}
+          <div className="absolute right-[-40px] md:right-[-100px] bottom-0 opacity-80 pointer-events-none grayscale">
+            {/* If an image for the flying figures exists later it can be added here. Providing space. */}
           </div>
-        </div>
-      </section>
-
-      {/* ── Minimalist Bottom Bar ── */}
-      <section className="px-8 md:px-12 py-12 border-t border-black/[0.03]">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-6 opacity-50 text-[#888] text-[9px] tracking-[0.25em] uppercase font-sans">
-           <div className="flex gap-10">
-             <span>Est. 2024</span>
-             <span>Berlin // London // Global</span>
-           </div>
-           <p>Reimagining Academic Discourse</p>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }
