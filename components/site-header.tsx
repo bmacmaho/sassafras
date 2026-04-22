@@ -65,16 +65,14 @@ export function SiteHeader() {
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 right-0 z-[100] px-16 pt-7 pb-4 md:px-24 md:pt-10 md:pb-6 flex flex-row justify-between items-center transition-all duration-700 ${
-          isMenuOpen ? "!z-[200]" : ""
-        } ${
+        className={`fixed top-[12px] md:top-[16px] left-0 right-0 z-[200] px-12 pt-4 pb-4 md:px-20 md:pt-5 md:pb-5 flex flex-row justify-between items-center transition-all duration-700 ${
           isVisible 
             ? `translate-y-0 opacity-100 ${isMenuOpen ? 'bg-transparent border-transparent shadow-none backdrop-blur-none' : 'bg-[#fcfaf2]/90 backdrop-blur-md border-b border-black/5 shadow-sm'}` 
             : "-translate-y-full opacity-0 pointer-events-none bg-transparent"
         }`}
       >
         {/* Left side: Logo */}
-        <Link href="/" className="group block shrink-0 translate-y-1">
+        <Link href="/" className="group block shrink-0">
           <div className="w-[60px] h-[60px] flex items-center justify-center transition-all duration-500 hover:scale-110">
             <Image
               src="/sassafras-logo.png"
@@ -123,7 +121,7 @@ export function SiteHeader() {
 
       {/* Full-Screen Menu Overlay */}
       <div 
-        className={`fixed inset-0 z-[150] bg-[#fcfaf2]/95 backdrop-blur-xl flex flex-col justify-start md:justify-center items-center pt-32 pb-20 px-6 gap-6 md:gap-10 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed inset-0 z-[150] bg-[#fcfaf2]/95 backdrop-blur-xl flex flex-col justify-start md:justify-center items-center pt-48 pb-20 px-6 gap-6 md:gap-10 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isMenuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-10"
         }`}
       >
