@@ -44,6 +44,7 @@ export interface Artwork {
   medium: string;
   theme: string;
   year: string;
+  issue: string;
   description?: string;
   aspectRatio: number;
   pos: { x: number; y: number; width: number; height: number };

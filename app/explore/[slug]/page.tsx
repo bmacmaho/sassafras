@@ -83,7 +83,7 @@ export default function ExploreDetailPage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-[9px] tracking-widest text-black/40 uppercase">Exhibition</p>
-                  <p className="text-xs tracking-widest uppercase font-bold">Sassafras #{artwork.issue.padStart(2, '0')}</p>
+                  <p className="text-xs tracking-widest uppercase font-bold">Sassafras #{artwork.issue.replace("Issue ", "").padStart(2, '0')}</p>
                 </div>
               </div>
 
