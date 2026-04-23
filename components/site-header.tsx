@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: "/issues", label: "All issues" },
   { href: "/explore", label: "Explore" },
   { href: "/about", label: "About us" },
-  { href: "/contact", label: "Contact" },
+  { href: "/keep-in-touch", label: "Keep in touch" },
 ]
 
 export function SiteHeader() {

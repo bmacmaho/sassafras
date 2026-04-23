@@ -467,49 +467,57 @@ export default function CurrentIssuePage() {
   const pages = buildPages()
 
   return (
-    <div className="pt-44 min-h-screen bg-[#fcfaf2]">
-      {/* ── Masthead ── */}
-      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-black/[0.05]">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
-          <div className="space-y-6">
-            <p className="text-[11px] tracking-[0.3em] text-[#555] uppercase font-sans">
-              Issue No. 1
-            </p>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-[#222] leading-none">
-              The Tower
+    <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
+        
+        {/* ── Masthead ── */}
+        <header className="relative z-50 mb-16 md:mb-24">
+          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-10">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase">
+              Current Issue
             </h1>
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-lg md:text-xl font-medium tracking-tight py-1">
+              <span className="text-black/40 leading-none">The Tower</span>
+              <span className="text-black/20 leading-none">Issue No. 1 — JUNE 2026</span>
+            </div>
           </div>
-          <div className="max-w-md space-y-4">
-            <p className="text-lg leading-[1.6] text-[#222]/90 italic">
-              "Challenging the Ivory Tower as an encloser of knowledge."
-            </p>
-            <p className="text-sm leading-[1.8] text-[#555] font-sans">
-              Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry.
-            </p>
+
+          <div className="mt-12 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+            <div className="max-w-xl">
+              <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
+                &ldquo;Challenging the Ivory Tower as an encloser of knowledge.&rdquo;
+              </p>
+            </div>
+            <div className="max-w-md">
+              <p className="text-sm md:text-base leading-relaxed text-[#555] font-sans">
+                Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry. Flip through the digital edition below.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        {/* ── FlipBook Container ── */}
+        <div className="flex flex-col items-center justify-center py-12 md:py-24 relative overflow-hidden min-h-[70vh] border border-black/[0.03] bg-black/[0.01]">
+          {/* Ambient glow */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse, rgba(205,170,120,0.06) 0%, transparent 70%)",
+            }}
+          />
+
+          {/* The Book */}
+          <div className="relative z-10 transform scale-[0.85] md:scale-100">
+            <ClientOnly>
+              <FlipBook pages={pages} width={460} height={650} />
+            </ClientOnly>
+          </div>
+          
+          <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <p className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans">Click to flip pages</p>
+            <div className="w-12 h-[1px] bg-black/10" />
           </div>
         </div>
-      </section>
-
-      {/* ── FlipBook Container ── */}
-      <div className="flex flex-col items-center justify-center py-20 px-4 relative overflow-hidden min-h-[80vh]">
-      {/* Ambient glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "70vw",
-          height: "50vh",
-          background: "radial-gradient(ellipse, rgba(205,170,120,0.04) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* The Book */}
-      <ClientOnly>
-        <FlipBook pages={pages} width={460} height={650} />
-      </ClientOnly>
       </div>
     </div>
   )

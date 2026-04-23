@@ -1,22 +1,41 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, Suspense } from "react"
 import Image from "next/image"
 import { Search } from "lucide-react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { artworks as initialArtworks } from "@/lib/mock-data"
 import { Artwork } from "@/lib/types"
 
 
-export default function ExplorePage() {
+function ExploreContent() {
+  const searchParams = useSearchParams()
+  const urlQuery = searchParams.get("q") || ""
+  
   const [artworks, setArtworks] = useState<Artwork[]>(initialArtworks)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [activeFilters, setActiveFilters] = useState<{ type: string, value: string }[]>([])
-  const [searchQuery, setSearchQuery] = useState("")
+  const [activeCategory, setActiveCategory] = useState<string>("theme")
+  const [searchQuery, setSearchQuery] = useState(urlQuery)
   const [isRandomizing, setIsRandomizing] = useState(false)
   const galleryRef = useRef<HTMLDivElement>(null)
+
+  const categories = [
+    { id: "year", label: "Year", options: ["2024", "2025", "2026"] },
+    { id: "issue", label: "Issue", options: ["Issue 01", "Issue 02", "Issue 03"] },
+    { id: "medium", label: "Medium", options: ["Painting", "Photography", "Textile", "Digital Art", "Mixed Media", "Illustration", "Typography", "Resin Art", "Digital Illustration", "Charcoal on Paper", "Gouache", "Linocut Print"] },
+    { id: "theme", label: "Tag", options: ["Urban", "Nature", "Sociology", "Cosmology", "Abstract", "Surrealism", "Mythology", "History", "Fluidity", "Botanical", "Human Condition", "Hierarchy", "Cinema"] },
+  ]
+
+  // Sync searchQuery with URL q param
+  useEffect(() => {
+    if (urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery)
+    }
+  }, [urlQuery])
 
   const handleRandomize = useCallback(() => {
     if (!galleryRef.current || isRandomizing) return
@@ -51,10 +70,12 @@ export default function ExplorePage() {
         return prev.map((artwork, index) => {
           const cell = cells[index % cells.length]
           
+          // Randomize width for each artwork (smaller range)
+          const randomWidth = 100 + Math.random() * 120 // 100-220px
+          
           // Jitter within cell (keep 10% margin)
-          // Also account for image size in jitter
-          const h = artwork.pos.width / artwork.aspectRatio
-          const maxJitterX = Math.max(0, cellWidth - artwork.pos.width - 40)
+          const h = randomWidth / artwork.aspectRatio
+          const maxJitterX = Math.max(0, cellWidth - randomWidth - 40)
           const maxJitterY = Math.max(0, cellHeight - h - 40)
           
           const jitterX = Math.random() * maxJitterX + 20
@@ -67,6 +88,7 @@ export default function ExplorePage() {
             ...artwork,
             pos: { 
                 ...artwork.pos, 
+                width: randomWidth,
                 x: (pxLeft / containerWidth) * 100, 
                 y: (pxTop / (rows * cellHeight)) * 100 
             },
@@ -117,95 +139,123 @@ export default function ExplorePage() {
     <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
         
-        <header className="relative z-50 mb-20 border-b border-black/[0.05] pb-12">
-          <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
-            <div className="space-y-6">
-              <p className="text-[11px] tracking-[0.3em] text-[#555] uppercase font-sans">
-                Digital Gallery
-              </p>
-              <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-[#222] leading-none">
-                Explore
-              </h1>
-            </div>
-             
-          <div className="flex flex-col gap-6 items-end">
-             <div className="flex gap-10 text-[11px] tracking-[0.25em] uppercase font-sans">
+        <header className="relative z-50 mb-16">
+          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8">
+            <h1 className="text-4xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase text-center md:text-left">
+              Explore
+            </h1>
+            
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-base md:text-xl font-medium tracking-tight py-1">
+              <button 
+                onClick={handleRandomize}
+                disabled={isRandomizing}
+                className={`transition-all duration-300 text-center md:text-left leading-none ${isRandomizing ? 'opacity-30' : 'text-black/40 hover:text-black'}`}
+              >
+                Randomize
+              </button>
+
+              <div className="relative leading-none translate-y-0.5">
                 <button 
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`transition-all duration-300 flex items-center gap-3 ${showFilters ? 'text-black' : 'text-[#888]'}`}
+                  className={`transition-all duration-300 ${showFilters ? 'text-black' : 'text-black/40 hover:text-black'}`}
                 >
-                  <span className={`w-2 h-2 rounded-full ${showFilters ? 'bg-black' : 'bg-[#aaa] animate-pulse'}`} />
-                  FILTERS {activeFilters.length > 0 && `(${activeFilters.length})`}
+                  Filters
                 </button>
-                <button 
-                  onClick={handleRandomize}
-                  disabled={isRandomizing}
-                  className={`hover:text-black transition-all duration-300 ${isRandomizing ? 'opacity-30 cursor-wait' : 'text-[#888]'}`}
-                >
-                  {isRandomizing ? 'SHUFFLING...' : 'RANDOMIZE'}
-                </button>
-             </div>
-          </div>
+
+                {/* ── Branching Interface ── */}
+                {showFilters && (
+                  <div className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-1/2 top-full mt-8 md:mt-0 md:ml-6 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 animate-in fade-in slide-in-from-left-10 duration-700 pointer-events-auto z-[100] w-[90vw] md:w-auto">
+                    {/* SVG Branching Line (Desktop Only) */}
+                    <div className="hidden md:block w-16 h-[140px] relative">
+                      <svg width="100%" height="100%" viewBox="0 0 64 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 70C30 70 30 70 30 70V70C30 45 30 20 64 20" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120 }} />
+                        <path d="M30 70C30 55 30 45 64 45" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.1s' }} />
+                        <path d="M30 70C30 85 30 95 64 95" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.2s' }} />
+                        <path d="M30 70C30 120 30 120 64 120" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.3s' }} />
+                      </svg>
+                    </div>
+
+                    {/* Categories List */}
+                    <div className="flex flex-row md:flex-col justify-center md:justify-between h-auto md:h-[120px] py-1 font-sans text-sm md:text-xl text-black/80 w-full md:w-24 gap-6 md:gap-0">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => setActiveCategory(cat.id)}
+                          className={`text-center md:text-left transition-all leading-none ${activeCategory === cat.id ? 'font-bold text-black md:translate-x-2' : 'hover:text-black md:hover:translate-x-1'}`}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Options Box */}
+                    <div className="md:ml-12 w-full md:w-[480px] h-[220px] md:h-[180px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm">
+                      <button 
+                        onClick={() => setShowFilters(false)}
+                        className="absolute -top-7 right-0 text-[10px] uppercase tracking-widest opacity-30 hover:opacity-100 transition-opacity p-1"
+                      >
+                        [ close ]
+                      </button>
+                      <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+                        <div className="flex flex-wrap gap-2 md:gap-3 justify-center md:justify-start">
+                          {categories.find(c => c.id === activeCategory)?.options.map(opt => (
+                            <button
+                              key={opt}
+                              onClick={() => toggleFilter(activeCategory, opt)}
+                              className="group flex items-center gap-2 border border-black/10 px-3 md:px-4 py-1.5 md:py-2 text-[9px] md:text-[10px] uppercase tracking-wider font-medium hover:border-black/30 transition-all bg-white/5"
+                            >
+                              <div className={`w-3 md:w-3.5 h-3 md:h-3.5 border border-black/20 flex items-center justify-center transition-colors ${activeFilters.find(f => f.type === activeCategory && f.value === opt) ? 'bg-[#8d9c6b]/10 border-black/40' : ''}`}>
+                                {activeFilters.find(f => f.type === activeCategory && f.value === opt) && (
+                                  <div className="w-1 md:w-1.5 h-1 md:h-1.5 bg-[#8d9c6b]" />
+                                )}
+                              </div>
+                              {opt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {showFilters && (
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-12 animate-in slide-in-from-top-4 duration-500 ease-out bg-white/95 backdrop-blur-md p-6 border border-black/5 shadow-sm">
-              {[
-                { label: 'Medium', type: 'medium', options: ['Painting', 'Photography', 'Textile', 'Digital Art', 'Mixed Media', 'Illustration', 'Typography', 'Resin Art', 'Digital Illustration', 'Charcoal on Paper', 'Gouache', 'Linocut Print'] },
-                { label: 'Theme', type: 'theme', options: ['Urban', 'Nature', 'Sociology', 'Cosmology', 'Abstract', 'Surrealism', 'Mythology', 'History', 'Fluidity', 'Botanical', 'Human Condition'] },
-                { label: 'Year', type: 'year', options: ['2024', '2025', '2026'] }
-              ].map(group => (
-                <div key={group.label}>
-                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-[#888] mb-6 font-sans">{group.label}</h4>
-                  <div className="flex flex-wrap gap-x-6 gap-y-3">
-                    {group.options.map(opt => (
-                      <button
-                        key={opt}
-                        onClick={() => toggleFilter(group.type, opt)}
-                        className={`text-[12px] transition-colors ${activeFilters.find(f => f.type === group.type && f.value === opt) ? 'text-black font-semibold' : 'text-[#888] hover:text-black'}`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+          {/* ── Search & Active Filters ── */}
+          <div className="mt-12 flex flex-col md:flex-row justify-between items-end gap-8 relative z-50">
+            <div className="relative w-full max-w-xs group self-start">
+               <input 
+                 type="text"
+                 placeholder="Search artworks..."
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+                 className="w-full bg-transparent border-b border-black/10 px-0 py-2 rounded-none text-[10px] tracking-[0.2em] uppercase focus:outline-none focus:border-black/40 transition-all placeholder:text-black/20 font-sans text-black"
+               />
+               <Search className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black/20 group-focus-within:text-black/40 transition-colors" />
             </div>
-          )}
+
+            {/* Applied Filters Pills */}
+            <div className="flex flex-wrap gap-2 justify-end items-center font-sans max-w-xl">
+              {activeFilters.map(f => (
+                 <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-white/50 border border-black/10 px-3 py-1.5 rounded-full text-[9px] tracking-[0.1em] uppercase text-black/70 hover:text-black hover:border-black/30 transition-all">
+                     <span className="opacity-40">{f.type}:</span> {f.value}
+                     <button onClick={() => toggleFilter(f.type, f.value)} className="hover:text-red-500 ml-1 font-bold">×</button>
+                 </div>
+              ))}
+              {activeFilters.length > 0 && (
+                <button 
+                 onClick={() => setActiveFilters([])}
+                 className="text-[9px] tracking-[0.2em] text-[#f87171] hover:text-red-600 uppercase ml-4 transition-colors font-bold border-b border-red-200"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+          </div>
         </header>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-8 relative z-50">
-           <div className="relative w-full max-w-sm group">
-              <input 
-                type="text"
-                placeholder="Search artworks or artists..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/5 border border-black/10 px-10 py-3 rounded-none text-[11px] tracking-[0.1em] uppercase focus:outline-none focus:border-black/30 focus:bg-black/10 transition-all placeholder:text-black/30 font-sans text-black"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30 group-focus-within:text-black/60 transition-colors" />
-           </div>
-
-           <div className="flex flex-wrap gap-3 justify-end items-center font-sans">
-             {activeFilters.map(f => (
-                <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-black/5 border border-black/10 px-3 py-1.5 text-[9px] tracking-[0.15em] uppercase text-black">
-                    <span className="opacity-40">{f.type}:</span> {f.value}
-                    <button onClick={() => toggleFilter(f.type, f.value)} className="hover:text-red-500">×</button>
-                </div>
-             ))}
-             {activeFilters.length > 0 && (
-               <button 
-                onClick={() => setActiveFilters([])}
-                className="text-[9px] tracking-[0.2em] text-[#f87171] hover:text-white uppercase ml-4 transition-colors"
-               >
-                 Reset
-               </button>
-             )}
-           </div>
-        </div>
-
         {/* ── Visual Gallery Container ── */}
-        <div ref={galleryRef} className="relative w-full min-h-screen mt-20">
+        <div ref={galleryRef} className="relative w-full min-h-screen -mt-12">
           <div 
             className="absolute inset-0 pointer-events-none opacity-[0.6]"
             style={{ 
@@ -269,7 +319,21 @@ export default function ExplorePage() {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(0.5deg); }
         }
+        @keyframes draw-branch {
+          to { stroke-dashoffset: 0; }
+        }
+        .animate-draw-branch {
+          animation: draw-branch 0.6s ease-out forwards;
+        }
       `}</style>
     </div>
+  )
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={null}>
+      <ExploreContent />
+    </Suspense>
   )
 }

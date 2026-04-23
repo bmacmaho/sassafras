@@ -58,8 +58,8 @@ export function SiteFooter() {
         
         <div className="flex flex-col md:text-right font-medium uppercase tracking-widest text-[11px] space-y-1 text-black/60">
            <Link href="/about" className="hover:text-black transition-colors">Information</Link>
-           <Link href="/contact" className="hover:text-black transition-colors">Press</Link>
-           <Link href="/keep-in-touch" className="hover:text-black transition-colors">Contact</Link>
+           <Link href="/keep-in-touch" className="hover:text-black transition-colors">Keep in Touch</Link>
+           <Link href="/submissions" className="hover:text-black transition-colors">Submissions</Link>
            <p className="mt-4 pt-4 border-t border-black/10 select-none">
              &copy; {new Date().getFullYear()} Sassafras Initiative
            </p>

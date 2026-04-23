@@ -23,113 +23,132 @@ const timeline = [
 
 export default function SubmissionsPage() {
   return (
-    <div className="pt-44 min-h-screen bg-[#fcfaf2]">
-      {/* ── Submission Masthead ── */}
-      <section className="px-8 md:px-12 py-12 md:py-20 border-b border-black/[0.1]">
-        <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
-          <div className="space-y-6">
-            <p className="text-[11px] tracking-[0.3em] text-[#555] uppercase font-sans">
-              Issue 01 — Open Call
-            </p>
-            <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-[#222] leading-none">
-              The Tower
+    <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
+        
+        {/* ── Submission Masthead ── */}
+        <header className="relative z-50 mb-20 md:mb-32">
+          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-10">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase">
+              Submissions
             </h1>
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-lg md:text-xl font-medium tracking-tight py-1">
+              <span className="text-black/40 leading-none">Open Call</span>
+              <span className="text-black/20 leading-none">Issue No. 1 — The Tower</span>
+            </div>
           </div>
-          <div className="max-w-md space-y-4">
-            <p className="text-lg leading-[1.6] text-[#222]">
-              Challenging the 'Ivory Tower' as an encloser of knowledge.
-            </p>
-            <p className="text-sm leading-[1.8] text-[#555]">
-              We seek any medium — illustration, essays, photography, video, articles — that addresses hierarchies inside and outside of academia.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* ── Consolidated Submission Info ── */}
-      <section className="px-8 md:px-12 py-16 md:py-24">
-        <div className="mx-auto max-w-7xl grid lg:grid-cols-2 gap-20">
+          <div className="mt-12 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+            <div className="max-w-xl">
+              <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
+                Challenging the &ldquo;Ivory Tower&rdquo; as an encloser of knowledge.
+              </p>
+            </div>
+            <div className="max-w-md">
+              <p className="text-sm md:text-base leading-relaxed text-[#555] font-sans">
+                We seek any medium — illustration, essays, photography, video, articles — that addresses hierarchies inside and outside of academia. We believe knowledge flows freely when different forms of inquiry meet in dialogue.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        {/* ── Content Grid ── */}
+        <div className="grid lg:grid-cols-12 gap-16 md:gap-24 relative">
           
           {/* Themes & Inspiration (Left) */}
-          <div className="space-y-16">
-            <div className="space-y-8">
-              <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-sans flex items-center gap-4">
-                <span className="w-8 h-[1px] bg-black/10" /> Sub-Themes
+          <div className="lg:col-span-7 space-y-20">
+            <section className="space-y-10">
+              <h2 className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-black/10" /> Sub-Themes & Exploration
               </h2>
-              <div className="grid gap-6">
+              <div className="grid gap-8">
                 {subThemes.map((theme, i) => (
-                  <div key={i} className="flex gap-6 items-start">
-                    <span className="text-[10px] text-[#888] font-mono mt-1 opacity-50">/0{i+1}</span>
-                    <p className="text-[14px] leading-relaxed text-[#555]">{theme}</p>
+                  <div key={i} className="group flex gap-8 items-start border-b border-black/[0.03] pb-6 last:border-0">
+                    <span className="text-[10px] text-black/20 font-mono mt-1 transition-colors group-hover:text-black/60">0{i+1}</span>
+                    <p className="text-base md:text-lg leading-relaxed text-[#444] font-serif group-hover:text-black transition-colors">{theme}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            <div className="p-8 border border-black/5 bg-black/[0.01] space-y-6">
-               <h3 className="text-xs tracking-widest text-[#222] font-bold uppercase">Formats</h3>
-               <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-[11px] text-[#555] font-sans uppercase tracking-wider">
-                  <div className="flex flex-col gap-1"><span>Text</span><span className="text-[#888]">Markdown/Doc</span></div>
-                  <div className="flex flex-col gap-1"><span>Image</span><span className="text-[#888]">300 DPI</span></div>
-                  <div className="flex flex-col gap-1"><span>Audio/Video</span><span className="text-[#888]">Up to 20m</span></div>
-                  <div className="flex flex-col gap-1"><span>Word Count</span><span className="text-[#888]">1500–2000w</span></div>
+            <section className="p-10 border border-black/10 bg-black/[0.01] space-y-8 relative group overflow-hidden">
+               <div className="absolute top-0 left-0 w-1 h-full bg-black/5 group-hover:bg-black/10 transition-colors" />
+               <h3 className="text-xs tracking-[0.3em] text-black/40 font-bold uppercase">Accepted Formats</h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 text-[11px] md:text-xs text-[#555] font-sans uppercase tracking-wider">
+                  <div className="flex flex-col gap-2 border-l border-black/5 pl-4">
+                    <span className="text-black font-bold">Text</span>
+                    <span className="text-[#888]">Essays, Poetry, Articles (Markdown/Doc)</span>
+                  </div>
+                  <div className="flex flex-col gap-2 border-l border-black/5 pl-4">
+                    <span className="text-black font-bold">Visual</span>
+                    <span className="text-[#888]">Illustration, Photography (300 DPI)</span>
+                  </div>
+                  <div className="flex flex-col gap-2 border-l border-black/5 pl-4">
+                    <span className="text-black font-bold">Dynamic</span>
+                    <span className="text-[#888]">Audio, Video, New Media (Up to 20m)</span>
+                  </div>
+                  <div className="flex flex-col gap-2 border-l border-black/5 pl-4">
+                    <span className="text-black font-bold">Length</span>
+                    <span className="text-[#888]">Recommended 1500–2500 words</span>
+                  </div>
                </div>
-            </div>
+            </section>
           </div>
 
           {/* Process & Timeline (Right) */}
-          <div className="space-y-16">
+          <div className="lg:col-span-5 space-y-20">
             {/* Process */}
-            <div className="space-y-10">
-              <h2 className="text-[10px] tracking-[0.4em] text-[#888] uppercase font-sans flex items-center gap-4">
-                <span className="w-8 h-[1px] bg-black/10" /> Process
+            <section className="space-y-12">
+              <h2 className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-black/10" /> The Workflow
               </h2>
-              <div className="space-y-10">
+              <div className="space-y-12 border-l border-black/[0.05] pl-8">
                 {[
-                  { title: "1. The Pitch", desc: "Briefly overview your intention. We review on a rolling basis." },
-                  { title: "2. The Draft", desc: "Submit a complete first version by the deadline for review." },
-                  { title: "3. Edits", desc: "We work together on suggestions before finally publishing." }
+                  { title: "The Pitch", desc: "Briefly overview your intention, research background, and medium. We review all pitches on a rolling basis." },
+                  { title: "The Draft", desc: "Submit a complete first version by the specified deadline. Our editorial team provides initial feedback." },
+                  { title: "Refinement", desc: "We work collaboratively on suggested edits and technical formatting before the final publication date." }
                 ].map((step, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <h3 className="text-base font-bold text-[#222]">{step.title}</h3>
-                    <p className="text-[13px] leading-relaxed text-[#555]">{step.desc}</p>
+                  <div key={idx} className="space-y-3 relative">
+                    <div className="absolute -left-[37px] top-1.5 w-2 h-2 rounded-full bg-black/10" />
+                    <h3 className="text-lg font-bold text-[#222] uppercase tracking-tight">{step.title}</h3>
+                    <p className="text-sm leading-relaxed text-[#666] font-sans">{step.desc}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
             {/* Timeline */}
-            <div className="space-y-8 bg-black/[0.03] p-10 relative overflow-hidden">
-              <Clock className="absolute top-[-20px] right-[-20px] w-32 h-32 opacity-[0.03] rotate-12" />
-              <h2 className="text-[10px] tracking-[0.4em] text-[#555] uppercase font-sans mb-6">Key Dates</h2>
-              <div className="space-y-6 relative z-10">
+            <section className="space-y-10 bg-[#222] text-white p-12 relative overflow-hidden shadow-2xl">
+              <Clock className="absolute top-[-20px] right-[-20px] w-48 h-48 opacity-[0.03] rotate-12" />
+              <h2 className="text-[10px] tracking-[0.4em] text-white/40 uppercase font-sans mb-8">Critical Deadlines</h2>
+              <div className="space-y-8 relative z-10">
                 {timeline.map((item) => (
-                  <div key={item.label} className="flex flex-col md:flex-row md:justify-between md:items-baseline border-b border-black/5 pb-4 gap-2">
-                    <span className="text-[12px] text-[#888] uppercase tracking-widest">{item.label}</span>
-                    <span className="text-[14px] font-bold text-[#222]">{item.date}</span>
+                  <div key={item.label} className="flex flex-col gap-1 border-b border-white/10 pb-4 last:border-0">
+                    <span className="text-[10px] text-white/30 uppercase tracking-[0.3em]">{item.label}</span>
+                    <span className="text-base font-medium font-serif italic text-white/90">{item.date}</span>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
             {/* Submit Link */}
-            <div className="pt-6">
+            <div className="pt-4">
               <a
                 href="https://docs.google.com/forms/d/..."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group w-full flex items-center justify-between border border-black bg-transparent text-black px-10 py-6 hover:bg-black hover:text-white transition-all duration-500"
+                className="group flex items-center justify-between border-2 border-black bg-black text-white px-10 py-8 hover:bg-transparent hover:text-black transition-all duration-500"
               >
                 <div className="flex flex-col items-start gap-1">
-                  <span className="text-[12px] font-bold uppercase tracking-[0.3em]">Submit Proposal</span>
-                  <span className="text-[9px] opacity-40 italic">Google Form Entry</span>
+                  <span className="text-sm font-bold uppercase tracking-[0.3em]">Submit Proposal</span>
+                  <span className="text-[10px] opacity-60 font-sans tracking-wide">Secure Google Form Gateway</span>
                 </div>
-                <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform" />
+                <ArrowRight size={24} className="group-hover:translate-x-3 transition-transform duration-500" />
               </a>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

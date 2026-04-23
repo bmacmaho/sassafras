@@ -256,9 +256,10 @@ export const artworks: Artwork[] = [
     medium: "Digital Illustration",
     theme: "Surrealism",
     year: "2026",
+    issue: "Issue 03",
     description: "A cosmic exploration of bioluminescence, where the depths of the ocean meet the vastness of the galaxy.",
     aspectRatio: 673 / 1024,
-    pos: { x: 50, y: 5, width: 220, height: 0 }, 
+    pos: { x: 50, y: 5, width: 140, height: 0 }, 
     float: { delay: "0s", dur: "8s" }
   },
   {
@@ -270,9 +271,10 @@ export const artworks: Artwork[] = [
     medium: "Charcoal on Paper",
     theme: "Mythology",
     year: "2026",
+    issue: "Issue 03",
     description: "Captured in the raw texture of charcoal, this piece evokes the silent, powerful movement of mythic wings across a darkened landscape.",
     aspectRatio: 1024 / 654,
-    pos: { x: 15, y: 15, width: 280, height: 0 },
+    pos: { x: 15, y: 15, width: 180, height: 0 },
     float: { delay: "1.5s", dur: "10s" }
   },
   {
@@ -284,9 +286,10 @@ export const artworks: Artwork[] = [
     medium: "Gouache",
     theme: "Botanical",
     year: "2025",
+    issue: "Issue 02",
     description: "A study in organic balance, utilizing the opaque richness of gouache to highlight the intricate patterns found in nature.",
     aspectRatio: 718 / 1024,
-    pos: { x: 80, y: 25, width: 200, height: 0 },
+    pos: { x: 80, y: 25, width: 120, height: 0 },
     float: { delay: "0.8s", dur: "7s" }
   },
   {
@@ -298,9 +301,10 @@ export const artworks: Artwork[] = [
     medium: "Digital Art",
     theme: "Abstract",
     year: "2026",
+    issue: "Issue 03",
     description: "An explosion of light and color that centers on the energetic pulse of creation.",
     aspectRatio: 936 / 981,
-    pos: { x: 45, y: 45, width: 240, height: 0 },
+    pos: { x: 45, y: 45, width: 160, height: 0 },
     float: { delay: "2.1s", dur: "9s" }
   },
   {
@@ -312,9 +316,10 @@ export const artworks: Artwork[] = [
     medium: "Linocut Print",
     theme: "Human Condition",
     year: "2025",
+    issue: "Issue 02",
     description: "The stark contrast of linocut captures the rhythmic struggle and harmony of human experience.",
     aspectRatio: 764 / 776,
-    pos: { x: 10, y: 55, width: 220, height: 0 },
+    pos: { x: 10, y: 55, width: 140, height: 0 },
     float: { delay: "1.1s", dur: "7.5s" }
   },
   {
@@ -326,9 +331,10 @@ export const artworks: Artwork[] = [
     medium: "Typography",
     theme: "History",
     year: "2024",
+    issue: "Issue 01",
     description: "A typographic reimagining of Francis Bacon's reflections on the beauty and order of nature.",
     aspectRatio: 1024 / 916,
-    pos: { x: 75, y: 70, width: 280, height: 0 },
+    pos: { x: 75, y: 70, width: 180, height: 0 },
     float: { delay: "0.3s", dur: "12s" }
   },
   {
@@ -340,9 +346,10 @@ export const artworks: Artwork[] = [
     medium: "Resin Art",
     theme: "Fluidity",
     year: "2026",
+    issue: "Issue 03",
     description: "Frozen in time, this resin piece captures the dynamic flow of golden currents.",
     aspectRatio: 1024 / 890,
-    pos: { x: 35, y: 78, width: 260, height: 0 },
+    pos: { x: 35, y: 78, width: 160, height: 0 },
     float: { delay: "2.1s", dur: "6s" }
   },
   {
@@ -354,9 +361,10 @@ export const artworks: Artwork[] = [
     medium: "Photography",
     theme: "Nature",
     year: "2026",
+    issue: "Issue 03",
     description: "A stark photographic capture of winter's quiet isolation and the sharp lines of the landscape.",
     aspectRatio: 1024 / 768,
-    pos: { x: 65, y: 50, width: 280, height: 0 },
+    pos: { x: 65, y: 50, width: 180, height: 0 },
     float: { delay: "1.2s", dur: "9s" }
   }
 ]
