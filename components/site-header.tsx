@@ -205,7 +205,11 @@ export function SiteHeader() {
               <Link href="/" className="flex items-center flex-shrink-0">
                 <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
               </Link>
-              <div className="flex-1 overflow-hidden h-full flex items-center">
+              <div className="flex-1 overflow-hidden h-full flex items-center relative">
+                <span
+                  className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
+                  style={{ opacity: menuOpen ? 0 : 1 }}
+                >{pageLabel}</span>
                 <div
                   className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
                   style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
