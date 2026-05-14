@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { Search } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
+import { useHeaderExtras } from "@/components/header-extras-context"
 
 function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -73,6 +74,13 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
   )
 }
 
+const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
+  "/about":         { line1: "The Initiative",              line2: "Established 2024 — Berlin" },
+  "/issues":        { line1: "Archive",                     line2: "Full Collection — 2024 to Present" },
+  "/current-issue": { line1: "The Tower",                   line2: "Issue No. 1 — JUNE 2026" },
+  "/submissions":   { line1: "Open Call",                   line2: "Issue No. 1 — The Tower" },
+}
+
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   { href: "/issues", label: "ALL ISSUES" },
@@ -106,6 +114,8 @@ export function SiteHeader() {
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
+  const { extras } = useHeaderExtras()
+  const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
 
   if (pathname === "/") return null
 
@@ -271,12 +281,23 @@ export function SiteHeader() {
                 className="object-contain"
               />
             </Link>
-            <span
-              className="font-alte-haas text-5xl tracking-widest"
-              style={{ color: "#1a1a1a" }}
-            >
-              {pageLabel}
-            </span>
+            <div className="flex items-end gap-8">
+              <span className="font-alte-haas text-5xl tracking-widest" style={{ color: "#1a1a1a" }}>
+                {pageLabel}
+              </span>
+              {extras ? (
+                <div className="flex flex-col justify-end pb-1 gap-1">{extras}</div>
+              ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
+                <div className="flex flex-col justify-end pb-1 gap-1">
+                  <span className="font-title text-base font-medium tracking-tight text-black/40 leading-none">
+                    {PAGE_SUBTITLES[subtitleKey].line1}
+                  </span>
+                  <span className="font-title text-base font-medium tracking-tight text-black/20 leading-none">
+                    {PAGE_SUBTITLES[subtitleKey].line2}
+                  </span>
+                </div>
+              ) : null}
+            </div>
           </div>}
         </header>
     </>
