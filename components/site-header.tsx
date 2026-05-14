@@ -79,7 +79,7 @@ const NAV_LINKS = [
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT" },
   { href: "/submissions", label: "SUBMISSIONS" },
-  { href: "/keep-in-touch", label: "KEEP IN TOUCH" },
+  { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
 
 export function SiteHeader() {
