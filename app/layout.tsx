@@ -14,6 +14,22 @@ const geistMono = localFont({
   weight: "100 900",
 })
 
+const alteHaasGrotesk = localFont({
+  src: [
+    {
+      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-alte-haas",
+})
+
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { MouseGlow } from "@/components/mouse-glow"
@@ -39,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable}`}>
       <body className="font-mono antialiased text-[#222] transition-colors duration-1000">
         <PageFrame>
           <MouseGlow />

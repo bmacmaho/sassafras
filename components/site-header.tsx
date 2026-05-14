@@ -95,7 +95,7 @@ export function SiteHeader() {
           >
             {/* No Background Hover Circle per request */}
             
-            <div className="relative font-bold leading-none text-[#1a2b6d] flex flex-col items-end gap-1 font-sans select-none tracking-tight">
+            <div className="relative font-bold leading-none text-[#1a2b6d] flex flex-col items-end gap-1 font-title select-none tracking-tight">
               {/* Top Section: NU (Inverted) */}
               <div className="flex gap-1.5 text-[28px] rotate-180 transition-all duration-500 group-hover:-translate-x-1 group-hover:text-black">
                 <span>N</span>
@@ -130,7 +130,7 @@ export function SiteHeader() {
             key={link.href}
             href={link.href}
             onClick={() => setIsMenuOpen(false)}
-            className="text-4xl sm:text-5xl md:text-7xl font-black font-sans uppercase tracking-tighter text-[#222] hover:text-[#c5d940] transition-colors"
+            className="text-4xl sm:text-5xl md:text-7xl font-black font-title uppercase tracking-tighter text-[#222] hover:text-[#c5d940] transition-colors"
           >
             {link.label}
           </Link>
