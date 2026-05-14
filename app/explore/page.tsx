@@ -21,10 +21,10 @@ function ExploreContent() {
   const [closingFilters, setClosingFilters] = useState(false)
   const closeFilters = () => {
     setClosingFilters(true)
-    setTimeout(() => { setShowFilters(false); setClosingFilters(false) }, 400)
+    setTimeout(() => { setShowFilters(false); setClosingFilters(false); setActiveCategory("") }, 400)
   }
   const [activeFilters, setActiveFilters] = useState<{ type: string, value: string }[]>([])
-  const [activeCategory, setActiveCategory] = useState<string>("theme")
+  const [activeCategory, setActiveCategory] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState(urlQuery)
   const [isRandomizing, setIsRandomizing] = useState(false)
   const galleryRef = useRef<HTMLDivElement>(null)
@@ -164,14 +164,33 @@ function ExploreContent() {
 
                 {/* ── Branching Interface ── */}
                 {(showFilters || closingFilters) && (
-                  <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[80%] top-full mt-8 md:mt-0 md:ml-6 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
+                  <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[80%] top-full mt-8 md:mt-0 md:ml-2 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
                     {/* SVG Branching Line (Desktop Only) */}
                     <div className="hidden md:block w-16 h-[140px] relative">
                       <svg width="100%" height="100%" viewBox="0 0 64 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 70C30 70 30 70 30 70V70C30 45 30 20 64 20" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120 }} />
-                        <path d="M30 70C30 55 30 45 64 45" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.1s' }} />
-                        <path d="M30 70C30 85 30 95 64 95" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.2s' }} />
-                        <path d="M30 70C30 120 30 120 64 120" stroke="black" strokeWidth="0.6" className="animate-draw-branch" style={{ strokeDasharray: 120, strokeDashoffset: 120, animationDelay: '0.3s' }} />
+                        {([
+                          { d: "M0 115C30 115 40 22 64 22",  len: 150, delay: "0s" },
+                          { d: "M0 115C30 115 40 54 64 54",  len: 100, delay: "0.1s" },
+                          { d: "M0 115C30 115 40 86 64 86",  len: 70,  delay: "0.2s" },
+                          { d: "M0 115C30 115 40 118 64 118", len: 60, delay: "0.3s" },
+                        ] as const).map(({ d, len, delay }, i) => (
+                          <path
+                            key={i}
+                            d={d}
+                            stroke="black"
+                            strokeWidth="0.6"
+                            className={closingFilters ? undefined : "animate-draw-branch"}
+                            style={closingFilters ? {
+                              strokeDasharray: len,
+                              strokeDashoffset: len,
+                              transition: `stroke-dashoffset 0.35s ease-in ${delay}`,
+                            } : {
+                              strokeDasharray: len,
+                              strokeDashoffset: len,
+                              animationDelay: delay,
+                            }}
+                          />
+                        ))}
                       </svg>
                     </div>
 
@@ -189,9 +208,9 @@ function ExploreContent() {
                     </div>
 
                     {/* Options Box */}
-                    <div className="md:ml-12 w-full md:w-[480px] h-[220px] md:h-[150px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm">
+                    {activeCategory && <div className="md:ml-12 w-full md:w-[480px] h-[220px] md:h-[150px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
                       <button
-                        onClick={closeFilters}
+                        onClick={() => setActiveCategory("")}
                         className="absolute -right-6 top-0 text-black/30 hover:text-black transition-colors text-xl leading-none"
                       >✕</button>
                       <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
@@ -212,7 +231,7 @@ function ExploreContent() {
                           ))}
                         </div>
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 )}
           </div>
