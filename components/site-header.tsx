@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
+import { Search } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 
 function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
@@ -86,11 +87,12 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
   const menuOpenRef = useRef(menuOpen)
-  const homeDismissedRef = useRef(false)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
 
-  const isHome = pathname === "/"
+  if (pathname === "/") return null
 
   useEffect(() => {
     if (!menuOpenRef.current) return
@@ -99,93 +101,69 @@ export function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
-    const handler = () => {
-      const sy = window.scrollY
-
-      if (isHome) {
-        if (sy <= 20) {
-          homeDismissedRef.current = false
-          setMenuOpen(false)
-        } else if (sy > 100 && !homeDismissedRef.current) {
-          setMenuOpen(true)
-        }
-        return
-      }
-
-      setScrolled(sy > 60)
-    }
+    const handler = () => { setScrolled(window.scrollY > 60) }
     window.addEventListener("scroll", handler, { passive: true })
     return () => window.removeEventListener("scroll", handler)
-  }, [isHome])
+  }, [])
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
 
   return (
     <>
-      {/* Fullscreen overlay — all screen sizes on home, mobile-only elsewhere */}
+      {/* Mobile overlay — appears below header */}
       <div
-        className={`${isHome ? "" : "lg:hidden "}fixed inset-0 z-[60] flex flex-col items-center justify-center gap-8 transition-opacity duration-500`}
-        style={{
-          backgroundColor: isHome ? "#fbfaf1" : currentColor,
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? "auto" : "none",
-        }}
-      >
-        <button
-          onClick={() => { if (isHome) homeDismissedRef.current = true; setMenuOpen(false) }}
-          className="absolute top-8 right-8 bg-transparent border-none cursor-pointer"
-          style={{ color: "rgb(43, 52, 133)" }}
+          className={`lg:hidden fixed left-0 right-0 bottom-0 z-[149] bg-[#fcfaf2]/95 backdrop-blur-xl flex flex-col justify-start items-center pt-16 pb-20 px-6 gap-6 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            menuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-4"
+          }`}
+          style={{ top: "76px" }}
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="4" y1="4" x2="20" y2="20"/>
-            <line x1="20" y1="4" x2="4" y2="20"/>
-          </svg>
-        </button>
-        {NAV_LINKS.map((link) => {
-          const linkAccent = PAGE_COLORS[link.href] ?? DEFAULT_COLOR
-          return (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="group relative font-alte-haas text-2xl tracking-[0.25em]"
-              style={{ color: isHome ? linkAccent : "white" }}
+              className="font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] text-[#222] hover:text-[#c5d940] transition-colors"
             >
               {link.label}
-              <span
-                className="block h-[1px] transition-all duration-300 ease-out origin-center scale-x-0 group-hover:scale-x-100"
-                style={{ backgroundColor: isHome ? linkAccent : "white" }}
-              />
             </Link>
-          )
-        })}
+          ))}
+          <form
+            onSubmit={(e) => { e.preventDefault(); if (searchQuery.trim()) { router.push(`/explore?q=${encodeURIComponent(searchQuery.trim())}`); setMenuOpen(false) } }}
+            className="relative flex items-center border border-black px-6 py-3 mt-8 w-[80%] max-w-sm"
+          >
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="SEARCH..."
+              className="w-full bg-transparent border-none outline-none font-alte-haas text-sm tracking-widest text-black placeholder:text-black/40"
+            />
+            <button type="submit" aria-label="Search">
+              <Search className="w-5 h-5 text-black hover:opacity-70 transition-opacity" />
+            </button>
+          </form>
       </div>
 
-      {/* Header — hidden on home */}
-      {!isHome && <>
-
         {/* Mobile slim bar */}
-        <header className="lg:hidden sticky top-0 z-50 px-24 pt-4 flex items-center relative overflow-hidden" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
-          <Link href="/" className="flex items-center">
+        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
+          <Link href="/" className="flex items-start">
             <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
           </Link>
-          <div className="absolute right-24 top-1/2 -translate-y-1/2 flex items-center gap-3" style={{ zIndex: 10 }}>
+          <div className="absolute right-8 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center flex-shrink-0"
-              style={{ color: "rgb(43, 52, 133)" }}
-            >
-              {menuOpen ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
-                </svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
-                </svg>
-              )}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
+              <div className="relative font-bold leading-none flex flex-col items-end gap-1 select-none tracking-tight" style={{ color: "rgb(43, 52, 133)" }}>
+                <div className="flex gap-1.5 text-[20px] rotate-180 transition-all duration-500 group-hover:-translate-x-1 font-alte-haas">
+                  <span>N</span><span>U</span>
+                </div>
+                <div
+                  className="flex gap-1.5 text-[20px] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-top-right font-alte-haas"
+                  style={{ transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)" }}
+                >
+                  <span>M</span><span>E</span>
+                </div>
+              </div>
             </button>
           </div>
         </header>
@@ -301,7 +279,6 @@ export function SiteHeader() {
             </span>
           </div>}
         </header>
-      </>}
     </>
   )
 }
