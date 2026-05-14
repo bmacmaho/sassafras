@@ -14,6 +14,7 @@ interface Node {
   vy?: number
   fx?: number | null
   fy?: number | null
+  activeT?: number
 }
 
 interface Link {
