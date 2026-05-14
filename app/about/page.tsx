@@ -52,6 +52,8 @@ const howWeWork = [
   },
 ]
 
+import { CollectiveGraph } from "@/components/about/collective-graph"
+
 export default function AboutPage() {
   const [activePerson, setActivePerson] = useState<typeof peopleData[0] | null>(null)
 
@@ -65,7 +67,7 @@ export default function AboutPage() {
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase">
               About Us
             </h1>
-            <div className="flex flex-col justify-between items-center md:items-start font-sans text-lg md:text-xl font-medium tracking-tight py-1">
+            <div className="flex flex-col justify-between items-center md:items-start font-title text-lg md:text-xl font-medium tracking-tight py-1">
               <span className="text-black/40 leading-none">The Initiative</span>
               <span className="text-black/20 leading-none">Established 2024 — Berlin</span>
             </div>
@@ -117,52 +119,44 @@ export default function AboutPage() {
         </section>
 
         {/* ── People Section ── */}
-        <section className="pt-20 border-t border-black/5 relative">
-          <h2 className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans mb-16 flex items-center gap-4">
-            <span className="w-8 h-[1px] bg-black/10" /> The Collective
-          </h2>
-          
-          <div className="min-h-[400px] relative">
-            <div className="space-y-10 md:space-y-12 text-[#444] text-[15px] max-w-4xl mx-auto">
-              {peopleData.map((person, idx) => (
-                <div 
-                  key={person.id}
-                  onClick={() => setActivePerson(person)}
-                  className="relative flex items-center gap-3 transition-all duration-500 hover:text-black cursor-pointer group hover:scale-105 hover:z-[100]"
-                  style={{ 
-                    marginLeft: person.ml, 
-                    marginTop: person.mt !== "0px" ? person.mt : undefined,
-                    animation: `float-drift ${15 + (idx * 2)}s ease-in-out infinite alternate`,
-                    animationDelay: `${idx * -1.5}s`
-                  }}
-                >
-                  {person.isImage ? (
-                    <Image 
-                      src="/sassafras-logo.png" 
-                      alt={person.name} 
-                      width={18} 
-                      height={18} 
-                      className="object-cover bg-black p-0.5 border border-black/10"
-                    />
-                  ) : (
-                    <div className="w-4 h-4 bg-[#c5d940] border border-black/10" />
-                  )}
-                  <span className="font-mono text-sm md:text-base tracking-tight whitespace-nowrap">
-                    {person.name} <span className="opacity-30 ml-2">/ {person.role}</span>
-                  </span>
-                </div>
-              ))}
+        <section className="mb-32 pt-20 border-t border-black/5 relative">
+          <div className="grid lg:grid-cols-12 gap-12 md:gap-20 mb-20">
+            <div className="lg:col-span-4">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#222] uppercase leading-none">
+                The<br />Collective
+              </h2>
             </div>
           </div>
+          
+          <div className="relative">
+            <CollectiveGraph 
+              people={peopleData} 
+              onPersonClick={(person) => setActivePerson(person)} 
+            />
+          </div>
+        </section>
 
-          <style jsx global>{`
-            @keyframes float-drift {
-              0% { transform: translate(0, 0) rotate(0deg); }
-              33% { transform: translate(12px, -8px) rotate(0.5deg); }
-              66% { transform: translate(-8px, 10px) rotate(-0.5deg); }
-              100% { transform: translate(6px, 6px) rotate(0deg); }
-            }
-          `}</style>
+        {/* ── Collaborators Section ── */}
+        <section className="mb-32 pt-20 border-t border-black/5">
+          <h2 className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-title mb-16 flex items-center gap-4">
+            <span className="w-8 h-[1px] bg-black/10" /> Collaborators
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-16">
+            {[
+              { name: "Elena Rossi", role: "Contributing Editor" },
+              { name: "Marcus Thorne", role: "Research Fellow" },
+              { name: "Sana Al-Sayed", role: "Visual Artist" },
+              { name: "Julian Vane", role: "Poetics Consultant" },
+              { name: "Lina Meyer", role: "Digital Archivist" },
+              { name: "Aris Xenakis", role: "Sound Designer" },
+            ].map((collab, i) => (
+              <div key={i} className="group border-l border-black/10 pl-6 hover:border-black transition-colors duration-500">
+                <h3 className="text-xl font-bold text-[#222] uppercase tracking-tight group-hover:text-[#6a8cff] transition-colors">{collab.name}</h3>
+                <p className="text-sm font-mono text-black/40 mt-1 uppercase tracking-widest">{collab.role}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
           {/* Person Modal/Popup */}
           {activePerson && (
@@ -197,7 +191,6 @@ export default function AboutPage() {
               </div>
             </div>
           )}
-        </section>
       </div>
     </div>
   )

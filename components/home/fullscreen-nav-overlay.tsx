@@ -71,7 +71,7 @@ export function FullscreenNavOverlay() {
             href={link.href}
             className="group w-full max-w-5xl text-center transition-colors py-2 md:py-4"
           >
-            <span className="text-3xl sm:text-5xl md:text-[5rem] font-black font-sans uppercase tracking-tighter transition-colors text-[#222] group-hover:text-[#666] leading-none">
+            <span className="text-3xl sm:text-5xl md:text-[5rem] font-black font-title uppercase tracking-tighter transition-colors text-[#222] group-hover:text-[#666] leading-none">
               {link.label}
             </span>
           </Link>
@@ -79,7 +79,7 @@ export function FullscreenNavOverlay() {
       </nav>
 
       <div className="absolute bottom-8 flex justify-center w-full">
-        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-sm font-bold tracking-widest uppercase cursor-pointer text-[#666] hover:text-[#222] transition-colors">
+        <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-sm font-bold font-title tracking-widest uppercase cursor-pointer text-[#666] hover:text-[#222] transition-colors">
           INSTAGRAM
         </a>
       </div>

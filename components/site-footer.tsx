@@ -7,61 +7,113 @@ import { usePathname } from "next/navigation"
 export function SiteFooter() {
   const pathname = usePathname()
   
-  let matchColor = "#f0f0f0" // default
+  let matchColor = "#fcfaf2" // Default cream
   
+  // Curated editorial color palette
   if (pathname === "/") {
-    matchColor = "#c5d940" // Green
+    matchColor = "#c5d940" // Sassafras Green
   } else if (pathname === "/about") {
-    matchColor = "#303a8f" // Blue
+    matchColor = "#d6e0f5" // Soft Academic Blue
   } else if (pathname?.startsWith("/explore")) {
-    matchColor = "#f39c12" // Orange
+    matchColor = "#f9e5c9" // Soft Gallery Ochre
   } else if (pathname === "/submissions") {
-    matchColor = "#e74c3c" // Red
-  } else if (pathname === "/contact" || pathname === "/keep-in-touch") {
-    matchColor = "#9b59b6" // Purple
+    matchColor = "#f5d6d6" // Soft Clay Red
+  } else if (pathname === "/keep-in-touch") {
+    matchColor = "#e6dcf5" // Soft Lavender
   } else if (pathname?.startsWith("/article") || pathname?.startsWith("/issues")) {
-    matchColor = "#16a085" // Teal
+    matchColor = "#d6f5ec" // Soft Teal
   } else if (pathname === "/current-issue") {
-    matchColor = "#27ae60" // Dark green
+    matchColor = "#e1f5d6" // Soft Moss
   }
   
   return (
     <footer 
-      className="relative px-8 py-8 md:px-14 md:py-12 text-black flex flex-col justify-between transition-colors duration-[1500ms] ease-in-out"
+      className="relative px-8 pt-12 pb-8 md:px-16 md:pt-20 md:pb-12 text-black transition-colors duration-[1500ms] ease-in-out overflow-hidden"
       style={{ backgroundColor: matchColor }}
     >
-      <div className="flex flex-col gap-8">
-        <h2 
-          className="text-4xl md:text-5xl font-medium tracking-[0.4em] uppercase text-black"
-        >
-          SASSAFRAS
-        </h2>
-      </div>
-      
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-12 gap-8">
-        <div className="flex gap-4">
-          <Link 
-            href="/issues"
-            className="w-10 h-10 border border-black flex items-center justify-center hover:bg-black/10 transition-colors"
-          >
-            <BookOpen size={18} strokeWidth={1.5} className="text-black" />
-          </Link>
-          <a 
-            href="https://instagram.com/sassafrasinitiative" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 border border-black flex items-center justify-center hover:bg-black/10 transition-colors"
-          >
-            <Instagram size={18} strokeWidth={1.5} className="text-black" />
-          </a>
+      {/* ── Marquee Branding ── */}
+      <div className="relative mb-12 md:mb-16 overflow-hidden border-y border-black/10 py-4 flex whitespace-nowrap group">
+        <div className="flex animate-marquee group-hover:pause">
+          {[1, 2, 3, 4].map((i) => (
+            <h2 
+              key={i}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
+            >
+              Sassafras
+            </h2>
+          ))}
         </div>
-        
-        <div className="flex flex-col md:text-right font-medium uppercase tracking-widest text-[11px] space-y-1 text-black/60">
-           <Link href="/about" className="hover:text-black transition-colors">Information</Link>
-           <Link href="/keep-in-touch" className="hover:text-black transition-colors">Keep in Touch</Link>
-           <Link href="/submissions" className="hover:text-black transition-colors">Submissions</Link>
-           <p className="mt-4 pt-4 border-t border-black/10 select-none">
-             &copy; {new Date().getFullYear()} Sassafras Initiative
+        <div className="flex absolute top-4 animate-marquee2 group-hover:pause whitespace-nowrap">
+          {[1, 2, 3, 4].map((i) => (
+            <h2 
+              key={i}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
+            >
+              Sassafras
+            </h2>
+          ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes marquee2 {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee {
+          animation: marquee 60s linear infinite;
+        }
+        .animate-marquee2 {
+          animation: marquee2 60s linear infinite;
+        }
+        .pause {
+          animation-play-state: paused;
+        }
+      `}</style>
+      
+      <div className="grid lg:grid-cols-12 gap-12 items-end">
+        {/* Colophon */}
+        <div className="lg:col-span-4 hidden lg:block">
+          <div className="space-y-4 font-mono text-[9px] uppercase tracking-widest text-black/40 leading-relaxed border-l border-black/10 pl-6">
+            <p>Sassafras is an interdisciplinary publication seeking to reimagine academic discourse through radical experimentation of form.</p>
+            <p>Typography: Alte Haas Grotesk & Geist Mono. Initialized in Berlin, 2024.</p>
+          </div>
+        </div>
+
+        {/* Social / Links */}
+        <div className="lg:col-span-4 flex flex-col items-center lg:items-start gap-8">
+          <div className="flex gap-4">
+            <Link 
+              href="/issues"
+              className="w-12 h-12 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full"
+            >
+              <BookOpen size={18} strokeWidth={1.5} />
+            </Link>
+            <a 
+              href="https://instagram.com/sassafrasinitiative" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-all rounded-full"
+            >
+              <Instagram size={18} strokeWidth={1.5} />
+            </a>
+          </div>
+        </div>
+
+        {/* Navigation & Credits */}
+        <div className="lg:col-span-4 flex flex-col text-right font-medium uppercase tracking-widest text-[10px] space-y-2">
+           <div className="flex flex-wrap justify-end gap-x-8 gap-y-2 mb-8">
+             <Link href="/about" className="hover:opacity-50 transition-opacity">About</Link>
+             <Link href="/keep-in-touch" className="hover:opacity-50 transition-opacity">Contact</Link>
+             <Link href="/submissions" className="hover:opacity-50 transition-opacity">Submissions</Link>
+             <Link href="/explore" className="hover:opacity-50 transition-opacity">Explore</Link>
+           </div>
+           <p className="pt-4 border-t border-black/10 text-black/30">
+             &copy; {new Date().getFullYear()} Sassafras Initiative — Open Access
            </p>
         </div>
       </div>

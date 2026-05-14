@@ -44,13 +44,13 @@ function ExploreContent() {
     const containerWidth = galleryRef.current.offsetWidth
     const isMobile = containerWidth < 768
     
-    // Grid settings to GUARANTEE no overlap
-    const cols = isMobile ? 1 : 3
-    const rows = isMobile ? 8 : 6
-    const cellWidth = containerWidth / cols
-    const cellHeight = 400 // Fixed cell height for reliable vertical spacing
+    // Grid settings to GUARANTEE no overlap and exact grid alignment
+    const cols = isMobile ? 1 : Math.max(2, Math.floor(containerWidth / 400));
+    const cellWidth = Math.max(100, Math.floor((containerWidth / cols) / 100) * 100);
+    const cellHeight = 600; // Fixed 600px cell height for reliable vertical spacing
     
     // Create list of available cells
+    const rows = isMobile ? 8 : 6;
     const cells: { r: number, c: number }[] = []
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
@@ -70,31 +70,38 @@ function ExploreContent() {
         return prev.map((artwork, index) => {
           const cell = cells[index % cells.length]
           
-          // Randomize width for each artwork (smaller range)
-          const randomWidth = 100 + Math.random() * 120 // 100-220px
+          const snap = (v: number) => Math.round(v / 100) * 100;
           
-          // Jitter within cell (keep 10% margin)
-          const h = randomWidth / artwork.aspectRatio
-          const maxJitterX = Math.max(0, cellWidth - randomWidth - 40)
-          const maxJitterY = Math.max(0, cellHeight - h - 40)
+          // Ensure width is aligned to grid (200px or 300px)
+          const widths = [200, 300];
+          const randomWidth = widths[Math.floor(Math.random() * widths.length)];
           
-          const jitterX = Math.random() * maxJitterX + 20
-          const jitterY = Math.random() * maxJitterY + 20
+          const h = randomWidth / artwork.aspectRatio;
+          const maxJitterX = Math.max(0, cellWidth - randomWidth);
+          const maxJitterY = Math.max(0, cellHeight - h);
           
-          const pxLeft = (cell.c * cellWidth) + jitterX
-          const pxTop = (cell.r * cellHeight) + jitterY
+          const jitterX = Math.random() * maxJitterX;
+          const jitterY = Math.random() * maxJitterY;
+          
+          // Snap to 100px grid intervals
+          let pxLeft = snap((cell.c * cellWidth) + jitterX);
+          const maxAllowedLeft = Math.floor((containerWidth - randomWidth) / 100) * 100;
+          if (pxLeft > maxAllowedLeft) {
+            pxLeft = Math.max(0, maxAllowedLeft);
+          }
+          const pxTop = snap((cell.r * cellHeight) + jitterY);
 
           return {
             ...artwork,
             pos: { 
                 ...artwork.pos, 
                 width: randomWidth,
-                x: (pxLeft / containerWidth) * 100, 
-                y: (pxTop / (rows * cellHeight)) * 100 
+                x: pxLeft, 
+                y: pxTop 
             },
             float: {
-              delay: `${Math.random() * 2}s`,
-              dur: `${8 + Math.random() * 8}s`
+              delay: `0s`,
+              dur: `0s`
             }
           }
         })
@@ -108,11 +115,12 @@ function ExploreContent() {
   useEffect(() => {
     setMounted(true)
     // Only perform the initial non-overlapping shuffle ONCE when the component mounts
-    if (galleryRef.current && !hasShuffled.current) {
+    // or if the artworks are still at their small percentage-based initial mock data values
+    if (galleryRef.current && (!hasShuffled.current || artworks[0].pos.width < 100)) {
       handleRandomize()
       hasShuffled.current = true
     }
-  }, [handleRandomize]) 
+  }, [handleRandomize, artworks]) 
 
   const toggleFilter = (type: string, value: string) => {
     setActiveFilters(prev => {
@@ -141,7 +149,7 @@ function ExploreContent() {
         
         <header className="relative z-50 mb-16">
           <div className="flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8">
-            <h1 className="text-4xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase text-center md:text-left">
+            <h1 className="text-4xl md:text-7xl font-normal tracking-tight text-[#222] leading-[0.8] uppercase text-center md:text-left">
               Explore
             </h1>
             
@@ -272,13 +280,11 @@ function ExploreContent() {
               href={`/explore/${artwork.slug}`}
               className={`absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] block ${isRandomizing ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}
               style={{
-                left: `${artwork.pos.x}%`,
-                top: `${artwork.pos.y}%`,
+                left: `${artwork.pos.x}px`,
+                top: `${artwork.pos.y}px`,
                 width: `${artwork.pos.width}px`,
                 aspectRatio: artwork.aspectRatio,
                 zIndex: hoveredId === artwork.id ? 50 : 10,
-                animation: `float-gentle ${artwork.float.dur} ease-in-out infinite`,
-                animationDelay: artwork.float.delay
               }}
               onMouseEnter={() => setHoveredId(artwork.id)}
               onMouseLeave={() => setHoveredId(null)}
