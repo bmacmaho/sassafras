@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function KeepInTouchPage() {
   return (
-    <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans">
-      <div className="mx-auto max-w-5xl px-8 md:px-16 py-12">
+    <div className="pt-44 min-h-screen text-[#222] selection:bg-[#f0f0f0] font-sans">
+      <div className="mx-auto max-w-5xl py-12">
         
         {/* ── Header ── */}
         <header className="mb-24 border-b border-black/10 pb-16">
@@ -33,7 +33,7 @@ export default function KeepInTouchPage() {
               <div className="space-y-10">
                 <div className="group">
                   <span className="text-[9px] uppercase tracking-widest text-black/40 block mb-1">Email</span>
-                  <a href="mailto:sassafrasinitiative@gmail.com" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors">
+                  <a href="mailto:sassafrasinitiative@gmail.com" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors break-all">
                     sassafrasinitiative@gmail.com
                   </a>
                 </div>

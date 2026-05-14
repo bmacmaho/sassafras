@@ -79,7 +79,7 @@ const NAV_LINKS = [
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT" },
   { href: "/submissions", label: "SUBMISSIONS" },
-  { href: "/keep-in-touch", label: "KEEP IN TOUCH" },
+  { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
 
 export function SiteHeader() {
@@ -91,8 +91,6 @@ export function SiteHeader() {
   const router = useRouter()
   const menuOpenRef = useRef(menuOpen)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
-
-  if (pathname === "/") return null
 
   useEffect(() => {
     if (!menuOpenRef.current) return
@@ -108,6 +106,8 @@ export function SiteHeader() {
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
+
+  if (pathname === "/") return null
 
   return (
     <>
