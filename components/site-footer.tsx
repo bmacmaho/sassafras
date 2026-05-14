@@ -10,16 +10,32 @@ export function SiteFooter() {
   const matchColor = getPageColor(pathname)
 
   return (
-    <footer
-      className="relative px-8 py-8 md:px-14 md:py-12 text-black flex flex-col justify-between transition-colors duration-[1500ms] ease-in-out"
-      style={{ backgroundColor: matchColor }}
+    <footer 
+      className="relative px-8 pt-12 pb-8 md:px-16 md:pt-20 md:pb-12 text-black transition-colors duration-[1500ms] ease-in-out overflow-hidden"
+      style={{ backgroundColor: `${matchColor}80` }}
     >
-      <div className="flex flex-col gap-8">
-        <h2 
-          className="text-4xl md:text-5xl font-medium tracking-[0.4em] uppercase text-black"
-        >
-          SASSAFRAS
-        </h2>
+      {/* ── Marquee Branding ── */}
+      <div className="relative mb-12 md:mb-16 overflow-hidden border-y border-black/10 py-4 flex whitespace-nowrap group -mx-8 md:-mx-16">
+        <div className="flex animate-marquee group-hover:pause">
+          {[1, 2, 3, 4].map((i) => (
+            <h2 
+              key={i}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
+            >
+              Sassafras
+            </h2>
+          ))}
+        </div>
+        <div className="flex absolute top-4 animate-marquee2 group-hover:pause whitespace-nowrap">
+          {[1, 2, 3, 4].map((i) => (
+            <h2 
+              key={i}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
+            >
+              Sassafras
+            </h2>
+          ))}
+        </div>
       </div>
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-12 gap-8">
@@ -49,7 +65,23 @@ export function SiteFooter() {
            </p>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes marquee2 {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+        .animate-marquee2 {
+          animation: marquee2 30s linear infinite;
+        }
+      `}</style>
     </footer>
   )
 }
-
