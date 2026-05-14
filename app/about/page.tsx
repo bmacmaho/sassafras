@@ -58,22 +58,12 @@ export default function AboutPage() {
   const [activePerson, setActivePerson] = useState<typeof peopleData[0] | null>(null)
 
   return (
-    <div className="pt-44 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+    <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
         
         {/* ── Masthead ── */}
         <header className="relative z-50 mb-20 md:mb-32">
-          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-10">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-[#222] leading-[0.8] uppercase">
-              About Us
-            </h1>
-            <div className="flex flex-col justify-between items-center md:items-start font-title text-lg md:text-xl font-medium tracking-tight py-1">
-              <span className="text-black/40 leading-none">The Initiative</span>
-              <span className="text-black/20 leading-none">Established 2024 — Berlin</span>
-            </div>
-          </div>
-
-          <div className="mt-12 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
             <div className="max-w-xl">
               <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
                 Reimagining academic discourse through radical experimentation.

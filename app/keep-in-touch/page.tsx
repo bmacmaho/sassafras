@@ -8,14 +8,11 @@ export const metadata: Metadata = {
 
 export default function KeepInTouchPage() {
   return (
-    <div className="pt-44 min-h-screen text-[#222] selection:bg-[#f0f0f0] font-sans">
+    <div className="pt-12 min-h-screen text-[#222] selection:bg-[#f0f0f0] font-sans">
       <div className="mx-auto max-w-5xl py-12">
         
         {/* ── Header ── */}
         <header className="mb-24 border-b border-black/10 pb-16">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-[#222] uppercase mb-8">
-            Keep in Touch
-          </h1>
           <div className="max-w-2xl">
             <p className="text-xl md:text-2xl font-serif italic text-[#222] leading-relaxed">
               Sassafras is a space for dialogue, experimentation, and critical engagement. Reach out to collaborate, contribute, or support our mission.
