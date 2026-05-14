@@ -92,8 +92,6 @@ export function SiteHeader() {
   const menuOpenRef = useRef(menuOpen)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
 
-  if (pathname === "/") return null
-
   useEffect(() => {
     if (!menuOpenRef.current) return
     const timer = setTimeout(() => setMenuOpen(false), 3000)
@@ -108,6 +106,8 @@ export function SiteHeader() {
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
+
+  if (pathname === "/") return null
 
   return (
     <>
