@@ -106,11 +106,56 @@ export function SiteHeader() {
     return () => clearTimeout(timer)
   }, [pathname])
 
+  // Lock body scroll on every page navigation (desktop only — header re-expands)
   useEffect(() => {
-    const handler = () => { setScrolled(window.scrollY > 60) }
-    window.addEventListener("scroll", handler, { passive: true })
-    return () => window.removeEventListener("scroll", handler)
-  }, [])
+    if (window.innerWidth < 1024) return
+    document.body.style.position = "fixed"
+    document.body.style.width = "100%"
+    setScrolled(false)
+  }, [pathname])
+
+  // Re-expand header when user scrolls back to the very top
+  useEffect(() => {
+    if (!scrolled) return
+    if (window.innerWidth < 1024) return
+
+    const onScroll = () => {
+      if (window.scrollY === 0) {
+        document.body.style.position = "fixed"
+        document.body.style.width = "100%"
+        setScrolled(false)
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [scrolled])
+
+  // Unlock body after header collapse transition on first scroll gesture
+  useEffect(() => {
+    if (scrolled) return
+    if (window.innerWidth < 1024) return
+
+    const trigger = () => {
+      setScrolled(true)
+      setTimeout(() => {
+        document.body.style.position = ""
+        document.body.style.width = ""
+      }, 400)
+    }
+
+    const onWheel = (e: WheelEvent) => { if (e.deltaY > 0) trigger() }
+    const onKey = (e: KeyboardEvent) => {
+      if (["ArrowDown", " ", "PageDown"].includes(e.key)) trigger()
+    }
+
+    window.addEventListener("wheel", onWheel, { passive: true })
+    window.addEventListener("keydown", onKey)
+    return () => {
+      window.removeEventListener("wheel", onWheel)
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [scrolled])
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
