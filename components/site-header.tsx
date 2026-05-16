@@ -108,7 +108,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     const handler = () => {
-      if (pathname.startsWith("/explore")) { setScrolled(false); return }
+      if (pathname === "/explore") { setScrolled(false); return }
       setScrolled(window.scrollY > 60)
     }
     window.addEventListener("scroll", handler, { passive: true })
@@ -116,11 +116,13 @@ export function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
-    if (pathname.startsWith("/explore")) setScrolled(false)
+    if (pathname === "/explore") setScrolled(false)
   }, [pathname])
 
   const currentColor = getPageColor(pathname)
-  const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
+  const pageLink = NAV_LINKS.find(link => pathname.startsWith(link.href))
+  const pageLabel = pageLink?.label ?? ""
+  const pageHref = pageLink?.href ?? "/"
   const { extras, rightExtras } = useHeaderExtras()
   const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
 
@@ -203,10 +205,11 @@ export function SiteHeader() {
               <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
             </Link>
             <div className="flex-1 overflow-hidden h-full flex items-center relative">
-              <span
-                className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
+              <Link
+                href={pageHref}
+                className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap transition-opacity duration-300 hover:opacity-60"
                 style={{ opacity: menuOpen ? 0 : 1 }}
-              >{pageLabel}</span>
+              >{pageLabel}</Link>
               <div
                 className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
                 style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
@@ -328,9 +331,9 @@ export function SiteHeader() {
               />
             </Link>
             <div className="flex items-end gap-8">
-              <span className="font-alte-haas text-5xl tracking-widest" style={{ color: "#1a1a1a" }}>
+              <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: "#1a1a1a" }}>
                 {pageLabel}
-              </span>
+              </Link>
               {extras ? (
                 <div className="flex flex-col justify-end pb-1 gap-1">{extras}</div>
               ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
