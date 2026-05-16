@@ -233,7 +233,7 @@ export function BloomingFlower({ className, variant = "sassafras" }: { className
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-white/90 transition-transform duration-1000 overflow-visible"
+        className="text-[#FBFAF1]/90 transition-transform duration-1000 overflow-visible"
         style={{ overflow: 'visible' }}
       >
         <g className="transition-all duration-[2.5s] ease-in-out group-hover:translate-y-[-4px]">

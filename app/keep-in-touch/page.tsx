@@ -64,14 +64,14 @@ export default function KeepInTouchPage() {
             <div className="flex flex-col gap-4">
               <a 
                 href="mailto:sassafrasinitiative@gmail.com?subject=Donation Inquiry"
-                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-white transition-all group"
+                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-[#FBFAF1] transition-all group"
               >
                 <span className="text-xs font-bold uppercase tracking-widest">Support Monetarily</span>
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </a>
               <a 
                 href="mailto:sassafrasinitiative@gmail.com?subject=Volunteer Inquiry"
-                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-white transition-all group"
+                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-[#FBFAF1] transition-all group"
               >
                 <span className="text-xs font-bold uppercase tracking-widest">Join the Collective</span>
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>

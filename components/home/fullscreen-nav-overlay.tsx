@@ -61,7 +61,7 @@ export function FullscreenNavOverlay() {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-white/95 backdrop-blur-md"
+      className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-[#FBFAF1]/95 backdrop-blur-md"
       style={{ opacity: 0, pointerEvents: "none", willChange: "opacity" }}
     >
       <nav className="flex flex-col items-center justify-center w-full text-center h-full gap-2 md:gap-4">

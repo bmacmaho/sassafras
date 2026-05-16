@@ -108,14 +108,14 @@ export default function SubmissionsPage() {
             </section>
 
             {/* Timeline */}
-            <section className="space-y-10 bg-[#222] text-white p-12 relative overflow-hidden shadow-2xl">
+            <section className="space-y-10 bg-[#222] text-[#FBFAF1] p-12 relative overflow-hidden shadow-2xl">
               <Clock className="absolute top-[-20px] right-[-20px] w-48 h-48 opacity-[0.03] rotate-12" />
-              <h2 className="text-[10px] tracking-[0.4em] text-white/40 uppercase font-sans mb-8">Critical Deadlines</h2>
+              <h2 className="text-[10px] tracking-[0.4em] text-[#FBFAF1]/40 uppercase font-sans mb-8">Critical Deadlines</h2>
               <div className="space-y-8 relative z-10">
                 {timeline.map((item) => (
-                  <div key={item.label} className="flex flex-col gap-1 border-b border-white/10 pb-4 last:border-0">
-                    <span className="text-[10px] text-white/30 uppercase tracking-[0.3em]">{item.label}</span>
-                    <span className="text-base font-medium font-serif italic text-white/90">{item.date}</span>
+                  <div key={item.label} className="flex flex-col gap-1 border-b border-[#FBFAF1]/10 pb-4 last:border-0">
+                    <span className="text-[10px] text-[#FBFAF1]/30 uppercase tracking-[0.3em]">{item.label}</span>
+                    <span className="text-base font-medium font-serif italic text-[#FBFAF1]/90">{item.date}</span>
                   </div>
                 ))}
               </div>
@@ -127,7 +127,7 @@ export default function SubmissionsPage() {
                 href="https://docs.google.com/forms/d/..."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between border-2 border-black bg-black text-white px-10 py-8 hover:bg-transparent hover:text-black transition-all duration-500"
+                className="group flex items-center justify-between border-2 border-black bg-black text-[#FBFAF1] px-10 py-8 hover:bg-transparent hover:text-black transition-all duration-500"
               >
                 <div className="flex flex-col items-start gap-1">
                   <span className="text-sm font-bold uppercase tracking-[0.3em]">Submit Proposal</span>
