@@ -107,10 +107,17 @@ export function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
-    const handler = () => { setScrolled(window.scrollY > 60) }
+    const handler = () => {
+      if (pathname.startsWith("/explore")) { setScrolled(false); return }
+      setScrolled(window.scrollY > 60)
+    }
     window.addEventListener("scroll", handler, { passive: true })
     return () => window.removeEventListener("scroll", handler)
-  }, [])
+  }, [pathname])
+
+  useEffect(() => {
+    if (pathname.startsWith("/explore")) setScrolled(false)
+  }, [pathname])
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
@@ -180,38 +187,78 @@ export function SiteHeader() {
 
         {/* Desktop header */}
         <header
-          className="hidden lg:flex sticky top-4 z-50 px-24 relative overflow-hidden flex-col"
+          className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
           style={{
             backgroundColor: "#fbfaf1",
-            minHeight: scrolled ? "64px" : "250px",
-            transition: "min-height 0.4s ease",
+            height: scrolled ? "64px" : "250px",
+            transition: "height 0.4s ease",
           }}
         >
-          {/* Minimised: single flex row — logo | nav | hamburger */}
-          {scrolled && (
-            <div className="absolute inset-x-0 top-0 h-full flex flex-row items-center px-24 gap-6">
-              <Link href="/" className="flex items-center flex-shrink-0">
-                <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
-              </Link>
-              <div className="flex-1 overflow-hidden h-full flex items-center relative">
-                <span
-                  className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
-                  style={{ opacity: menuOpen ? 0 : 1 }}
-                >{pageLabel}</span>
-                <div
-                  className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
-                  style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
-                >
-                  {NAV_LINKS.map((link) => (
-                    <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
-                  ))}
-                </div>
+          {/* Minimised row — fades in when scrolled */}
+          <div
+            className="absolute inset-0 flex flex-row items-center pl-24 pr-40 gap-6 transition-opacity duration-300"
+            style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? "auto" : "none" }}
+          >
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
+            </Link>
+            <div className="flex-1 overflow-hidden h-full flex items-center relative">
+              <span
+                className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
+                style={{ opacity: menuOpen ? 0 : 1 }}
+              >{pageLabel}</span>
+              <div
+                className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
+                style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
+              >
+                {NAV_LINKS.map((link) => (
+                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+                ))}
               </div>
-              <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="flex-shrink-0 bg-transparent border-none cursor-pointer p-0 flex items-center justify-center"
-                style={{ color: "rgb(43, 52, 133)" }}
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+          </div>
+
+          {/* Maximised nav — fades out when scrolled */}
+          <nav
+            className="flex absolute inset-x-0 flex-row items-center transition-all duration-300 ease-in-out"
+            style={{
+              transform: menuOpen ? "translateX(0)" : "translateX(110%)",
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: !scrolled && menuOpen ? "auto" : "none",
+              paddingLeft: "6rem",
+              paddingRight: "6rem",
+              top: "2rem",
+            }}
+          >
+            <div className="flex items-center justify-between flex-1 pr-8">
+              {NAV_LINKS.map((link) => (
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+              ))}
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+          </nav>
+
+          {/* Menu button — always present, cross-fades between states */}
+          <div
+            className="absolute right-24 z-[70] flex items-center transition-all duration-300 ease-out"
+            style={{ top: scrolled ? "0px" : "3.5rem", height: scrolled ? "64px" : "auto" }}
+          >
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center z-[80]"
+              style={{ color: "rgb(43, 52, 133)", width: "56px", height: scrolled ? "56px" : "100px" }}
+            >
+              {/* Hamburger/Cross — fades in when minimised */}
+              <div
+                className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
+                style={{
+                  opacity: scrolled ? 1 : 0,
+                  transform: scrolled ? "scale(1) rotate(0deg)" : "scale(0.5) rotate(90deg)",
+                  pointerEvents: scrolled ? "auto" : "none",
+                  width: "100%",
+                  height: "100%",
+                }}
               >
                 {menuOpen ? (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -222,56 +269,45 @@ export function SiteHeader() {
                     <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
                   </svg>
                 )}
-              </button>
-            </div>
-          )}
-
-          {/* Desktop nav + MENU button — maximised only */}
-          {!scrolled && <>
-            <nav
-              className="flex absolute inset-x-0 flex-row items-center transition-transform duration-500 ease-in-out"
-              style={{
-                transform: menuOpen ? "translateX(0)" : "translateX(110%)",
-                paddingLeft: "6rem",
-                paddingRight: "6rem",
-                top: "2rem",
-              }}
-            >
-              <div className="flex items-center justify-between flex-1 pr-8">
-                {NAV_LINKS.map((link) => (
-                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
-                ))}
               </div>
-              <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-            </nav>
 
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="absolute right-24 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center"
-              style={{ color: "rgb(43, 52, 133)", zIndex: 10, top: "3.5rem" }}
-            >
-              <span
-                className="font-alte-haas text-xl tracking-[0.3em] select-none"
-                style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
+              {/* ME NU vertical text — fades in when maximised */}
+              <div
+                className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
+                style={{
+                  opacity: scrolled ? 0 : 1,
+                  transform: scrolled ? "scale(0.5) rotate(-90deg)" : "scale(1) rotate(0deg)",
+                  pointerEvents: scrolled ? "none" : "auto",
+                  width: "100%",
+                  height: "100%",
+                }}
               >
-                ME
                 <span
-                  className="font-alte-haas"
-                  style={{
-                    display: "inline-block",
-                    transformOrigin: "top right",
-                    transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
-                    transition: "transform 0.4s ease",
-                  }}
+                  className="font-alte-haas text-xl tracking-[0.3em] select-none"
+                  style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
                 >
-                  NU
+                  ME
+                  <span
+                    className="font-alte-haas"
+                    style={{
+                      display: "inline-block",
+                      transformOrigin: "top right",
+                      transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
+                      transition: "transform 0.4s ease",
+                    }}
+                  >
+                    NU
+                  </span>
                 </span>
-              </span>
+              </div>
             </button>
-          </>}
+          </div>
 
-          {/* Logo + page title — maximised only */}
-          {!scrolled && <div className="flex flex-col items-start gap-2 mt-auto pb-8">
+          {/* Logo + page title — fades out when scrolled */}
+          <div
+            className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
+            style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+          >
             <Link href="/" className="flex items-end">
               <Image
                 src="/sassafras-logo-square.JPG"
@@ -298,7 +334,7 @@ export function SiteHeader() {
                 </div>
               ) : null}
             </div>
-          </div>}
+          </div>
         </header>
     </>
   )

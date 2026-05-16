@@ -6,8 +6,8 @@ import { Instagram, BookOpen } from "lucide-react"
 export function SiteFooter() {
   return (
     <footer
-      className="relative px-8 pt-12 pb-8 md:px-16 md:pt-20 md:pb-12 text-black overflow-hidden"
-      style={{ backgroundColor: "#B8D160" }}
+      className="relative px-8 pb-8 md:px-16 md:pb-12 text-black overflow-hidden"
+      style={{ backgroundColor: "#B8D160", zIndex: 10000, paddingTop: "calc(3rem + 2px)", marginTop: "-2px" }}
     >
       {/* ── Marquee Branding ── */}
       <div className="relative mb-12 md:mb-16 overflow-hidden border-y border-black/10 py-4 flex whitespace-nowrap group -mx-8 md:-mx-16">
