@@ -157,22 +157,22 @@ function ExploreContent() {
           <div className="relative leading-none">
             <button
               onClick={() => showFilters ? closeFilters() : setShowFilters(true)}
-              className={`font-title text-base font-medium tracking-tight leading-none transition-all duration-300 ${showFilters ? 'text-black' : 'text-black/40 hover:text-black'}`}
+              className={`font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-green-500`}
             >
               Filters
             </button>
 
                 {/* ── Branching Interface ── */}
                 {(showFilters || closingFilters) && (
-                  <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[80%] top-full mt-8 md:mt-0 md:ml-2 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
+                  <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[55%] top-full mt-8 md:mt-0 md:ml-2 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
                     {/* SVG Branching Line (Desktop Only) */}
                     <div className="hidden md:block w-16 h-[140px] relative">
                       <svg width="100%" height="100%" viewBox="0 0 64 140" fill="none" xmlns="http://www.w3.org/2000/svg">
                         {([
-                          { d: "M0 115C30 115 40 22 64 22",  len: 150, delay: "0s" },
-                          { d: "M0 115C30 115 40 54 64 54",  len: 100, delay: "0.1s" },
-                          { d: "M0 115C30 115 40 86 64 86",  len: 70,  delay: "0.2s" },
-                          { d: "M0 115C30 115 40 118 64 118", len: 60, delay: "0.3s" },
+                          { d: "M0 77C30 77 40 22 64 22",  len: 120, delay: "0s" },
+                          { d: "M0 77C30 77 40 54 64 54",  len: 90, delay: "0.1s" },
+                          { d: "M0 77C30 77 40 86 64 86",  len: 75,  delay: "0.2s" },
+                          { d: "M0 77C30 77 40 118 64 118", len: 95, delay: "0.3s" },
                         ] as const).map(({ d, len, delay }, i) => (
                           <path
                             key={i}
@@ -238,7 +238,7 @@ function ExploreContent() {
           <button
             onClick={handleRandomize}
             disabled={isRandomizing}
-            className={`font-title text-base font-medium tracking-tight leading-none transition-all duration-300 text-left ${isRandomizing ? 'opacity-30' : 'text-black/40 hover:text-black'}`}
+            className={`font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-left ${isRandomizing ? 'opacity-30' : 'text-red-500'}`}
           >
             Randomize
           </button>
