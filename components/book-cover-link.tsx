@@ -26,7 +26,7 @@ export function BookCoverLink({
         <div className="absolute inset-y-0 left-[-4px] w-[8px] bg-gradient-to-r from-black/60 via-black/20 to-transparent -z-10 rounded-l-md" />
         
         {/* Book front cover */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#2a2420] via-[#1a1614] to-[#0f0d0c] rounded-r-md rounded-l-[4px] border-r-2 border-[#fff]/5 overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-[20px_20px_35px_rgba(0,0,0,0.4)]">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2a2420] via-[#1a1614] to-[#0f0d0c] rounded-r-md rounded-l-[4px] border-r-2 border-[#FBFAF1]/5 overflow-hidden shadow-2xl transition-all duration-700 group-hover:shadow-[20px_20px_35px_rgba(0,0,0,0.4)]">
           {/* Edge highlight on spine */}
           <div className="absolute top-0 bottom-0 left-0 w-2 bg-gradient-to-r from-[#FBFAF1]/10 to-transparent" />
           
