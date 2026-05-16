@@ -14,12 +14,14 @@ export function ScrollAnimator() {
           // 1. Update text path offset
           const textPath = document.getElementById("animated-text-path") as SVGTextPathElement | null
           if (textPath) {
-            // Move text offset based on scroll.
-            // With textAnchor="middle", startOffset="50%" centers the text exactly on the path.
-            // We animate from ~40% to ~60% so it shifts gracefully down the center gap
-            // without ever going off-screen or overlapping the images on the edges.
-            const offset = 40 + ((sy - (viewportHeight * 0.2)) * 0.02)
-            textPath.setAttribute("startOffset", `${Math.max(25, Math.min(75, offset))}%`)
+            // Only start moving the text when the second section (black area) starts coming into view.
+            // We use viewportHeight * 0.5 as the threshold.
+            const scrollStart = viewportHeight * 0.5
+            const scrollDistance = Math.max(0, sy - scrollStart)
+            
+            // Start at 10% and flow smoothly along the path as the user scrolls through the gallery
+            const offset = 10 + (scrollDistance * 0.04)
+            textPath.setAttribute("startOffset", `${Math.min(110, offset)}%`)
           }
 
           // 2. Animate images

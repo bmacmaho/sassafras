@@ -16,7 +16,7 @@
 }
 
 .font-alte-haas {
-  font-family: 'Alte Haas Grotesk', Papyrus, fantasy;
+  font-family: var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif !important;
 }
 
 @custom-variant dark (&:is(.dark *));

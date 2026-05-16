@@ -58,12 +58,19 @@ export default function AboutPage() {
   const [activePerson, setActivePerson] = useState<typeof peopleData[0] | null>(null)
 
   return (
-    <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
+    <div className="pt-20 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-4">
         
         {/* ── Masthead ── */}
-        <header className="relative z-50 mb-20 md:mb-32">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+        <header className="relative z-50 mb-8 md:mb-12">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-xl md:text-3xl font-medium tracking-tight">
+              <span className="text-[#222] leading-none mb-2">The Initiative</span>
+              <span className="text-black/30 text-sm md:text-lg leading-none uppercase tracking-[0.2em]">Established 2024 — Berlin</span>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
             <div className="max-w-xl">
               <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
                 Reimagining academic discourse through radical experimentation.
@@ -152,7 +159,7 @@ export default function AboutPage() {
           {activePerson && (
             <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#fcfaf2]/90 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setActivePerson(null)}>
               <div 
-                className="bg-[#FBFAF1] border-[2px] border-black p-10 max-w-lg w-full shadow-[12px_12px_0_0_#c5d940] relative animate-in zoom-in-95 duration-300"
+                className="bg-white border-[2px] border-black p-10 max-w-lg w-full shadow-[12px_12px_0_0_#c5d940] relative animate-in zoom-in-95 duration-300"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button 

@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { Search } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
-import { useHeaderExtras } from "@/components/header-extras-context"
 
 function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -74,20 +73,13 @@ function NavLink({ href, label, pathname }: { href: string; label: string; pathn
   )
 }
 
-const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
-  "/about":         { line1: "The Initiative",              line2: "Established 2024 — Berlin" },
-  "/issues":        { line1: "Archive",                     line2: "Full Collection — 2024 to Present" },
-  "/current-issue": { line1: "The Tower",                   line2: "Issue No. 1 — JUNE 2026" },
-  "/submissions":   { line1: "Open Call",                   line2: "Issue No. 1 — The Tower" },
-}
-
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   { href: "/issues", label: "ALL ISSUES" },
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT" },
   { href: "/submissions", label: "SUBMISSIONS" },
-  { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
+  { href: "/keep-in-touch", label: "KEEP IN TOUCH" },
 ]
 
 export function SiteHeader() {
@@ -107,22 +99,34 @@ export function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
+    let rafId: number
     const handler = () => {
-      if (pathname.startsWith("/explore")) { setScrolled(false); return }
-      setScrolled(window.scrollY > 60)
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        const currentScroll = window.scrollY
+        setScrolled(prev => {
+          // If already scrolled, only revert if we scroll back above 50px
+          if (prev) return currentScroll > 50
+          // If not scrolled, only trigger if we scroll below 100px
+          return currentScroll > 100
+        })
+      })
     }
     window.addEventListener("scroll", handler, { passive: true })
-    return () => window.removeEventListener("scroll", handler)
-  }, [pathname])
+    return () => {
+      window.removeEventListener("scroll", handler)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
 
+  // Automatically close menu/search on navigation
   useEffect(() => {
-    if (pathname.startsWith("/explore")) setScrolled(false)
+    setMenuOpen(false)
+    setSearchOpen(false)
   }, [pathname])
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
-  const { extras } = useHeaderExtras()
-  const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
 
   if (pathname === "/") return null
 
@@ -185,79 +189,93 @@ export function SiteHeader() {
           </div>
         </header>
 
-        {/* Desktop header */}
         <header
-          className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
+          className="hidden lg:flex sticky top-4 z-50 px-24 relative overflow-hidden flex-col transition-all duration-300 ease-out will-change-[min-height]"
           style={{
-            backgroundColor: "#fbfaf1",
-            height: scrolled ? "64px" : "250px",
-            transition: "height 0.4s ease",
+            backgroundColor: "#fcfaf2",
+            minHeight: scrolled ? "80px" : "250px",
+            marginBottom: "40px",
           }}
         >
-          {/* Minimised row — fades in when scrolled */}
-          <div
-            className="absolute inset-0 flex flex-row items-center pl-24 pr-40 gap-6 transition-opacity duration-300"
-            style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? "auto" : "none" }}
+          <Link 
+            href="/" 
+            className="absolute z-[60] transition-all duration-300 ease-out left-24"
+            style={{ 
+              top: scrolled ? "12px" : "40px", 
+              width: scrolled ? "56px" : "100px",
+              height: scrolled ? "56px" : "100px",
+              opacity: menuOpen ? 0 : 1,
+              pointerEvents: menuOpen ? "none" : "auto",
+            }}
           >
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
-            </Link>
-            <div className="flex-1 overflow-hidden h-full flex items-center relative">
-              <span
-                className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap pointer-events-none transition-opacity duration-300"
-                style={{ opacity: menuOpen ? 0 : 1 }}
-              >{pageLabel}</span>
-              <div
-                className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
-                style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
-              >
+            <div className="relative w-full h-full">
+              <Image 
+                src="/sassafras-logo-square.JPG" 
+                alt="Sassafras" 
+                fill
+                sizes="(max-width: 768px) 56px, 100px"
+                className="object-contain" 
+                priority
+              />
+            </div>
+          </Link>
+
+          <span
+            className="absolute left-24 font-alte-haas transition-all duration-300 ease-out tracking-widest z-[55]"
+            style={{ 
+              top: scrolled ? "33px" : "150px",
+              left: scrolled ? "170px" : "6rem",
+              fontSize: scrolled ? "0.875rem" : "3rem",
+              color: "#1a1a1a",
+              opacity: menuOpen ? 0 : 1,
+              letterSpacing: scrolled ? "0.2em" : "0.1em",
+            }}
+          >
+            {pageLabel}
+          </span>
+
+          <div 
+            className="absolute right-24 z-[70] flex items-center gap-12 transition-all duration-300 ease-out"
+            style={{ 
+              top: scrolled ? "0px" : "40px",
+              height: scrolled ? "80px" : "auto"
+            }} 
+          >
+            <div 
+              className="flex items-center gap-12 transition-all duration-500 ease-in-out"
+              style={{ 
+                transform: menuOpen ? "translateX(0)" : "translateX(120%)",
+                opacity: menuOpen ? 1 : 0,
+                pointerEvents: menuOpen ? "auto" : "none",
+              }}
+            >
+              <div className="flex items-center gap-10">
                 {NAV_LINKS.map((link) => (
                   <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
                 ))}
               </div>
+              <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
             </div>
-            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-          </div>
 
-          {/* Maximised nav — fades out when scrolled */}
-          <nav
-            className="flex absolute inset-x-0 flex-row items-center transition-all duration-300 ease-in-out"
-            style={{
-              transform: menuOpen ? "translateX(0)" : "translateX(110%)",
-              opacity: scrolled ? 0 : 1,
-              pointerEvents: !scrolled && menuOpen ? "auto" : "none",
-              paddingLeft: "6rem",
-              paddingRight: "6rem",
-              top: "2rem",
-            }}
-          >
-            <div className="flex items-center justify-between flex-1 pr-8">
-              {NAV_LINKS.map((link) => (
-                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
-              ))}
-            </div>
-            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
-          </nav>
-
-          {/* Menu button — always present, cross-fades between states */}
-          <div
-            className="absolute right-24 z-[70] flex items-center transition-all duration-300 ease-out"
-            style={{ top: scrolled ? "0px" : "3.5rem", height: scrolled ? "64px" : "auto" }}
-          >
+            {/* Menu Toggle Button with Transition */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center z-[80]"
-              style={{ color: "rgb(43, 52, 133)", width: "56px", height: scrolled ? "56px" : "100px" }}
+              className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center group z-[80]"
+              style={{ 
+                color: "rgb(43, 52, 133)", 
+                width: "56px", 
+                height: scrolled ? "56px" : "100px" 
+              }}
             >
-              {/* Hamburger/Cross — fades in when minimised */}
-              <div
+              {/* Hamburger/Cross Icon */}
+              <div 
                 className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
-                style={{
+                style={{ 
                   opacity: scrolled ? 1 : 0,
                   transform: scrolled ? "scale(1) rotate(0deg)" : "scale(0.5) rotate(90deg)",
                   pointerEvents: scrolled ? "auto" : "none",
                   width: "100%",
-                  height: "100%",
+                  height: "100%"
                 }}
               >
                 {menuOpen ? (
@@ -271,20 +289,24 @@ export function SiteHeader() {
                 )}
               </div>
 
-              {/* ME NU vertical text — fades in when maximised */}
-              <div
+              {/* Vertical "ME NU" Text */}
+              <div 
                 className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
-                style={{
+                style={{ 
                   opacity: scrolled ? 0 : 1,
                   transform: scrolled ? "scale(0.5) rotate(-90deg)" : "scale(1) rotate(0deg)",
                   pointerEvents: scrolled ? "none" : "auto",
                   width: "100%",
-                  height: "100%",
+                  height: "100%"
                 }}
               >
                 <span
                   className="font-alte-haas text-xl tracking-[0.3em] select-none"
-                  style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
+                  style={{ 
+                    writingMode: "vertical-rl" as const, 
+                    transform: "rotate(180deg)", 
+                    display: "inline-block" 
+                  }}
                 >
                   ME
                   <span
@@ -301,39 +323,6 @@ export function SiteHeader() {
                 </span>
               </div>
             </button>
-          </div>
-
-          {/* Logo + page title — fades out when scrolled */}
-          <div
-            className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
-            style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
-          >
-            <Link href="/" className="flex items-end">
-              <Image
-                src="/sassafras-logo-square.JPG"
-                alt="Sassafras"
-                width={80}
-                height={80}
-                className="object-contain"
-              />
-            </Link>
-            <div className="flex items-end gap-8">
-              <span className="font-alte-haas text-5xl tracking-widest" style={{ color: "#1a1a1a" }}>
-                {pageLabel}
-              </span>
-              {extras ? (
-                <div className="flex flex-col justify-end pb-1 gap-1">{extras}</div>
-              ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
-                <div className="flex flex-col justify-end pb-1 gap-1">
-                  <span className="font-title text-base font-medium tracking-tight text-black/40 leading-none">
-                    {PAGE_SUBTITLES[subtitleKey].line1}
-                  </span>
-                  <span className="font-title text-base font-medium tracking-tight text-black/20 leading-none">
-                    {PAGE_SUBTITLES[subtitleKey].line2}
-                  </span>
-                </div>
-              ) : null}
-            </div>
           </div>
         </header>
     </>

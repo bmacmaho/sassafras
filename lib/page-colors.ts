@@ -1,20 +1,30 @@
 export const PAGE_COLORS: Record<string, string> = {
-  "/":              "#FF7D00",
-  "/about":         "#FF730F",
-  "/explore":       "#A7B34D",
-  "/submissions":   "#9DA941",
-  "/keep-in-touch": "#7089B9",
-  "/contact":       "#7089B9",
-  "/issues":        "#9DA941",
-  "/article":       "#9DA941",
-  "/current-issue": "#7C6ABE",
+  "/":              "#c5d940", // Sassafras Green
+  "/current-issue": "#27ae60", // Forest Green
+  "/issues":        "#16a085", // Archive Teal
+  "/explore":       "#2b3485", // Deep Academic Blue
+  "/about":         "#3498db", // Sky Blue
+  "/submissions":   "#e74c3c", // Editorial Red
+  "/keep-in-touch": "#e67e22", // Vibrant Orange
+  "/contact":       "#e67e22", // Vibrant Orange
+  "/article":       "#1abc9c", // Fresh Cyan
 }
 
-export const DEFAULT_COLOR = "#9DA941"
+export const DEFAULT_COLOR = "#fcfaf2" // Soft Cream
 
 export function getPageColor(pathname: string): string {
+  // Check for exact matches first
+  if (PAGE_COLORS[pathname]) return PAGE_COLORS[pathname]
+  
+  // Check for prefix matches
   const match = Object.keys(PAGE_COLORS)
-    .sort((a, b) => b.length - a.length)
+    .filter(key => key !== "/") // Skip root to check more specific ones first
     .find((key) => pathname.startsWith(key))
-  return match ? PAGE_COLORS[match] : DEFAULT_COLOR
+    
+  if (match) return PAGE_COLORS[match]
+  
+  // Default to home color if on root, else fallback
+  if (pathname === "/") return PAGE_COLORS["/"]
+  
+  return DEFAULT_COLOR
 }

@@ -1,105 +1,68 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
+import { Instagram, BookOpen } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { getPageColor } from "@/lib/page-colors"
 
 export function SiteFooter() {
-  const colLabel = "uppercase tracking-wide text-[18px] leading-tight"
-  const colText = "uppercase tracking-wide text-[18px] leading-tight"
-  const colLink = "uppercase tracking-wide text-[18px] transition-colors block leading-tight underline underline-offset-2"
-  const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: "#35362E" }
+  const pathname = usePathname()
+  const matchColor = getPageColor(pathname)
 
   return (
-    <footer
-      className="relative px-4 md:px-8 overflow-hidden"
-      style={{ backgroundColor: "#B8D160", zIndex: 10000, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "4px solid black" }}
+    <footer 
+      className="relative px-8 pt-12 pb-8 md:px-16 md:pt-20 md:pb-12 text-black transition-colors duration-[1500ms] ease-in-out overflow-hidden"
+      style={{ backgroundColor: `${matchColor}40` }}
     >
-      {/* ── Top Section ── */}
-      <div className="flex flex-row justify-between gap-12 pb-0 flex-wrap" style={alteFontStyle}>
-
-        {/* 1 — Address */}
-        <div className="flex flex-col">
-          <span className={colLabel}>Sassafras E.V.</span>
-          <span className={colText}>Badstr. 23</span>
-          <span className={colText}>13357 Berlin</span>
-          <Link href="/impressum" className={colLink}>Impressum</Link>
-        </div>
-
-        {/* 2 — Contact */}
-        <div className="flex flex-col">
-          <span className={colLabel}>Contact:</span>
-          <a href="mailto:info@sassafras.com" className={colLink}>info@sassafras.com</a>
-          <a href="mailto:submissions@sassafras.com" className={colLink}>submissions@sassafras.com</a>
-        </div>
-
-        {/* 3 — Support */}
-        <div className="flex flex-col">
-          <span className={colLabel}>Support:</span>
-          <Link href="/donate" className={colLink}>Donate</Link>
-          <Link href="/volunteer" className={colLink}>Volunteer</Link>
-        </div>
-
-        {/* 5 — Credits */}
-        <div className="flex flex-col">
-          <span className={colLabel}>Design & Programming:</span>
-          <span className={colText}>Anna Phaidra</span>
-          <span className={colText}>Barra MacMahon</span>
-          <span className={colText}>Chenlu Ni</span>
-          <span className={colText}>
-            Typeface:{" "}
-            <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors underline">Alte Haas Grotesk</a>
-            {" "}
-            <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors underline">Charter</a>
-          </span>
-        </div>
-
-        {/* 4 — Follow (right aligned) */}
-        <div className="flex flex-col ml-auto pr-8 md:pr-16 items-end">
-          <div className="flex gap-4">
-            <a
-              href="https://instagram.com/sassafrasinitiative"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
-            >
-              <Image src="/socials/instagram.PNG" alt="Instagram" width={40} height={40} className="object-contain" />
-            </a>
-            <a
-              href="https://substack.com/sassafrasinitiative"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
-            >
-              <Image src="/socials/substack.PNG" alt="Substack" width={40} height={40} className="object-contain" />
-            </a>
-          </div>
-        </div>
-
-      </div>
-
       {/* ── Marquee Branding ── */}
-      <div className="relative flex whitespace-nowrap group -mx-8 md:-mx-16" style={{ transform: "translateY(25%)", borderTop: "4px solid #FBFAF1", marginTop: "-1.5vw" }}>
+      <div className="relative mb-12 md:mb-16 overflow-hidden border-y border-black/10 py-4 flex whitespace-nowrap group -mx-8 md:-mx-16">
         <div className="flex animate-marquee group-hover:pause">
           {[1, 2, 3, 4].map((i) => (
-            <h2
+            <h2 
               key={i}
-              className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
-              style={{ color: "#B8D160", WebkitTextStroke: "8px #5D9800", fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
             >
               Sassafras
             </h2>
           ))}
         </div>
-        <div className="flex absolute top-0 animate-marquee2 group-hover:pause whitespace-nowrap">
+        <div className="flex absolute top-4 animate-marquee2 group-hover:pause whitespace-nowrap">
           {[1, 2, 3, 4].map((i) => (
-            <h2
+            <h2 
               key={i}
-              className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
-              style={{ color: "#B8D160", WebkitTextStroke: "8px #5D9800", fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+              className="text-[12vw] font-bold uppercase leading-none tracking-[0.3em] pr-[20vw] select-none"
             >
               Sassafras
             </h2>
           ))}
+        </div>
+      </div>
+      
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-12 gap-8">
+        <div className="flex gap-4">
+          <Link 
+            href="/issues"
+            className="w-10 h-10 border border-black flex items-center justify-center hover:bg-black/10 transition-colors"
+          >
+            <BookOpen size={18} strokeWidth={1.5} className="text-black" />
+          </Link>
+          <a 
+            href="https://instagram.com/sassafrasinitiative" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 border border-black flex items-center justify-center hover:bg-black/10 transition-colors"
+          >
+            <Instagram size={18} strokeWidth={1.5} className="text-black" />
+          </a>
+        </div>
+        
+        <div className="flex flex-col md:text-right font-medium uppercase tracking-widest text-[11px] space-y-1 text-black/60">
+           <Link href="/about" className="hover:text-black transition-colors">Information</Link>
+           <Link href="/keep-in-touch" className="hover:text-black transition-colors">Keep in Touch</Link>
+           <Link href="/submissions" className="hover:text-black transition-colors">Submissions</Link>
+           <p className="mt-4 pt-4 border-t border-black/10 select-none">
+             &copy; {new Date().getFullYear()} Sassafras Initiative
+           </p>
         </div>
       </div>
 
@@ -113,10 +76,10 @@ export function SiteFooter() {
           100% { transform: translateX(0); }
         }
         .animate-marquee {
-          animation: marquee 30s linear infinite;
+          animation: marquee 60s linear infinite;
         }
         .animate-marquee2 {
-          animation: marquee2 30s linear infinite;
+          animation: marquee2 60s linear infinite;
         }
       `}</style>
     </footer>

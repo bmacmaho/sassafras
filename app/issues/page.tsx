@@ -14,12 +14,19 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
 
 export default function IssuesPage() {
   return (
-    <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
+    <div className="pt-20 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-4">
         
         {/* ── Masthead ── */}
-        <header className="relative z-50 mb-16 md:mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+        <header className="relative z-50 mb-8 md:mb-12">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-xl md:text-3xl font-medium tracking-tight">
+              <span className="text-[#222] leading-none mb-2">Archive</span>
+              <span className="text-black/30 text-sm md:text-lg leading-none uppercase tracking-[0.2em]">Full Collection — 2024 to Present</span>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
             <div className="max-w-xl">
               <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
                 Exploring the history and evolution of academic discourse.

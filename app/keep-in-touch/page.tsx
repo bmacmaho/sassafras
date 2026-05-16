@@ -8,15 +8,29 @@ export const metadata: Metadata = {
 
 export default function KeepInTouchPage() {
   return (
-    <div className="pt-12 min-h-screen text-[#222] selection:bg-[#f0f0f0] font-sans">
-      <div className="mx-auto max-w-5xl py-12">
+    <div className="pt-20 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans">
+      <div className="mx-auto max-w-7xl px-8 md:px-16 py-4">
         
         {/* ── Header ── */}
-        <header className="mb-24 border-b border-black/10 pb-16">
-          <div className="max-w-2xl">
-            <p className="text-xl md:text-2xl font-serif italic text-[#222] leading-relaxed">
-              Sassafras is a space for dialogue, experimentation, and critical engagement. Reach out to collaborate, contribute, or support our mission.
-            </p>
+        <header className="relative z-50 mb-8 md:mb-12">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
+            <div className="flex flex-col justify-between items-center md:items-start font-sans text-xl md:text-3xl font-medium tracking-tight">
+              <span className="text-[#222] leading-none mb-2">The Initiative</span>
+              <span className="text-black/30 text-sm md:text-lg leading-none uppercase tracking-[0.2em]">Contact & Support — Berlin</span>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
+            <div className="max-w-xl">
+              <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
+                Sassafras is a space for dialogue, experimentation, and critical engagement.
+              </p>
+            </div>
+            <div className="max-w-md">
+              <p className="text-sm md:text-base leading-relaxed text-[#555] font-sans">
+                Reach out to collaborate, contribute, or support our mission. We believe in open access and radical experimentation of form.
+              </p>
+            </div>
           </div>
         </header>
 
@@ -30,7 +44,7 @@ export default function KeepInTouchPage() {
               <div className="space-y-10">
                 <div className="group">
                   <span className="text-[9px] uppercase tracking-widest text-black/40 block mb-1">Email</span>
-                  <a href="mailto:sassafrasinitiative@gmail.com" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors break-all">
+                  <a href="mailto:sassafrasinitiative@gmail.com" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors">
                     sassafrasinitiative@gmail.com
                   </a>
                 </div>
@@ -64,14 +78,14 @@ export default function KeepInTouchPage() {
             <div className="flex flex-col gap-4">
               <a 
                 href="mailto:sassafrasinitiative@gmail.com?subject=Donation Inquiry"
-                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-[#FBFAF1] transition-all group"
+                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-white transition-all group"
               >
                 <span className="text-xs font-bold uppercase tracking-widest">Support Monetarily</span>
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </a>
               <a 
                 href="mailto:sassafrasinitiative@gmail.com?subject=Volunteer Inquiry"
-                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-[#FBFAF1] transition-all group"
+                className="flex items-center justify-between border border-black px-6 py-4 hover:bg-black hover:text-white transition-all group"
               >
                 <span className="text-xs font-bold uppercase tracking-widest">Join the Collective</span>
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
