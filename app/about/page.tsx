@@ -152,7 +152,7 @@ export default function AboutPage() {
           {activePerson && (
             <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#fcfaf2]/90 backdrop-blur-md animate-in fade-in duration-500" onClick={() => setActivePerson(null)}>
               <div 
-                className="bg-white border-[2px] border-black p-10 max-w-lg w-full shadow-[12px_12px_0_0_#c5d940] relative animate-in zoom-in-95 duration-300"
+                className="bg-[#FBFAF1] border-[2px] border-black p-10 max-w-lg w-full shadow-[12px_12px_0_0_#c5d940] relative animate-in zoom-in-95 duration-300"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button 

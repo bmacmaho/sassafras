@@ -100,7 +100,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={state.submitting}
-        className="mt-4 self-start border-2 border-black bg-transparent px-10 py-4 rounded-full text-xs uppercase tracking-widest text-black font-bold transition-all hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        className="mt-4 self-start border-2 border-black bg-transparent px-10 py-4 rounded-full text-xs uppercase tracking-widest text-black font-bold transition-all hover:bg-black hover:text-[#FBFAF1] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {state.submitting ? "Sending..." : "Send message"}
       </button>

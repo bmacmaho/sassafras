@@ -94,7 +94,7 @@ export default async function ArticlePage({
 
       {/* ── Article body ── */}
       <div className="px-6 py-14">
-        <div className="mx-auto max-w-4xl p-10 md:p-16 lg:p-24 bg-[#DCE4EC] border-[8px] md:border-[16px] border-white/50 backdrop-blur-md shadow-2xl relative overflow-hidden">
+        <div className="mx-auto max-w-4xl p-10 md:p-16 lg:p-24 bg-[#DCE4EC] border-[8px] md:border-[16px] border-[#FBFAF1]/50 backdrop-blur-md shadow-2xl relative overflow-hidden">
           {/* Frosted vignette effect */}
           <div className="absolute inset-0 shadow-[inset_0_0_40px_20px_rgba(255,255,255,0.7)] pointer-events-none"></div>
           <div className="relative z-10 max-w-2xl mx-auto">

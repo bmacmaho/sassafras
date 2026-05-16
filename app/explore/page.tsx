@@ -219,7 +219,7 @@ function ExploreContent() {
                             <button
                               key={opt}
                               onClick={() => toggleFilter(activeCategory, opt)}
-                              className="group flex items-center gap-2 border border-black/10 px-3 md:px-4 py-1.5 md:py-2 text-[9px] md:text-[10px] uppercase tracking-wider font-medium hover:border-black/30 transition-all bg-white/5"
+                              className="group flex items-center gap-2 border border-black/10 px-3 md:px-4 py-1.5 md:py-2 text-[9px] md:text-[10px] uppercase tracking-wider font-medium hover:border-black/30 transition-all bg-[#FBFAF1]/5"
                             >
                               <div className={`w-3 md:w-3.5 h-3 md:h-3.5 border border-black/20 flex items-center justify-center transition-colors ${activeFilters.find(f => f.type === activeCategory && f.value === opt) ? 'bg-[#8d9c6b]/10 border-black/40' : ''}`}>
                                 {activeFilters.find(f => f.type === activeCategory && f.value === opt) && (
@@ -260,7 +260,7 @@ function ExploreContent() {
             {/* Applied Filters Pills */}
             <div className="flex flex-wrap gap-2 justify-end items-center font-sans max-w-xl">
               {activeFilters.map(f => (
-                 <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-white/50 border border-black/10 px-3 py-1.5 rounded-full text-[9px] tracking-[0.1em] uppercase text-black/70 hover:text-black hover:border-black/30 transition-all">
+                 <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-[#FBFAF1]/50 border border-black/10 px-3 py-1.5 rounded-full text-[9px] tracking-[0.1em] uppercase text-black/70 hover:text-black hover:border-black/30 transition-all">
                      <span className="opacity-40">{f.type}:</span> {f.value}
                      <button onClick={() => toggleFilter(f.type, f.value)} className="hover:text-red-500 ml-1 font-bold">×</button>
                  </div>
@@ -315,7 +315,7 @@ function ExploreContent() {
               </div>
 
               {/* Main Image Frame (Matches aspect ratio) */}
-              <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-white">
+              <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
                  <Image
                   src={artwork.image}
                   alt={artwork.title}

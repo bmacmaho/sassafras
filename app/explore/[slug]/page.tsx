@@ -49,7 +49,7 @@ export default function ExploreDetailPage() {
           {/* ── Visual Section ── */}
           <div className="w-full relative group">
             <div 
-              className="relative w-full border border-black/10 bg-white shadow-xl p-4 md:p-12"
+              className="relative w-full border border-black/10 bg-[#FBFAF1] shadow-xl p-4 md:p-12"
               style={{ aspectRatio: artwork.aspectRatio }}
             >
               <Image
@@ -88,7 +88,7 @@ export default function ExploreDetailPage() {
               </div>
 
               <div className="pt-8 border-t border-black/5 space-y-4">
-                <button className="w-full bg-black text-white py-4 text-[9px] tracking-[0.3em] uppercase hover:invert transition-all">
+                <button className="w-full bg-black text-[#FBFAF1] py-4 text-[9px] tracking-[0.3em] uppercase hover:invert transition-all">
                     Inquire
                 </button>
                 <button className="w-full border border-black/10 py-4 text-[9px] tracking-[0.3em] uppercase hover:bg-black/5 transition-all">
@@ -125,7 +125,7 @@ export default function ExploreDetailPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {artworks.filter(a => a.theme === artwork.theme && a.id !== artwork.id).slice(0, 4).map(related => (
                     <Link key={related.id} href={`/explore/${related.slug}`} className="group space-y-3">
-                        <div className="aspect-[4/5] relative overflow-hidden bg-white border border-black/5">
+                        <div className="aspect-[4/5] relative overflow-hidden bg-[#FBFAF1] border border-black/5">
                             <Image 
                                 src={related.image} 
                                 alt={related.title} 
