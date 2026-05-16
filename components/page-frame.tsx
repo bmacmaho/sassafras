@@ -14,7 +14,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
         className="fixed inset-0 pointer-events-none z-[9999] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
         style={{ borderColor: frameColor }}
       />
-      {/* Inner gradient edges — 4 strips with transitioning backgroundColor + static mask fade */}
+      {/* Inner gradient edges — 4 strips */}
       {([
         { top: 12,   left: 12,   right: 12,  height: 10, mask: "linear-gradient(to bottom, black 50%, transparent 100%)" },
         { bottom: 12, left: 12,  right: 12,  height: 10, mask: "linear-gradient(to top,    black 50%, transparent 100%)" },
@@ -24,12 +24,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
         <div
           key={i}
           className="fixed pointer-events-none z-[9998] transition-colors duration-[1500ms] ease-in-out"
-          style={{
-            ...pos,
-            backgroundColor: frameColor,
-            maskImage: mask,
-            WebkitMaskImage: mask,
-          }}
+          style={{ ...pos, backgroundColor: frameColor, maskImage: mask, WebkitMaskImage: mask }}
         />
       ))}
       {/* Scrollable Document Body */}
