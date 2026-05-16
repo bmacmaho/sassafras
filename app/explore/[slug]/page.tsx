@@ -5,10 +5,20 @@ import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Share2, ZoomIn } from "lucide-react"
+import { useEffect } from "react"
 
 export default function ExploreDetailPage() {
   const { slug } = useParams()
   const artwork = artworks.find((a) => a.slug === slug)
+
+  useEffect(() => {
+    if (!artwork) return
+    const entry = { image: artwork.image, slug: artwork.slug }
+    const stored = sessionStorage.getItem("viewedArtworks")
+    const prev: typeof entry[] = stored ? JSON.parse(stored) : []
+    const deduped = [entry, ...prev.filter(a => a.slug !== entry.slug)].slice(0, 8)
+    sessionStorage.setItem("viewedArtworks", JSON.stringify(deduped))
+  }, [artwork?.slug])
 
   if (!artwork) {
     notFound()

@@ -4,7 +4,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
-import { Search } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras } from "@/components/header-extras-context"
 
@@ -95,7 +94,16 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [viewedArtworks, setViewedArtworks] = useState<{ image: string; slug: string }[]>([])
+
+  useEffect(() => {
+    if (pathname.startsWith("/explore")) {
+      const stored = sessionStorage.getItem("viewedArtworks")
+      setViewedArtworks(stored ? JSON.parse(stored) : [])
+    } else {
+      setViewedArtworks([])
+    }
+  }, [pathname])
   const router = useRouter()
   const menuOpenRef = useRef(menuOpen)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
@@ -142,45 +150,39 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] text-[#222] hover:text-[#c5d940] transition-colors"
+              className="font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] text-[#222] hover:text-[#c5d940] transition-colors text-center"
             >
               {link.label}
             </Link>
           ))}
-          <form
-            onSubmit={(e) => { e.preventDefault(); if (searchQuery.trim()) { router.push(`/explore?q=${encodeURIComponent(searchQuery.trim())}`); setMenuOpen(false) } }}
-            className="relative flex items-center border border-black px-6 py-3 mt-8 w-[80%] max-w-sm"
-          >
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="SEARCH..."
-              className="w-full bg-transparent border-none outline-none font-alte-haas text-sm tracking-widest text-black placeholder:text-black/40"
-            />
-            <button type="submit" aria-label="Search">
-              <Search className="w-5 h-5 text-black hover:opacity-70 transition-opacity" />
-            </button>
-          </form>
       </div>
 
         {/* Mobile slim bar */}
         <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
-          <Link href="/" className="flex items-start">
-            <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
-          </Link>
-          <div className="absolute right-8 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
+          <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-start">
+              <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
+            </Link>
+            {viewedArtworks.map((a) => (
+              <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                <div className="relative w-6 h-6 overflow-hidden border border-black/10">
+                  <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="absolute right-11 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
             <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
-              <div className="relative font-bold leading-none flex flex-col items-end gap-1 select-none tracking-tight" style={{ color: "rgb(43, 52, 133)" }}>
-                <div className="flex gap-1.5 text-[20px] rotate-180 transition-all duration-500 group-hover:-translate-x-1 font-alte-haas">
-                  <span>N</span><span>U</span>
+              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: "rgb(43, 52, 133)" }}>
+                <div className="flex gap-1.5 text-xl leading-none font-alte-haas">
+                  <span>M</span><span>E</span>
                 </div>
                 <div
-                  className="flex gap-1.5 text-[20px] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-top-right font-alte-haas"
+                  className="flex gap-1.5 text-xl leading-none transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-top-right font-alte-haas"
                   style={{ transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)" }}
                 >
-                  <span>M</span><span>E</span>
+                  <span>N</span><span>U</span>
                 </div>
               </div>
             </button>
@@ -198,12 +200,21 @@ export function SiteHeader() {
         >
           {/* Minimised row — fades in when scrolled */}
           <div
-            className="absolute inset-0 flex flex-row items-center pl-24 pr-24 gap-6 transition-opacity duration-300"
+            className="absolute inset-0 flex flex-row items-center pl-24 pr-[7.5rem] gap-6 transition-opacity duration-300"
             style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? "auto" : "none" }}
           >
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
-            </Link>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
+              </Link>
+              {viewedArtworks.map((a) => (
+                <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                  <div className="relative w-6 h-6 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
+                    <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                  </div>
+                </Link>
+              ))}
+            </div>
             <div className="flex-1 overflow-hidden h-full flex items-center relative">
               <Link
                 href={pageHref}
@@ -321,15 +332,24 @@ export function SiteHeader() {
             className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
             style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
           >
-            <Link href="/" className="flex items-end">
-              <Image
-                src="/sassafras-logo-square.JPG"
-                alt="Sassafras"
-                width={80}
-                height={80}
-                className="object-contain"
-              />
-            </Link>
+            <div className="flex items-start gap-2">
+              <Link href="/" className="flex items-start">
+                <Image
+                  src="/sassafras-logo-square.JPG"
+                  alt="Sassafras"
+                  width={80}
+                  height={80}
+                  className="object-contain"
+                />
+              </Link>
+              {viewedArtworks.map((a) => (
+                <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                  <div className="relative w-10 h-10 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
+                    <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                  </div>
+                </Link>
+              ))}
+            </div>
             <div className="flex items-end gap-8">
               <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: "#1a1a1a" }}>
                 {pageLabel}
