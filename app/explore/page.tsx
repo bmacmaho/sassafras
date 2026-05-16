@@ -117,9 +117,10 @@ function ExploreContent() {
           const snap = (v: number) => Math.round(v / 100) * 100
           const widths = [200, 300]
           const randomWidth = widths[Math.floor(Math.random() * widths.length)]
-          const h = randomWidth / artwork.aspectRatio
+          const naturalH = randomWidth / artwork.aspectRatio
+          const randomHeight = Math.max(100, Math.floor(naturalH / 100) * 100)
           const maxJitterX = Math.max(0, cellWidth - randomWidth)
-          const maxJitterY = Math.max(0, cellHeight - h)
+          const maxJitterY = Math.max(0, cellHeight - randomHeight)
           const jitterX = Math.random() * maxJitterX
           const jitterY = Math.random() * maxJitterY
           let pxLeft = snap((cell.c * cellWidth) + jitterX)
@@ -128,7 +129,7 @@ function ExploreContent() {
           const pxTop = snap((cell.r * cellHeight) + jitterY)
           return {
             ...artwork,
-            pos: { ...artwork.pos, width: randomWidth, x: pxLeft, y: pxTop },
+            pos: { ...artwork.pos, width: randomWidth, height: randomHeight, x: pxLeft, y: pxTop },
             float: { delay: `0s`, dur: `0s` }
           }
         })
@@ -308,7 +309,9 @@ function ExploreContent() {
                 left: `${artwork.pos.x}px`,
                 top: `${artwork.pos.y}px`,
                 width: `${artwork.pos.width}px`,
-                aspectRatio: artwork.aspectRatio,
+                height: hoveredId === artwork.id
+                  ? `${Math.round(artwork.pos.width / artwork.aspectRatio)}px`
+                  : `${artwork.pos.height}px`,
                 zIndex: hoveredId === artwork.id ? 50 : 10,
               }}
               onMouseEnter={() => setHoveredId(artwork.id)}
