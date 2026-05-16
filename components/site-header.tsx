@@ -8,7 +8,7 @@ import { Search } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras } from "@/components/header-extras-context"
 
-function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
+export function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -121,7 +121,7 @@ export function SiteHeader() {
 
   const currentColor = getPageColor(pathname)
   const pageLabel = NAV_LINKS.find(link => pathname.startsWith(link.href))?.label ?? ""
-  const { extras } = useHeaderExtras()
+  const { extras, rightExtras } = useHeaderExtras()
   const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
 
   if (pathname === "/") return null
@@ -196,7 +196,7 @@ export function SiteHeader() {
         >
           {/* Minimised row — fades in when scrolled */}
           <div
-            className="absolute inset-0 flex flex-row items-center pl-24 pr-40 gap-6 transition-opacity duration-300"
+            className="absolute inset-0 flex flex-row items-center pl-24 pr-24 gap-6 transition-opacity duration-300"
             style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? "auto" : "none" }}
           >
             <Link href="/" className="flex items-center flex-shrink-0">
@@ -241,7 +241,7 @@ export function SiteHeader() {
 
           {/* Menu button — always present, cross-fades between states */}
           <div
-            className="absolute right-24 z-[70] flex items-center transition-all duration-300 ease-out"
+            className="absolute right-16 z-[70] flex items-center transition-all duration-300 ease-out"
             style={{ top: scrolled ? "0px" : "3.5rem", height: scrolled ? "64px" : "auto" }}
           >
             <button
@@ -302,6 +302,16 @@ export function SiteHeader() {
               </div>
             </button>
           </div>
+
+          {/* Bottom-right extras (e.g. search on explore page) */}
+          {rightExtras && (
+            <div
+              className="absolute bottom-8 right-[4.5rem] transition-opacity duration-300"
+              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+            >
+              {rightExtras}
+            </div>
+          )}
 
           {/* Logo + page title — fades out when scrolled */}
           <div

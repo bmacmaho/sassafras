@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef, Suspense } from "react"
-import { HeaderSlot } from "@/components/header-extras-context"
+import { HeaderSlot, HeaderRightSlot } from "@/components/header-extras-context"
+import { SearchBox } from "@/components/site-header"
 import Image from "next/image"
-import { Search } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { artworks as initialArtworks } from "@/lib/mock-data"
@@ -27,9 +27,11 @@ function ExploreContent() {
   const [activeCategory, setActiveCategory] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState(urlQuery)
   const [isRandomizing, setIsRandomizing] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const [canvasHeight, setCanvasHeight] = useState(0)
-  const [panX, setPanX] = useState(0)
-  const [panY, setPanY] = useState(0)
+  const panXRef = useRef(0)
+  const panYRef = useRef(0)
+  const panLayerRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
 
   const categories = [
@@ -60,14 +62,17 @@ function ExploreContent() {
     return () => { ro.disconnect(); window.removeEventListener("resize", measure) }
   }, [mounted])
 
-  // Capture wheel events on canvas to pan instead of page-scroll
+  // Capture wheel events on canvas — mutate DOM directly to avoid re-render loops
   useEffect(() => {
     const canvas = galleryRef.current
     if (!canvas) return
     const onWheel = (e: WheelEvent) => {
       e.preventDefault()
-      setPanX(x => x - e.deltaX)
-      setPanY(y => y - e.deltaY)
+      panXRef.current -= e.deltaX
+      panYRef.current -= e.deltaY
+      if (panLayerRef.current) {
+        panLayerRef.current.style.transform = `translate(${panXRef.current}px, ${panYRef.current}px)`
+      }
     }
     canvas.addEventListener("wheel", onWheel, { passive: false })
     return () => canvas.removeEventListener("wheel", onWheel)
@@ -76,9 +81,9 @@ function ExploreContent() {
   const handleRandomize = useCallback(() => {
     if (!galleryRef.current || isRandomizing) return
     setIsRandomizing(true)
-    // Reset pan on randomize
-    setPanX(0)
-    setPanY(0)
+    panXRef.current = 0
+    panYRef.current = 0
+    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(0px, 0px)`
 
     const containerWidth = galleryRef.current.offsetWidth
     const containerHeight = galleryRef.current.offsetHeight || canvasHeight
@@ -147,7 +152,12 @@ function ExploreContent() {
   }
 
   const filteredArtworks = artworks.filter(a => {
-    const categoryMatch = activeFilters.length === 0 || activeFilters.every(f => (a as any)[f.type] === f.value)
+    const filtersByType = activeFilters.reduce((acc, f) => {
+      acc[f.type] = acc[f.type] ? [...acc[f.type], f.value] : [f.value]
+      return acc
+    }, {} as Record<string, string[]>)
+    const categoryMatch = activeFilters.length === 0 ||
+      Object.entries(filtersByType).every(([type, values]) => values.includes((a as any)[type]))
     const searchMatch = searchQuery === "" ||
       a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.author.toLowerCase().includes(searchQuery.toLowerCase())
@@ -169,7 +179,7 @@ function ExploreContent() {
 
           {/* ── Branching Interface ── */}
           {(showFilters || closingFilters) && (
-            <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[55%] top-full mt-8 md:mt-0 md:ml-2 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
+            <div className={`absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-full md:top-1/2 md:-translate-y-[55%] top-full mt-8 md:mt-0 md:ml-0.5 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-0 pointer-events-auto z-[100] w-[90vw] md:w-auto ${closingFilters ? "animate-out fade-out slide-out-to-left-10 duration-400" : "animate-in fade-in slide-in-from-left-10 duration-700"}`}>
               {/* SVG Branching Line (Desktop Only) */}
               <div className="hidden md:block w-16 h-[140px] relative">
                 <svg width="100%" height="100%" viewBox="0 0 64 140" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -214,7 +224,7 @@ function ExploreContent() {
 
               {/* Options Box */}
               {activeCategory && (
-                <div className="md:ml-12 w-full md:w-[480px] h-[220px] md:h-[150px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
+                <div className="w-full md:w-[480px] h-[220px] md:h-[150px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
                   <button
                     onClick={() => setActiveCategory("")}
                     className="absolute -right-6 top-0 text-black/30 hover:text-black transition-colors text-xl leading-none"
@@ -254,47 +264,36 @@ function ExploreContent() {
       {/* ── Canvas ── */}
       <div
         ref={galleryRef}
-        className="relative overflow-hidden"
+        className="relative overflow-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32"
         style={{
           height: canvasHeight > 0 ? `${canvasHeight}px` : `calc(100svh - 266px)`,
           backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.08) 1px, transparent 1px)`,
           backgroundSize: '100px 100px',
         }}
       >
-        {/* Search & active filters overlay */}
-        <div className="absolute top-4 left-4 right-4 z-50 flex flex-col md:flex-row md:items-start gap-3 md:gap-8 pointer-events-none">
-          <div className="relative w-full max-w-xs group pointer-events-auto">
-            <input
-              type="text"
-              placeholder="Search artworks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#fcfaf2]/80 backdrop-blur-sm border-b border-black/10 px-0 py-2 rounded-none text-[10px] tracking-[0.2em] uppercase focus:outline-none focus:border-black/40 transition-all placeholder:text-black/20 font-sans text-black"
-            />
-            <Search className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black/20 group-focus-within:text-black/40 transition-colors" />
+        <HeaderRightSlot>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            {activeFilters.map(f => (
+              <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-pink-100 border-2 border-black rounded-full px-2.5 py-0.5">
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">{f.value}</span>
+                <button onClick={() => toggleFilter(f.type, f.value)} className="text-black hover:opacity-60 transition-opacity text-xs font-bold ml-1">×</button>
+              </div>
+            ))}
+            {searchQuery && (
+              <div className="flex items-center gap-2 bg-pink-100 border-2 border-black rounded-full px-2.5 py-0.5">
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">Search:</span>
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">{searchQuery}</span>
+                <button onClick={() => setSearchQuery("")} className="text-black hover:opacity-60 transition-opacity text-xs font-bold ml-1">×</button>
+              </div>
+            )}
+            <SearchBox color="black" open={searchOpen} onToggle={() => setSearchOpen(o => !o)} />
           </div>
-          {activeFilters.length > 0 && (
-            <div className="flex flex-wrap gap-2 items-center pointer-events-auto">
-              {activeFilters.map(f => (
-                <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-[#FBFAF1]/80 backdrop-blur-sm border border-black/10 px-3 py-1.5 rounded-full text-[9px] tracking-[0.1em] uppercase text-black/70 hover:text-black hover:border-black/30 transition-all">
-                  <span className="opacity-40">{f.type}:</span> {f.value}
-                  <button onClick={() => toggleFilter(f.type, f.value)} className="hover:text-red-500 ml-1 font-bold">×</button>
-                </div>
-              ))}
-              <button
-                onClick={() => setActiveFilters([])}
-                className="text-[9px] tracking-[0.2em] text-[#f87171] hover:text-red-600 uppercase ml-2 transition-colors font-bold border-b border-red-200"
-              >
-                Clear All
-              </button>
-            </div>
-          )}
-        </div>
+        </HeaderRightSlot>
 
         {/* ── Panned artworks layer ── */}
         <div
+          ref={panLayerRef}
           className="absolute inset-0"
-          style={{ transform: `translate(${panX}px, ${panY}px)` }}
         >
           {filteredArtworks.map((artwork) => (
             <Link
