@@ -31,6 +31,7 @@ function ExploreContent() {
   const [canvasHeight, setCanvasHeight] = useState(0)
   const panXRef = useRef(0)
   const panYRef = useRef(0)
+  const scaleRef = useRef(1)
   const panLayerRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
 
@@ -66,17 +67,37 @@ function ExploreContent() {
   useEffect(() => {
     const canvas = galleryRef.current
     if (!canvas) return
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      panXRef.current -= e.deltaX
-      panYRef.current -= e.deltaY
-      if (panLayerRef.current) {
-        panLayerRef.current.style.transform = `translate(${panXRef.current}px, ${panYRef.current}px)`
-      }
+
+    const applyTransform = () => {
+      const x = panXRef.current, y = panYRef.current, s = scaleRef.current
+      if (panLayerRef.current)
+        panLayerRef.current.style.transform = `translate(${x}px, ${y}px) scale(${s})`
       if (galleryRef.current) {
-        galleryRef.current.style.backgroundPosition = `${panXRef.current}px ${panYRef.current}px`
+        galleryRef.current.style.backgroundPosition = `${x}px ${y}px`
+        galleryRef.current.style.backgroundSize = `${100 * s}px ${100 * s}px`
       }
     }
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      if (e.ctrlKey) {
+        // Pinch-to-zoom — zoom towards cursor
+        const rect = canvas.getBoundingClientRect()
+        const mouseX = e.clientX - rect.left
+        const mouseY = e.clientY - rect.top
+        const worldX = (mouseX - panXRef.current) / scaleRef.current
+        const worldY = (mouseY - panYRef.current) / scaleRef.current
+        const newScale = Math.min(4, Math.max(0.25, scaleRef.current * (1 - e.deltaY * 0.01)))
+        panXRef.current = mouseX - worldX * newScale
+        panYRef.current = mouseY - worldY * newScale
+        scaleRef.current = newScale
+      } else {
+        panXRef.current -= e.deltaX
+        panYRef.current -= e.deltaY
+      }
+      applyTransform()
+    }
+
     canvas.addEventListener("wheel", onWheel, { passive: false })
     return () => canvas.removeEventListener("wheel", onWheel)
   }, [mounted])
@@ -86,8 +107,12 @@ function ExploreContent() {
     setIsRandomizing(true)
     panXRef.current = 0
     panYRef.current = 0
-    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(0px, 0px)`
-    if (galleryRef.current) galleryRef.current.style.backgroundPosition = `0px 0px`
+    scaleRef.current = 1
+    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(0px, 0px) scale(1)`
+    if (galleryRef.current) {
+      galleryRef.current.style.backgroundPosition = `0px 0px`
+      galleryRef.current.style.backgroundSize = `100px 100px`
+    }
 
     const containerWidth = galleryRef.current.offsetWidth
     const containerHeight = galleryRef.current.offsetHeight || canvasHeight
@@ -272,7 +297,7 @@ function ExploreContent() {
         className="relative overflow-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32"
         style={{
           height: canvasHeight > 0 ? `${canvasHeight}px` : `calc(100svh - 266px)`,
-          backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.08) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px), linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)`,
           backgroundSize: '100px 100px',
         }}
       >
@@ -299,6 +324,7 @@ function ExploreContent() {
         <div
           ref={panLayerRef}
           className="absolute inset-0"
+          style={{ transformOrigin: '0 0' }}
         >
           {filteredArtworks.map((artwork) => (
             <Link
