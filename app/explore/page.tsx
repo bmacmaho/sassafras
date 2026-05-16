@@ -343,9 +343,9 @@ function ExploreContent() {
               onMouseEnter={() => setHoveredId(artwork.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
-              <div className={`absolute left-full top-0 pl-4 w-72 transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100' : 'opacity-0'}`}>
-                <p className="text-black text-2xl font-bold leading-tight font-alte-haas uppercase">{artwork.title}</p>
-                <p className="text-[#555] text-base tracking-widest uppercase mt-2 font-alte-haas">{artwork.author}</p>
+              <div className={`absolute left-full top-0 pl-4 whitespace-nowrap transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100' : 'opacity-0'}`}>
+                <p className="text-black font-bold font-alte-haas uppercase" style={{ fontSize: '86px', lineHeight: '100px' }}>{artwork.title}</p>
+                <p className="text-[#555] font-alte-haas uppercase tracking-widest" style={{ fontSize: '20px', lineHeight: '50px' }}>{artwork.author}</p>
               </div>
               <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
                 <Image
