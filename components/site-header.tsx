@@ -368,6 +368,9 @@ export function SiteHeader() {
               ) : null}
             </div>
           </div>
+          {pathname === "/explore" && (
+            <div className="absolute bottom-0 left-10 right-10 md:left-11 md:right-11 h-0 border-b-4 border-[#D5D4CD] pointer-events-none" />
+          )}
         </header>
     </>
   )
