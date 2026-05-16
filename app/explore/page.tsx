@@ -389,7 +389,7 @@ function ExploreContent() {
           style={{ transformOrigin: '0 0' }}
         >
           <div
-            className={`absolute pointer-events-none transition-opacity duration-300 bg-white/70 ${hoveredId !== null ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute pointer-events-none transition-opacity duration-300 bg-[#FBFAF1]/70 ${hoveredId !== null ? 'opacity-100' : 'opacity-0'}`}
             style={{ inset: '-50000px', zIndex: 20 }}
           />
           {filteredArtworks.map((artwork) => (
