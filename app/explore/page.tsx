@@ -29,11 +29,13 @@ function ExploreContent() {
   const [isRandomizing, setIsRandomizing] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [canvasHeight, setCanvasHeight] = useState(0)
-  const panXRef = useRef(0)
-  const panYRef = useRef(0)
-  const scaleRef = useRef(1)
+  const panXRef = useRef(100)
+  const panYRef = useRef(80)
+  const scaleRef = useRef(0.75)
   const panLayerRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
+  const labelRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+  const typingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const categories = [
     { id: "year", label: "Year", options: ["2024", "2025", "2026"] },
@@ -105,13 +107,13 @@ function ExploreContent() {
   const handleRandomize = useCallback(() => {
     if (!galleryRef.current || isRandomizing) return
     setIsRandomizing(true)
-    panXRef.current = 0
-    panYRef.current = 0
-    scaleRef.current = 1
-    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(0px, 0px) scale(1)`
+    panXRef.current = 100
+    panYRef.current = 80
+    scaleRef.current = 0.75
+    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
     if (galleryRef.current) {
-      galleryRef.current.style.backgroundPosition = `0px 0px`
-      galleryRef.current.style.backgroundSize = `100px 100px`
+      galleryRef.current.style.backgroundPosition = `100px 80px`
+      galleryRef.current.style.backgroundSize = `75px 75px`
     }
 
     const containerWidth = galleryRef.current.offsetWidth
@@ -120,44 +122,48 @@ function ExploreContent() {
 
     const cols = isMobile ? 1 : Math.max(2, Math.floor(containerWidth / 400))
     const cellWidth = Math.max(100, Math.floor((containerWidth / cols) / 100) * 100)
-    const cellHeight = Math.max(200, Math.floor((containerHeight / (isMobile ? 8 : 6)) / 100) * 100)
-
-    const rows = isMobile ? 8 : 6
-    const cells: { r: number, c: number }[] = []
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        cells.push({ r, c })
-      }
-    }
-
-    for (let i = cells.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cells[i], cells[j]] = [cells[j], cells[i]]
-    }
 
     setTimeout(() => {
       setArtworks(prev => {
-        return prev.map((artwork, index) => {
-          const cell = cells[index % cells.length]
-          const snap = (v: number) => Math.round(v / 100) * 100
-          const widths = [200, 300]
-          const randomWidth = widths[Math.floor(Math.random() * widths.length)]
+        const snap = (v: number) => Math.round(v / 100) * 100
+
+        // Shuffle indices for variety on each randomize
+        const indices = prev.map((_, i) => i)
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]]
+        }
+
+        const colHeights = new Array(cols).fill(0)
+        const placed = new Array(prev.length)
+
+        indices.forEach(index => {
+          const artwork = prev[index]
+          const validWidths = [200, 300].filter(w => w <= cellWidth)
+          const randomWidth = validWidths.length > 0
+            ? validWidths[Math.floor(Math.random() * validWidths.length)]
+            : cellWidth
           const naturalH = randomWidth / artwork.aspectRatio
           const randomHeight = Math.max(100, Math.floor(naturalH / 100) * 100)
-          const maxJitterX = Math.max(0, cellWidth - randomWidth)
-          const maxJitterY = Math.max(0, cellHeight - randomHeight)
+
+          // Place in shortest column; break ties randomly
+          const minH = Math.min(...colHeights)
+          const candidates = colHeights.map((_, i) => i).filter(i => colHeights[i] === minH)
+          const col = candidates[Math.floor(Math.random() * candidates.length)]
+
+          const maxJitterX = cellWidth - randomWidth
           const jitterX = Math.random() * maxJitterX
-          const jitterY = Math.random() * maxJitterY
-          let pxLeft = snap((cell.c * cellWidth) + jitterX)
-          const maxAllowedLeft = Math.floor((containerWidth - randomWidth) / 100) * 100
-          if (pxLeft > maxAllowedLeft) pxLeft = Math.max(0, maxAllowedLeft)
-          const pxTop = snap((cell.r * cellHeight) + jitterY)
-          return {
+          const pxLeft = snap(col * cellWidth + jitterX)
+          const pxTop = colHeights[col]
+          colHeights[col] = pxTop + randomHeight + 100
+
+          placed[index] = {
             ...artwork,
             pos: { ...artwork.pos, width: randomWidth, height: randomHeight, x: pxLeft, y: pxTop },
             float: { delay: `0s`, dur: `0s` }
           }
         })
+        return placed
       })
       setIsRandomizing(false)
     }, 600)
@@ -167,11 +173,67 @@ function ExploreContent() {
 
   useEffect(() => {
     setMounted(true)
+    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
+    if (galleryRef.current) { galleryRef.current.style.backgroundSize = `75px 75px`; galleryRef.current.style.backgroundPosition = `100px 80px` }
     if (galleryRef.current && (!hasShuffled.current || artworks[0].pos.width < 100)) {
       handleRandomize()
       hasShuffled.current = true
     }
   }, [handleRandomize, artworks])
+
+  useEffect(() => {
+    if (typingInterval.current) clearInterval(typingInterval.current)
+    if (hoveredId === null) return
+    const el = labelRefs.current.get(hoveredId)
+    if (!el) return
+    const artwork = artworks.find(a => a.id === hoveredId)
+    if (!artwork) return
+    const titleEl = el.querySelector('[data-title]') as HTMLElement
+    const authorEl = el.querySelector('[data-author]') as HTMLElement
+    if (!titleEl || !authorEl) return
+
+    const measureLines = (el: HTMLElement, text: string): string[] => {
+      if (!text) return []
+      el.textContent = text
+      if (!el.firstChild) return [text]
+      const lines: string[] = []
+      let line = ''
+      let lineTop = -1
+      for (let i = 0; i < text.length; i++) {
+        const range = document.createRange()
+        range.setStart(el.firstChild, i)
+        range.setEnd(el.firstChild, i + 1)
+        const top = range.getBoundingClientRect().top
+        if (lineTop < 0) lineTop = top
+        if (top > lineTop + 5) { lines.push(line); line = text[i]; lineTop = top }
+        else line += text[i]
+      }
+      if (line) lines.push(line)
+      return lines
+    }
+
+    const ltrMark = (s: string) => s.replace(/([:\-–—,;!?])/g, '\u200E$1\u200E')
+    const title = ltrMark(artwork.title.toUpperCase())
+    const author = ltrMark(artwork.author.toUpperCase())
+    const titleLines = measureLines(titleEl, title)
+    const authorLines = measureLines(authorEl, author)
+
+    // Render one block span per line so each can type independently
+    titleEl.innerHTML = titleLines.map(() => '<span style="display:block"></span>').join('')
+    authorEl.innerHTML = authorLines.map(() => '<span style="display:block"></span>').join('')
+    const titleSpans = Array.from(titleEl.children) as HTMLElement[]
+    const authorSpans = Array.from(authorEl.children) as HTMLElement[]
+
+    const maxLen = Math.max(...titleLines.map(l => l.length), ...authorLines.map(l => l.length), 1)
+    let i = 0
+    typingInterval.current = setInterval(() => {
+      titleLines.forEach((line, idx) => { if (titleSpans[idx]) titleSpans[idx].textContent = line.slice(0, i) })
+      authorLines.forEach((line, idx) => { if (authorSpans[idx]) authorSpans[idx].textContent = line.slice(0, i) })
+      i++
+      if (i > maxLen) clearInterval(typingInterval.current!)
+    }, 40)
+    return () => { if (typingInterval.current) clearInterval(typingInterval.current) }
+  }, [hoveredId])
 
   const toggleFilter = (type: string, value: string) => {
     setActiveFilters(prev => {
@@ -326,6 +388,10 @@ function ExploreContent() {
           className="absolute inset-0"
           style={{ transformOrigin: '0 0' }}
         >
+          <div
+            className={`absolute pointer-events-none transition-opacity duration-300 bg-white/70 ${hoveredId !== null ? 'opacity-100' : 'opacity-0'}`}
+            style={{ inset: '-50000px', zIndex: 20 }}
+          />
           {filteredArtworks.map((artwork) => (
             <Link
               key={artwork.id}
@@ -343,10 +409,21 @@ function ExploreContent() {
               onMouseEnter={() => setHoveredId(artwork.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
-              <div className={`absolute left-full top-0 pl-4 whitespace-nowrap transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100' : 'opacity-0'}`}>
-                <p className="text-black font-bold font-alte-haas uppercase" style={{ fontSize: '86px', lineHeight: '100px' }}>{artwork.title}</p>
-                <p className="text-[#555] font-alte-haas uppercase tracking-widest" style={{ fontSize: '20px', lineHeight: '50px' }}>{artwork.author}</p>
-              </div>
+              {(() => {
+                const canvasWidth = galleryRef.current?.offsetWidth ?? 0
+                const screenCentreX = artwork.pos.x * scaleRef.current + panXRef.current + (artwork.pos.width * scaleRef.current) / 2
+                const onRight = screenCentreX > canvasWidth / 2
+                return (
+                  <div
+                    ref={el => { if (el) labelRefs.current.set(artwork.id, el); else labelRefs.current.delete(artwork.id) }}
+                    className={`absolute top-0 transition-all duration-500 pointer-events-none z-50 ${onRight ? 'right-full pr-4 text-right' : 'left-full pl-4 text-left'} ${hoveredId === artwork.id ? 'opacity-100 translate-x-0' : `opacity-0 ${onRight ? 'translate-x-4' : '-translate-x-4'}`}`}
+                    style={{ width: '200px' }}
+                  >
+                    <p data-title className="text-black font-bold font-alte-haas" style={{ fontSize: '42px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
+                    <p data-author className="text-[#555] font-alte-haas tracking-widest" style={{ fontSize: '16px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
+                  </div>
+                )
+              })()}
               <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
                 <Image
                   src={artwork.image}
