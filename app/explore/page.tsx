@@ -73,6 +73,9 @@ function ExploreContent() {
       if (panLayerRef.current) {
         panLayerRef.current.style.transform = `translate(${panXRef.current}px, ${panYRef.current}px)`
       }
+      if (galleryRef.current) {
+        galleryRef.current.style.backgroundPosition = `${panXRef.current}px ${panYRef.current}px`
+      }
     }
     canvas.addEventListener("wheel", onWheel, { passive: false })
     return () => canvas.removeEventListener("wheel", onWheel)
@@ -84,6 +87,7 @@ function ExploreContent() {
     panXRef.current = 0
     panYRef.current = 0
     if (panLayerRef.current) panLayerRef.current.style.transform = `translate(0px, 0px)`
+    if (galleryRef.current) galleryRef.current.style.backgroundPosition = `0px 0px`
 
     const containerWidth = galleryRef.current.offsetWidth
     const containerHeight = galleryRef.current.offsetHeight || canvasHeight
@@ -310,11 +314,9 @@ function ExploreContent() {
               onMouseEnter={() => setHoveredId(artwork.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
-              <div className={`absolute left-0 -top-10 w-full transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100 -translate-y-2' : 'opacity-0 translate-y-0'}`}>
-                <div className="py-2 text-center">
-                  <p className="text-black text-sm font-bold leading-tight font-sans uppercase">{artwork.title}</p>
-                  <p className="text-[#555] text-[9px] tracking-widest uppercase mt-0.5 font-sans">{artwork.author}</p>
-                </div>
+              <div className={`absolute left-full top-0 pl-4 w-72 transition-all duration-500 pointer-events-none z-50 ${hoveredId === artwork.id ? 'opacity-100' : 'opacity-0'}`}>
+                <p className="text-black text-2xl font-bold leading-tight font-alte-haas uppercase">{artwork.title}</p>
+                <p className="text-[#555] text-base tracking-widest uppercase mt-2 font-alte-haas">{artwork.author}</p>
               </div>
               <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
                 <Image
