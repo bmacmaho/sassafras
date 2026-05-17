@@ -47,34 +47,48 @@ export function SearchBox({ color, open, onToggle }: { color: string; open: bool
   )
 }
 
-function NavLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
+function NavLink({ href, label, pathname, submenu }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[] }) {
+  const [hovered, setHovered] = useState(false)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = pathname.startsWith(href)
+  const color = hovered || isActive ? linkColor : "black"
+
   return (
-    <Link
-      href={href}
-      className="group relative font-alte-haas text-base tracking-[0.05em] transition-colors text-center"
-      style={{ color: isActive ? linkColor : "black" }}
-      onMouseEnter={e => (e.currentTarget.style.color = linkColor)}
-      onMouseLeave={e => (e.currentTarget.style.color = isActive ? linkColor : "black")}
+    <div
+      className="relative flex flex-col items-center"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {label}
-      <span
-        className="block h-[1px] transition-all duration-300 ease-out origin-center"
-        style={{ backgroundColor: linkColor, transform: isActive ? "scaleX(1)" : "scaleX(0)" }}
-        ref={el => {
-          if (!el) return
-          const parent = el.parentElement!
-          parent.addEventListener("mouseenter", () => (el.style.transform = "scaleX(1)"))
-          parent.addEventListener("mouseleave", () => { if (!isActive) el.style.transform = "scaleX(0)" })
-        }}
-      />
-    </Link>
+      <Link
+        href={href}
+        className="relative font-alte-haas text-base tracking-[0.05em] transition-colors text-center"
+        style={{ color }}
+      >
+        {label}
+        <span
+          className="block h-[1px] transition-all duration-300 ease-out origin-center"
+          style={{ backgroundColor: linkColor, transform: hovered || isActive ? "scaleX(1)" : "scaleX(0)" }}
+        />
+      </Link>
+      {submenu && (
+        <div className={`absolute top-full pt-3 flex flex-col items-center gap-2 transition-all duration-200 z-10 ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}>
+          {submenu.map(item => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60"
+              style={{ color: "#FBFAF1", WebkitTextStroke: "0.5px black" }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
 const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
-  "/about":         { line1: "The Initiative",              line2: "Established 2024 — Berlin" },
   "/issues":        { line1: "Archive",                     line2: "Full Collection — 2024 to Present" },
   "/current-issue": { line1: "The Tower",                   line2: "Issue No. 1 — JUNE 2026" },
   "/submissions":   { line1: "Open Call",                   line2: "Issue No. 1 — The Tower" },
@@ -84,7 +98,7 @@ const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   { href: "/issues", label: "ALL ISSUES" },
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT" },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS" }] },
   { href: "/submissions", label: "SUBMISSIONS" },
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
@@ -115,21 +129,14 @@ export function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
-    const handler = () => {
-      if (pathname === "/explore") { setScrolled(false); return }
-      setScrolled(window.scrollY > 60)
-    }
+    const handler = () => setScrolled(window.scrollY > 60)
     window.addEventListener("scroll", handler, { passive: true })
     return () => window.removeEventListener("scroll", handler)
   }, [pathname])
 
-  useEffect(() => {
-    if (pathname === "/explore") setScrolled(false)
-  }, [pathname])
-
   const currentColor = getPageColor(pathname)
   const pageLink = NAV_LINKS.find(link => pathname.startsWith(link.href))
-  const pageLabel = pageLink?.label ?? ""
+  const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
   const pageHref = pageLink?.href ?? "/"
   const { extras, rightExtras } = useHeaderExtras()
   const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
@@ -226,7 +233,7 @@ export function SiteHeader() {
                 style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
               >
                 {NAV_LINKS.map((link) => (
-                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} />
                 ))}
               </div>
             </div>
@@ -247,7 +254,7 @@ export function SiteHeader() {
           >
             <div className="flex items-center justify-between flex-1 pr-8">
               {NAV_LINKS.map((link) => (
-                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} />
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} />
               ))}
             </div>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
@@ -368,8 +375,8 @@ export function SiteHeader() {
               ) : null}
             </div>
           </div>
-          {pathname === "/explore" && (
-            <div className="absolute bottom-0 left-10 right-10 md:left-11 md:right-11 h-0 border-b-4 border-[#D5D4CD] pointer-events-none" />
+          {(pathname === "/explore" || pathname.startsWith("/about")) && !scrolled && (
+            <div className="absolute bottom-0 left-24 right-24 h-0 border-b-4 border-[#D5D4CD] pointer-events-none" />
           )}
         </header>
     </>

@@ -35,6 +35,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { MouseGlow } from "@/components/mouse-glow"
 import { PageFrame } from "@/components/page-frame"
 import { HeaderExtrasProvider } from "@/components/header-extras-context"
+import { BackToTop } from "@/components/back-to-top"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -62,7 +63,7 @@ export default function RootLayout({
         <PageFrame>
           <MouseGlow />
           <SiteHeader />
-          <main className="flex-1 flex flex-col px-6 sm:px-12 md:px-16 lg:px-24 xl:px-32 pb-32 md:pb-56 w-full max-w-[1920px] mx-auto">{children}</main>
+          <main className="flex-1 flex flex-col px-6 sm:px-12 md:px-16 lg:px-24 xl:px-32 pb-32 md:pb-56 w-full max-w-[1920px] mx-auto">{children}<BackToTop /></main>
           <SiteFooter />
         </PageFrame>
         </HeaderExtrasProvider>

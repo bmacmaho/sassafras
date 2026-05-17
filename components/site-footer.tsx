@@ -2,17 +2,25 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export function SiteFooter() {
+  const pathname = usePathname()
+  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions"
+
+  const bgColor = isAbout ? "#A39DC3" : "#B8D160"
+  const marqueeStroke = isAbout ? "#48464B" : "#5D9800"
+  const textColor = "#35362E"
+
   const colLabel = "uppercase tracking-wide text-[18px] leading-tight"
   const colText = "uppercase tracking-wide text-[18px] leading-tight"
   const colLink = "uppercase tracking-wide text-[18px] transition-colors block leading-tight underline underline-offset-2"
-  const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: "#35362E" }
+  const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: textColor }
 
   return (
     <footer
       className="relative px-4 md:px-8 overflow-hidden"
-      style={{ backgroundColor: "#B8D160", zIndex: 10003, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "4px solid black", overflowAnchor: "none" }}
+      style={{ backgroundColor: bgColor, zIndex: 10000, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "1px solid black" }}
     >
       {/* ── Top Section ── */}
       <div className="flex flex-row justify-between gap-12 pb-0 flex-wrap" style={alteFontStyle}>
@@ -84,7 +92,7 @@ export function SiteFooter() {
             <h2
               key={i}
               className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
-              style={{ color: "#B8D160", WebkitTextStroke: "8px #5D9800", fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+              style={{ color: bgColor, WebkitTextStroke: `8px ${marqueeStroke}`, fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
             >
               Sassafras
             </h2>
@@ -95,7 +103,7 @@ export function SiteFooter() {
             <h2
               key={i}
               className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
-              style={{ color: "#B8D160", WebkitTextStroke: "8px #5D9800", fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+              style={{ color: bgColor, WebkitTextStroke: `8px ${marqueeStroke}`, fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
             >
               Sassafras
             </h2>
