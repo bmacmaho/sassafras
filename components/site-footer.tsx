@@ -12,7 +12,7 @@ export function SiteFooter() {
   return (
     <footer
       className="relative px-4 md:px-8 overflow-hidden"
-      style={{ backgroundColor: "#B8D160", zIndex: 10000, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "4px solid black" }}
+      style={{ backgroundColor: "#B8D160", zIndex: 10003, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "4px solid black", overflowAnchor: "none" }}
     >
       {/* ── Top Section ── */}
       <div className="flex flex-row justify-between gap-12 pb-0 flex-wrap" style={alteFontStyle}>
@@ -78,7 +78,7 @@ export function SiteFooter() {
       </div>
 
       {/* ── Marquee Branding ── */}
-      <div className="relative flex whitespace-nowrap group -mx-8 md:-mx-16" style={{ transform: "translateY(25%)", borderTop: "4px solid #FBFAF1", marginTop: "-1.5vw" }}>
+      <div className="relative flex whitespace-nowrap group -mx-8 md:-mx-16" style={{ transform: "translateY(25%)", borderTop: "4px solid #FBFAF1", marginTop: "-1.5vw", willChange: "transform" }}>
         <div className="flex animate-marquee group-hover:pause">
           {[1, 2, 3, 4].map((i) => (
             <h2

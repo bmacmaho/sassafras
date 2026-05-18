@@ -6,6 +6,7 @@
   src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: block;
 }
 
 @font-face {
@@ -13,10 +14,11 @@
   src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: block;
 }
 
 .font-alte-haas {
-  font-family: 'Alte Haas Grotesk', Papyrus, fantasy;
+  font-family: var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif !important;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -79,6 +81,8 @@
     margin: 0;
     padding: 0;
     overscroll-behavior: none;
+    /* Prevent scroll position corrections due to font swaps, image loads, or transform changes */
+    overflow-anchor: none;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -213,15 +217,6 @@
   }
 }
 
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
 @keyframes fade-in {
   from {
@@ -340,4 +335,24 @@
       transparent 28px,
       rgba(0, 0, 0, 0.01) 28px,
       rgba(0, 0, 0, 0.01) 29px);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee2 {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0%); }
+}
+
+/* Homepage banner — faster */
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Footer marquee uses the same class but overrides speed via its own style jsx (30s) */
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
 }

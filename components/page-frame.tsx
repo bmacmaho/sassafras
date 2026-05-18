@@ -11,7 +11,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
     <>
       {/* Viewport Fixed Frame Overlay */}
       <div
-        className="fixed inset-0 pointer-events-none z-[9999] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
+        className="fixed inset-0 pointer-events-none z-[10002] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
         style={{ borderColor: frameColor }}
       />
       {/* Inner gradient edges — 4 strips */}
@@ -23,7 +23,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
       ] as const).map(({ mask, ...pos }, i) => (
         <div
           key={i}
-          className="fixed pointer-events-none z-[9998] transition-colors duration-[1500ms] ease-in-out"
+          className="fixed pointer-events-none z-[10001] transition-colors duration-[1500ms] ease-in-out"
           style={{ ...pos, backgroundColor: frameColor, maskImage: mask, WebkitMaskImage: mask }}
         />
       ))}

@@ -57,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable}`}>
-      <body className="font-mono antialiased text-[#222] transition-colors duration-1000">
+      <body className="font-mono antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
         <HeaderExtrasProvider>
         <PageFrame>
           <MouseGlow />
