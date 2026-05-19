@@ -7,15 +7,17 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const frameColor = getPageColor(pathname)
 
+  const isHome = pathname === "/"
+
   return (
     <>
       {/* Viewport Fixed Frame Overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none z-[10002] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
+      {!isHome && <div
+        className="fixed inset-0 pointer-events-none z-[9999] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
         style={{ borderColor: frameColor }}
-      />
+      />}
       {/* Inner gradient edges — 4 strips */}
-      {([
+      {!isHome && ([
         { top: 12,   left: 12,   right: 12,  height: 10, mask: "linear-gradient(to bottom, black 50%, transparent 100%)" },
         { bottom: 12, left: 12,  right: 12,  height: 10, mask: "linear-gradient(to top,    black 50%, transparent 100%)" },
         { top: 12,   bottom: 12, left: 12,   width: 10,  mask: "linear-gradient(to right,  black 50%, transparent 100%)" },
@@ -23,7 +25,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
       ] as const).map(({ mask, ...pos }, i) => (
         <div
           key={i}
-          className="fixed pointer-events-none z-[10001] transition-colors duration-[1500ms] ease-in-out"
+          className="fixed pointer-events-none z-[9998] transition-colors duration-[1500ms] ease-in-out"
           style={{ ...pos, backgroundColor: frameColor, maskImage: mask, WebkitMaskImage: mask }}
         />
       ))}
