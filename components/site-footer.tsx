@@ -17,6 +17,8 @@ export function SiteFooter() {
   const colLink = "uppercase tracking-wide text-[18px] transition-colors block leading-tight underline underline-offset-2"
   const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: textColor }
 
+  if (pathname === "/") return null
+
   return (
     <footer
       className="relative px-4 md:px-8 overflow-hidden"

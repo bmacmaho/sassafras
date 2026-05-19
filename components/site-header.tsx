@@ -89,16 +89,16 @@ function NavLink({ href, label, pathname, submenu }: { href: string; label: stri
 }
 
 const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
-  "/issues":        { line1: "Archive",                     line2: "Full Collection — 2024 to Present" },
-  "/current-issue": { line1: "The Tower",                   line2: "Issue No. 1 — JUNE 2026" },
-  "/submissions":   { line1: "Open Call",                   line2: "Issue No. 1 — The Tower" },
+  "/issues":                  { line1: "Archive",        line2: "Full Collection — 2024 to Present" },
+  "/current-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
+  "/submissions":             { line1: "Open Call",      line2: "Issue No. 1 — The Tower" },
 }
 
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   { href: "/issues", label: "ALL ISSUES" },
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS" }] },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why Sassafras?" }] },
   { href: "/submissions", label: "SUBMISSIONS" },
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
@@ -135,7 +135,8 @@ export function SiteHeader() {
   }, [pathname])
 
   const currentColor = getPageColor(pathname)
-  const pageLink = NAV_LINKS.find(link => pathname.startsWith(link.href))
+  const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
+  const pageLink = [...allLinks].sort((a, b) => b.href.length - a.href.length).find(link => pathname.startsWith(link.href))
   const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
   const pageHref = pageLink?.href ?? "/"
   const { extras, rightExtras } = useHeaderExtras()
