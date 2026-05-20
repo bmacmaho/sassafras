@@ -357,7 +357,7 @@ function ExploreContent() {
       <div className="-mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 mt-4">
       <div
         ref={galleryRef}
-        className="relative overflow-hidden mx-10 md:mx-11 border-l-4 border-r-4 border-b-4 border-[#D5D4CD] z-[49]"
+        className="relative overflow-hidden mx-10 md:mx-11 lg:mx-24 border-l-4 border-r-4 border-b-4 border-[#D5D4CD] z-[49]"
         style={{
           height: canvasHeight > 0 ? `${canvasHeight}px` : `calc(100svh - 266px)`,
           backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px), linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)`,

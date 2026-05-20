@@ -103,11 +103,20 @@ const NAV_LINKS = [
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
 
+const HEADER_MAX = 250
+const HEADER_MIN = 64
+const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
+
 export function SiteHeader() {
   const pathname = usePathname()
+
   const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
+  const [headerTransition, setHeaderTransition] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const accumRef = useRef(0)
+  const phaseLockedRef = useRef(true)
+  const scrolled = headerHeight <= HEADER_MIN
   const [viewedArtworks, setViewedArtworks] = useState<{ image: string; slug: string }[]>([])
 
   useEffect(() => {
@@ -128,11 +137,51 @@ export function SiteHeader() {
     return () => clearTimeout(timer)
   }, [pathname])
 
+  // Reset header to expanded state on each page navigation
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60)
-    window.addEventListener("scroll", handler, { passive: true })
-    return () => window.removeEventListener("scroll", handler)
+    if (window.scrollY > 0) {
+      accumRef.current = COLLAPSE_RANGE
+      phaseLockedRef.current = false
+      setHeaderHeight(HEADER_MIN)
+    } else {
+      accumRef.current = 0
+      phaseLockedRef.current = true
+      setHeaderHeight(HEADER_MAX)
+    }
+    setHeaderTransition(false)
   }, [pathname])
+
+  // Wheel interceptor: desktop only, locks content scroll while header collapses
+  useEffect(() => {
+    if (!window.matchMedia('(min-width: 1024px)').matches) return
+
+    const onWheel = (e: WheelEvent) => {
+      if (!phaseLockedRef.current) return
+      e.preventDefault()
+      setHeaderTransition(false)
+      accumRef.current = Math.max(0, Math.min(COLLAPSE_RANGE, accumRef.current + e.deltaY))
+      setHeaderHeight(HEADER_MAX - accumRef.current)
+      if (e.deltaY > 0 && accumRef.current >= COLLAPSE_RANGE) {
+        phaseLockedRef.current = false
+      }
+    }
+
+    const onScroll = () => {
+      if (window.scrollY === 0 && !phaseLockedRef.current) {
+        phaseLockedRef.current = true
+        accumRef.current = 0
+        setHeaderTransition(true)
+        setHeaderHeight(HEADER_MAX)
+      }
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
 
   const currentColor = getPageColor(pathname)
   const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
@@ -202,8 +251,8 @@ export function SiteHeader() {
           className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
           style={{
             backgroundColor: "#fbfaf1",
-            height: scrolled ? "64px" : "250px",
-            transition: "height 0.4s ease",
+            height: `${headerHeight}px`,
+            transition: headerTransition ? "height 0.4s ease" : "none",
           }}
         >
           {/* Minimised row — fades in when scrolled */}
@@ -363,7 +412,7 @@ export function SiteHeader() {
                 {pageLabel}
               </Link>
               {extras ? (
-                <div className="flex flex-col justify-end pb-1 gap-1">{extras}</div>
+                <div className="flex flex-col justify-end pb-1 gap-1 h-12">{extras}</div>
               ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
                 <div className="flex flex-col justify-end pb-1 gap-1">
                   <span className="font-title text-base font-medium tracking-tight text-black/40 leading-none">

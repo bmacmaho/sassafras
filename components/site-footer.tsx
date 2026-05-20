@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 
 export function SiteFooter() {
   const pathname = usePathname()
-  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions"
+  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions" || pathname === "/issues"
 
   const bgColor = isAbout ? "#A39DC3" : "#B8D160"
   const marqueeStroke = isAbout ? "#48464B" : "#5D9800"
