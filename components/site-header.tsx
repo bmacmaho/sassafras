@@ -54,7 +54,7 @@ export function SearchBox({ color, open, onToggle, darkMode }: { color: string; 
 function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[]; darkMode?: boolean }) {
   const [hovered, setHovered] = useState(false)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
-  const isActive = pathname.startsWith(href)
+  const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
   const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
 
   return (
@@ -99,6 +99,7 @@ const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
 }
 
 const NAV_LINKS = [
+  { href: "/", label: "HOME" },
   { href: "/current-issue", label: "CURRENT ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
