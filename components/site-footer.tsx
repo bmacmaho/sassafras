@@ -3,13 +3,16 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { useHeaderScrolled } from "@/components/header-extras-context"
 
 export function SiteFooter() {
   const pathname = usePathname()
+  const { darkMode } = useHeaderScrolled()
   const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions" || pathname === "/issues"
 
-  const bgColor = isAbout ? "#A39DC3" : "#B8D160"
-  const marqueeStroke = isAbout ? "#48464B" : "#5D9800"
+  const usePurple = isAbout || darkMode
+  const bgColor = usePurple ? "#A39DC3" : "#B8D160"
+  const marqueeStroke = usePurple ? "#48464B" : "#5D9800"
   const textColor = "#35362E"
 
   const colLabel = "uppercase tracking-wide text-[18px] leading-tight"
