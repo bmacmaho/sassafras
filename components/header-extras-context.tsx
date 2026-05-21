@@ -14,15 +14,18 @@ const HeaderScrolledContext = createContext<{
   setHeaderScrolled: (v: boolean) => void
   headerHeight: number
   setHeaderHeight: (v: number) => void
-}>({ headerScrolled: false, setHeaderScrolled: () => {}, headerHeight: 0, setHeaderHeight: () => {} })
+  darkMode: boolean
+  setDarkMode: (v: boolean) => void
+}>({ headerScrolled: false, setHeaderScrolled: () => {}, headerHeight: 0, setHeaderHeight: () => {}, darkMode: false, setDarkMode: () => {} })
 
 export function HeaderExtrasProvider({ children }: { children: ReactNode }) {
   const [extras, setExtras] = useState<ReactNode>(null)
   const [rightExtras, setRightExtras] = useState<ReactNode>(null)
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(0)
+  const [darkMode, setDarkMode] = useState(false)
   const extrasValue = useMemo(() => ({ extras, setExtras, rightExtras, setRightExtras }), [extras, rightExtras])
-  const scrolledValue = useMemo(() => ({ headerScrolled, setHeaderScrolled, headerHeight, setHeaderHeight }), [headerScrolled, headerHeight])
+  const scrolledValue = useMemo(() => ({ headerScrolled, setHeaderScrolled, headerHeight, setHeaderHeight, darkMode, setDarkMode }), [headerScrolled, headerHeight, darkMode])
   return (
     <HeaderScrolledContext.Provider value={scrolledValue}>
       <HeaderExtrasContext.Provider value={extrasValue}>

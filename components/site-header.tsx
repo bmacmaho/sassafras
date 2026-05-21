@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
-import { ChevronUp, ChevronDown } from "lucide-react"
+import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
@@ -49,11 +49,11 @@ export function SearchBox({ color, open, onToggle }: { color: string; open: bool
   )
 }
 
-function NavLink({ href, label, pathname, submenu }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[] }) {
+function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[]; darkMode?: boolean }) {
   const [hovered, setHovered] = useState(false)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = pathname.startsWith(href)
-  const color = hovered || isActive ? linkColor : "black"
+  const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
 
   return (
     <div
@@ -108,10 +108,14 @@ const NAV_LINKS = [
 const HEADER_MAX = 250
 const HEADER_MIN = 64
 const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
+const SNAP_THRESHOLD = 60
 
 export function SiteHeader() {
   const pathname = usePathname()
   const isExplorePage = pathname === "/explore"
+  const isCurrentIssuePage = pathname === "/current-issue"
+  const hasChevron = isExplorePage || isCurrentIssuePage
+  const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
@@ -162,19 +166,22 @@ export function SiteHeader() {
     if (!window.matchMedia('(min-width: 1024px)').matches) return
 
     const onWheel = (e: WheelEvent) => {
-      if (pathnameRef.current === "/explore") return
+      if (pathnameRef.current === "/explore" || pathnameRef.current === "/current-issue") return
       if (!phaseLockedRef.current) return
       e.preventDefault()
       setHeaderTransition(false)
       accumRef.current = Math.max(0, Math.min(COLLAPSE_RANGE, accumRef.current + e.deltaY))
-      setHeaderHeight(HEADER_MAX - accumRef.current)
-      if (e.deltaY > 0 && accumRef.current >= COLLAPSE_RANGE) {
+      if (e.deltaY > 0 && accumRef.current >= SNAP_THRESHOLD) {
+        accumRef.current = COLLAPSE_RANGE
+        setHeaderHeight(HEADER_MIN)
         phaseLockedRef.current = false
+      } else {
+        setHeaderHeight(HEADER_MAX - accumRef.current)
       }
     }
 
     const onScroll = () => {
-      if (pathnameRef.current === "/explore") return
+      if (pathnameRef.current === "/explore" || pathnameRef.current === "/current-issue") return
       if (window.scrollY === 0 && !phaseLockedRef.current) {
         phaseLockedRef.current = true
         accumRef.current = 0
@@ -205,14 +212,16 @@ export function SiteHeader() {
   }
 
   const { extras, rightExtras } = useHeaderExtras()
-  const { setHeaderScrolled, setHeaderHeight: setContextHeaderHeight } = useHeaderScrolled()
+  const { setHeaderScrolled, setHeaderHeight: setContextHeaderHeight, darkMode, setDarkMode } = useHeaderScrolled()
   useEffect(() => { setHeaderScrolled(scrolled) }, [scrolled, setHeaderScrolled])
   useEffect(() => {
     setContextHeaderHeight(headerHeight)
     document.documentElement.style.setProperty('--header-bottom', `${16 + headerHeight}px`)
   }, [headerHeight, setContextHeaderHeight])
+  useEffect(() => { setDarkMode(pathname === "/current-issue") }, [pathname, setDarkMode])
 
   const currentColor = getPageColor(pathname)
+  const accentColor = darkMode ? "#39FF14" : currentColor
   const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
   const pageLink = [...allLinks].sort((a, b) => b.href.length - a.href.length).find(link => pathname.startsWith(link.href))
   const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
@@ -225,9 +234,9 @@ export function SiteHeader() {
     <>
       {/* Mobile overlay — appears below header */}
       <div
-          className={`lg:hidden fixed left-0 right-0 bottom-0 z-[149] bg-[#fcfaf2]/95 backdrop-blur-xl flex flex-col justify-start items-center pt-16 pb-20 px-6 gap-6 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`lg:hidden fixed left-0 right-0 bottom-0 z-[149] backdrop-blur-xl flex flex-col justify-start items-center pt-16 pb-20 px-6 gap-6 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             menuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-4"
-          }`}
+          } ${darkMode ? "bg-black/95" : "bg-[#fcfaf2]/95"}`}
           style={{ top: "76px" }}
         >
           {NAV_LINKS.map((link) => (
@@ -235,7 +244,7 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] text-[#222] hover:text-[#c5d940] transition-colors text-center"
+              className={`font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors text-center ${darkMode ? "text-white" : "text-[#222]"}`}
             >
               {link.label}
             </Link>
@@ -243,10 +252,10 @@ export function SiteHeader() {
       </div>
 
         {/* Mobile slim bar */}
-        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: "#fbfaf1", height: "64px" }}>
+        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px" }}>
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-start">
-              <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
+              <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
             </Link>
             {viewedArtworks.map((a) => (
               <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
@@ -259,7 +268,7 @@ export function SiteHeader() {
           <div className="absolute right-11 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
             <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
-              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: "rgb(43, 52, 133)" }}>
+              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: darkMode ? "white" : "rgb(43, 52, 133)" }}>
                 <div className="flex gap-1.5 text-xl leading-none font-alte-haas">
                   <span>M</span><span>E</span>
                 </div>
@@ -278,7 +287,7 @@ export function SiteHeader() {
         <header
           className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
           style={{
-            backgroundColor: "#fbfaf1",
+            backgroundColor: darkMode ? "#000" : "#fbfaf1",
             height: `${headerHeight}px`,
             transition: headerTransition ? "height 0.4s ease" : "none",
           }}
@@ -290,7 +299,7 @@ export function SiteHeader() {
           >
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <Link href="/" className="flex items-center">
-                <Image src="/sassafras-logo-square.JPG" alt="Sassafras" width={48} height={48} className="object-contain" />
+                <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
               </Link>
               {viewedArtworks.map((a) => (
                 <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
@@ -304,14 +313,14 @@ export function SiteHeader() {
               <Link
                 href={pageHref}
                 className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap transition-opacity duration-300 hover:opacity-60"
-                style={{ opacity: menuOpen ? 0 : 1 }}
+                style={{ opacity: menuOpen ? 0 : 1, color: darkMode ? "white" : undefined }}
               >{pageLabel}</Link>
               <div
                 className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
                 style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
               >
                 {NAV_LINKS.map((link) => (
-                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} />
+                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} darkMode={darkMode} />
                 ))}
               </div>
             </div>
@@ -332,7 +341,7 @@ export function SiteHeader() {
           >
             <div className="flex items-center justify-between flex-1 pr-8">
               {NAV_LINKS.map((link) => (
-                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} />
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} darkMode={darkMode} />
               ))}
             </div>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
@@ -346,7 +355,7 @@ export function SiteHeader() {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center z-[80]"
-              style={{ color: "rgb(43, 52, 133)", width: "56px", height: scrolled ? "56px" : "100px" }}
+              style={{ color: darkMode ? "white" : "rgb(43, 52, 133)", width: "56px", height: scrolled ? "56px" : "100px" }}
             >
               {/* Hamburger/Cross — fades in when minimised */}
               <div
@@ -412,6 +421,42 @@ export function SiteHeader() {
             </div>
           )}
 
+          {/* Dark / light mode toggle */}
+          {hasThemeToggle && (
+            <div
+              className="absolute bottom-8 right-24 transition-opacity duration-300"
+              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+            >
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="flex items-center gap-2 font-alte-haas text-[10px] tracking-[0.2em] cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-70"
+              >
+                <Sun size={12} style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.55)" }} />
+                <div
+                  className="relative rounded-full transition-colors duration-300 flex-shrink-0"
+                  style={{
+                    width: 30,
+                    height: 16,
+                    backgroundColor: darkMode ? accentColor : "transparent",
+                    border: `1.5px solid ${darkMode ? accentColor : "rgba(0,0,0,0.3)"}`,
+                  }}
+                >
+                  <div
+                    className="absolute rounded-full transition-all duration-300"
+                    style={{
+                      top: 2,
+                      width: 10,
+                      height: 10,
+                      backgroundColor: darkMode ? "#000" : "rgba(0,0,0,0.4)",
+                      transform: darkMode ? "translateX(15px)" : "translateX(2px)",
+                    }}
+                  />
+                </div>
+                <Moon size={12} style={{ color: darkMode ? "white" : "rgba(0,0,0,0.35)" }} />
+              </button>
+            </div>
+          )}
+
           {/* Logo + page title — fades out when scrolled */}
           <div
             className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
@@ -420,7 +465,7 @@ export function SiteHeader() {
             <div className="flex items-start gap-2">
               <Link href="/" className="flex items-start">
                 <Image
-                  src="/sassafras-logo-square.JPG"
+                  src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"}
                   alt="Sassafras"
                   width={80}
                   height={80}
@@ -436,28 +481,28 @@ export function SiteHeader() {
               ))}
             </div>
             <div className="flex items-end gap-8">
-              <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: "#1a1a1a" }}>
+              <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: darkMode ? "white" : "#1a1a1a" }}>
                 {pageLabel}
               </Link>
               {extras ? (
                 <div className="flex flex-col justify-end pb-1 gap-1 h-12">{extras}</div>
               ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
                 <div className="flex flex-col justify-end pb-1 gap-1">
-                  <span className="font-title text-base font-medium tracking-tight text-black/40 leading-none">
+                  <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white" : "text-black/40"}`}>
                     {PAGE_SUBTITLES[subtitleKey].line1}
                   </span>
-                  <span className="font-title text-base font-medium tracking-tight text-black/20 leading-none">
+                  <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white/70" : "text-black/20"}`}>
                     {PAGE_SUBTITLES[subtitleKey].line2}
                   </span>
                 </div>
               ) : null}
             </div>
           </div>
-          {(pathname === "/explore" || pathname.startsWith("/about")) && (
-            <div className="absolute bottom-0 left-24 right-24 h-0 border-b-4 border-[#D5D4CD] pointer-events-none" />
+          {(pathname === "/explore" || pathname.startsWith("/about") || pathname === "/current-issue") && (
+            <div className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none" style={{ borderColor: darkMode ? accentColor : "#D5D4CD" }} />
           )}
         </header>
-      {isExplorePage && (
+      {hasChevron && (
         <div
           className="hidden lg:block pointer-events-none overflow-visible"
           style={{ position: "sticky", top: `${16 + headerHeight}px`, height: 0, zIndex: 80 }}
@@ -465,9 +510,10 @@ export function SiteHeader() {
           <button
             onClick={handleChevronToggle}
             aria-label={scrolled ? "Expand header" : "Collapse header"}
-            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1] transition-colors"
+            className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 transition-colors ${darkMode ? "bg-black" : "border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1]"}`}
+            style={darkMode ? { borderColor: accentColor, color: accentColor } : undefined}
           >
-            {scrolled ? <ChevronDown size={18} strokeWidth={2} /> : <ChevronUp size={18} strokeWidth={2} />}
+            {scrolled ? <ChevronDown size={14} strokeWidth={2} /> : <ChevronUp size={14} strokeWidth={2} />}
           </button>
         </div>
       )}

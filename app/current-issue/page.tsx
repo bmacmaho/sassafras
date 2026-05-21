@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { CSSProperties } from "react"
 import { useState, useEffect } from "react"
+import { useHeaderScrolled } from "@/components/header-extras-context"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -465,29 +466,14 @@ function buildPages(): BookPage[] {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
   const pages = buildPages()
+  const { darkMode } = useHeaderScrolled()
 
   return (
-    <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
-        
-        {/* ── Masthead ── */}
-        <header className="relative z-50 mb-16 md:mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
-            <div className="max-w-xl">
-              <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
-                &ldquo;Challenging the Ivory Tower as an encloser of knowledge.&rdquo;
-              </p>
-            </div>
-            <div className="max-w-md">
-              <p className="text-sm md:text-base leading-relaxed text-[#555] font-sans">
-                Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry. Flip through the digital edition below.
-              </p>
-            </div>
-          </div>
-        </header>
+    <div className={`pb-16 font-sans overflow-x-hidden ${darkMode ? "bg-black text-white selection:bg-white/20" : "bg-transparent"}`}>
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-0 pb-0">
 
         {/* ── FlipBook Container ── */}
-        <div className="flex flex-col items-center justify-center py-12 md:py-24 relative overflow-hidden min-h-[70vh] border border-black/[0.03] bg-black/[0.01]">
+        <div className="flex flex-col items-center justify-center relative overflow-hidden" style={{ minHeight: "calc(100svh - var(--header-bottom, 266px))" }}>
           {/* Ambient glow */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
@@ -497,16 +483,10 @@ export default function CurrentIssuePage() {
           />
 
           {/* The Book */}
-          <div className="relative z-10 transform scale-[0.85] md:scale-100">
-            <ClientOnly>
-              <FlipBook pages={pages} width={460} height={650} />
-            </ClientOnly>
-          </div>
+          <ClientOnly>
+            <FlipBook pages={pages} width={460} height={650} />
+          </ClientOnly>
           
-          <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-            <p className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans">Click to flip pages</p>
-            <div className="w-12 h-[1px] bg-black/10" />
-          </div>
         </div>
       </div>
     </div>

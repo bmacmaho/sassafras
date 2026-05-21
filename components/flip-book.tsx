@@ -84,7 +84,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
       // When opened, the book takes up width * 2 virtually.
       const targetW = isOpen ? width * 2 + 40 : width + 40
       const targetH = height + 80
-      const s = Math.min(1, (vw - 48) / targetW, (vh - 200) / targetH)
+      const s = Math.min(1.3, (vw - 48) / targetW, (vh - 40) / targetH)
       setScale(Math.max(0.35, s))
     }
     update()
@@ -191,7 +191,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
     (e: React.PointerEvent) => {
       if (!isDragging || !dragStart.current) return
       const dx = e.clientX - dragStart.current.x
-      const maxDrag = width
+      const maxDrag = width * scale
       if (dragPage.current === "next" && currentPage + 1 < totalSheets) {
         const ratio = Math.max(-1, Math.min(0, dx / maxDrag))
         setDragAngle(ratio * 180)
@@ -200,7 +200,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
         setDragAngle(-180 + ratio * 180)
       }
     },
-    [isDragging, width, currentPage, totalSheets]
+    [isDragging, width, scale, currentPage, totalSheets]
   )
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
@@ -242,7 +242,13 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
   /* ── keyboard ───────────────────────────────────────────────── */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (!isOpen) return
+      if (!isOpen) {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault()
+          openBook()
+        }
+        return
+      }
       if (e.key === "ArrowRight" || e.key === " ") {
         e.preventDefault()
         goNextPage()
@@ -258,7 +264,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
     }
     window.addEventListener("keydown", handler)
     return () => window.removeEventListener("keydown", handler)
-  }, [isOpen, goNextPage, goPrevPage, closeBook])
+  }, [isOpen, openBook, goNextPage, goPrevPage, closeBook])
 
   /* ── helpers ────────────────────────────────────────────────── */
   const pageStyle = (zIndex: number, extra?: CSSProperties): CSSProperties => ({
@@ -339,16 +345,26 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         style={{
-          width,
-          height,
+          width: width * scale,
+          height: height * scale,
           position: "relative",
           transformStyle: "preserve-3d",
-          // Slide the container right by 50% relative to itself as cover opens
-          transform: `scale(${scale}) translateX(${Math.abs(coverAngle / 180) * 50}%)`,
-          transformOrigin: "center center",
+          transform: `translateX(${Math.abs(coverAngle / 180) * 50}%)`,
+          transformOrigin: "left center",
           cursor: isOpen ? "grab" : "pointer",
         }}
       >
+      {/* ── Scaled inner content ────────────────────────────────── */}
+      <div style={{
+        width,
+        height,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+        transformStyle: "preserve-3d",
+      }}>
         {/* ── Back cover (static) ─────────────────────────────── */}
         <div
           style={{
@@ -665,7 +681,8 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
             }}
           />
         )}
-      </div>
+      </div>{/* end inner scaled div */}
+      </div>{/* end bookRef */}
     </div>
   )
 }
