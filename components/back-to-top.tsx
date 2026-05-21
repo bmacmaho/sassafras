@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 
 export function BackToTop() {
   const pathname = usePathname()
-  if (pathname === "/") return null
+  if (pathname === "/" || pathname === "/current-issue") return null
 
   return (
     <button

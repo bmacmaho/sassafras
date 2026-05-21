@@ -3,6 +3,8 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { BookCoverLink } from "@/components/book-cover-link"
 import { useState, useEffect } from "react"
+import { notFound } from "next/navigation"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -13,6 +15,8 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
 
 
 export default function IssuesPage() {
+  if (!FEATURE_FLAGS.allIssues) notFound()
+
   return (
     <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">

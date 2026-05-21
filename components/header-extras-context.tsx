@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react"
 
 const HeaderExtrasContext = createContext<{
   extras: ReactNode
@@ -9,18 +9,38 @@ const HeaderExtrasContext = createContext<{
   setRightExtras: (node: ReactNode) => void
 }>({ extras: null, setExtras: () => {}, rightExtras: null, setRightExtras: () => {} })
 
+const HeaderScrolledContext = createContext<{
+  headerScrolled: boolean
+  setHeaderScrolled: (v: boolean) => void
+  headerHeight: number
+  setHeaderHeight: (v: number) => void
+  darkMode: boolean
+  setDarkMode: (v: boolean) => void
+}>({ headerScrolled: false, setHeaderScrolled: () => {}, headerHeight: 0, setHeaderHeight: () => {}, darkMode: false, setDarkMode: () => {} })
+
 export function HeaderExtrasProvider({ children }: { children: ReactNode }) {
   const [extras, setExtras] = useState<ReactNode>(null)
   const [rightExtras, setRightExtras] = useState<ReactNode>(null)
+  const [headerScrolled, setHeaderScrolled] = useState(false)
+  const [headerHeight, setHeaderHeight] = useState(0)
+  const [darkMode, setDarkMode] = useState(false)
+  const extrasValue = useMemo(() => ({ extras, setExtras, rightExtras, setRightExtras }), [extras, rightExtras])
+  const scrolledValue = useMemo(() => ({ headerScrolled, setHeaderScrolled, headerHeight, setHeaderHeight, darkMode, setDarkMode }), [headerScrolled, headerHeight, darkMode])
   return (
-    <HeaderExtrasContext.Provider value={{ extras, setExtras, rightExtras, setRightExtras }}>
-      {children}
-    </HeaderExtrasContext.Provider>
+    <HeaderScrolledContext.Provider value={scrolledValue}>
+      <HeaderExtrasContext.Provider value={extrasValue}>
+        {children}
+      </HeaderExtrasContext.Provider>
+    </HeaderScrolledContext.Provider>
   )
 }
 
 export function useHeaderExtras() {
   return useContext(HeaderExtrasContext)
+}
+
+export function useHeaderScrolled() {
+  return useContext(HeaderScrolledContext)
 }
 
 /** Render this inside a page to inject content into the header bottom-left area. */

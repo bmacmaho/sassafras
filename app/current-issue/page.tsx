@@ -2,9 +2,11 @@
 
 import { FlipBook, type BookPage } from "@/components/flip-book"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Maximize2, X } from "lucide-react"
 import type { CSSProperties } from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
+import { useHeaderScrolled } from "@/components/header-extras-context"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -47,6 +49,15 @@ const pageNum: CSSProperties = {
   letterSpacing: "0.15em",
   color: "#b5a994",
 }
+
+/* ── Contributors data ──────────────────────────────────────────── */
+const contributorsData = [
+  { id: 1, name: "Elena Vasquez",    role: "Essayist",     photo: null, bio: "" },
+  { id: 2, name: "Felix Okonkwo",    role: "Audio Essay",  photo: null, bio: "" },
+  { id: 3, name: "Priya Sunderajan", role: "Poet",         photo: null, bio: "" },
+  { id: 4, name: "Tomás Reinholt",   role: "Illustrator",  photo: null, bio: "" },
+  { id: 5, name: "Yuki Nakashima",   role: "Photographer", photo: null, bio: "" },
+]
 
 /* ── Sub-themes data ────────────────────────────────────────────── */
 const subThemes = [
@@ -465,29 +476,51 @@ function buildPages(): BookPage[] {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
   const pages = buildPages()
+  const { darkMode } = useHeaderScrolled()
+  const dm = darkMode
+
+  const [openContribId, setOpenContribId] = useState<number | null>(null)
+  const contribNameRef = useRef<HTMLParagraphElement>(null)
+  const contribNameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const handleContribSelect = (id: number) => setOpenContribId(prev => prev === id ? null : id)
+
+  const [fullscreen, setFullscreen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = fullscreen ? "hidden" : ""
+    return () => { document.body.style.overflow = "" }
+  }, [fullscreen])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setFullscreen(false) }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [])
+
+  useEffect(() => {
+    if (contribNameTypingInterval.current) clearInterval(contribNameTypingInterval.current)
+    const el = contribNameRef.current
+    if (!el || !openContribId) { if (el) el.textContent = ""; return }
+    const person = contributorsData.find(p => p.id === openContribId)
+    if (!person) return
+    const name = person.name
+    el.textContent = ""
+    let i = 0
+    contribNameTypingInterval.current = setInterval(() => {
+      el.textContent = name.slice(0, i)
+      i++
+      if (i > name.length) clearInterval(contribNameTypingInterval.current!)
+    }, 40)
+    return () => { if (contribNameTypingInterval.current) clearInterval(contribNameTypingInterval.current) }
+  }, [openContribId])
 
   return (
-    <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
-        
-        {/* ── Masthead ── */}
-        <header className="relative z-50 mb-16 md:mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-12 border-t border-black/10 pt-12">
-            <div className="max-w-xl">
-              <p className="text-2xl md:text-3xl font-serif italic text-[#222] leading-snug">
-                &ldquo;Challenging the Ivory Tower as an encloser of knowledge.&rdquo;
-              </p>
-            </div>
-            <div className="max-w-md">
-              <p className="text-sm md:text-base leading-relaxed text-[#555] font-sans">
-                Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry. Flip through the digital edition below.
-              </p>
-            </div>
-          </div>
-        </header>
+    <div className={`pb-16 font-sans overflow-x-hidden ${darkMode ? "bg-black text-white selection:bg-white/20" : "bg-transparent"}`}>
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-0">
 
         {/* ── FlipBook Container ── */}
-        <div className="flex flex-col items-center justify-center py-12 md:py-24 relative overflow-hidden min-h-[70vh] border border-black/[0.03] bg-black/[0.01]">
+        <div className="flex flex-col items-center justify-center relative overflow-hidden" style={{ minHeight: "calc(100svh - var(--header-bottom, 266px))" }}>
           {/* Ambient glow */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
@@ -497,16 +530,108 @@ export default function CurrentIssuePage() {
           />
 
           {/* The Book */}
-          <div className="relative z-10 transform scale-[0.85] md:scale-100">
-            <ClientOnly>
-              <FlipBook pages={pages} width={460} height={650} />
-            </ClientOnly>
-          </div>
-          
-          <div className="mt-16 flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-            <p className="text-[10px] tracking-[0.4em] text-black/30 uppercase font-sans">Click to flip pages</p>
-            <div className="w-12 h-[1px] bg-black/10" />
-          </div>
+          <ClientOnly>
+            <FlipBook pages={pages} width={420} height={600} />
+          </ClientOnly>
+
+          {/* Expand button */}
+          <button
+            onClick={() => setFullscreen(true)}
+            className={`absolute bottom-4 right-4 p-2 rounded transition-colors ${darkMode ? "text-white/30 hover:text-white/70" : "text-black/25 hover:text-black/60"}`}
+            title="Fullscreen"
+          >
+            <Maximize2 size={16} />
+          </button>
+
+        </div>
+      </div>
+
+      {/* ── Fullscreen overlay — portalled to body to escape transform stacking context ── */}
+      {fullscreen && createPortal(
+        <div className="fixed inset-0 bg-black flex items-center justify-center" style={{ zIndex: 99999 }}>
+          <button
+            onClick={() => setFullscreen(false)}
+            className="absolute top-5 right-5 p-2 text-white/40 hover:text-white transition-colors"
+            title="Exit fullscreen (Esc)"
+          >
+            <X size={22} />
+          </button>
+          <ClientOnly>
+            <FlipBook pages={pages} width={420} height={600} />
+          </ClientOnly>
+        </div>,
+        document.body
+      )}
+
+      {/* ── Separator ── */}
+      <div
+        className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
+        style={{ width: 'calc(100vw - 12rem)', marginLeft: 'calc(-50vw + 50% + 6rem)' }}
+      />
+
+      {/* ── Contributors ── */}
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-16">
+        <h2
+          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none"
+          style={dm ? { color: "#111", WebkitTextStroke: "1.5px white" } : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }}
+        >
+          Contributors
+        </h2>
+        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+          {contributorsData.map((person, i) => (
+            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
+              <button
+                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
+                onClick={() => handleContribSelect(person.id)}
+              >
+                <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
+                <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
+                  {(() => {
+                    const words = person.role.split(" ")
+                    const lines = words.length === 4
+                      ? [words[0], words[1] + " " + words[2], words[3]]
+                      : words
+                    return lines.map((line, j) => <span key={j} className="block">{line}</span>)
+                  })()}
+                </span>
+              </button>
+              <div
+                className="grid transition-[grid-template-rows] duration-400 ease-in-out"
+                style={{ gridTemplateRows: openContribId === person.id ? "1fr" : "0fr" }}
+              >
+                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                      {person.photo ? (
+                        <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                      )}
+                    </div>
+                    <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
+                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <div className="relative pr-3">
+                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
+                            {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                          </p>
+                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
+                        </div>
+                      </div>
+                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
+                        <span
+                          className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
+                          style={{ color: "#5D9800", writingMode: "vertical-rl" }}
+                        >
+                          {person.role}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

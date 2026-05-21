@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
+import { notFound } from "next/navigation"
 import { ArrowRight, Clock, FileText, Globe } from "lucide-react"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 export const metadata: Metadata = {
   title: "Submissions | Sassafras",
@@ -22,6 +24,8 @@ const timeline = [
 ]
 
 export default function SubmissionsPage() {
+  if (!FEATURE_FLAGS.submissions) notFound()
+
   return (
     <div className="pt-12 min-h-screen bg-[#fcfaf2] text-[#222] selection:bg-[#f0f0f0] font-sans overflow-x-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 py-12">
