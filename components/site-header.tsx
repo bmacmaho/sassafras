@@ -4,8 +4,9 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
+import { ChevronUp, ChevronDown } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
-import { useHeaderExtras } from "@/components/header-extras-context"
+import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 export function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
@@ -97,7 +98,7 @@ const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
 
 const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
-  { href: "/issues", label: "ALL ISSUES" },
+  ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why Sassafras?" }] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
@@ -110,6 +111,7 @@ const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
 
 export function SiteHeader() {
   const pathname = usePathname()
+  const isExplorePage = pathname === "/explore"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
@@ -117,6 +119,7 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false)
   const accumRef = useRef(0)
   const phaseLockedRef = useRef(true)
+  const pathnameRef = useRef(pathname)
   const scrolled = headerHeight <= HEADER_MIN
   const [viewedArtworks, setViewedArtworks] = useState<{ image: string; slug: string }[]>([])
 
@@ -152,11 +155,14 @@ export function SiteHeader() {
     setHeaderTransition(false)
   }, [pathname])
 
+  useEffect(() => { pathnameRef.current = pathname }, [pathname])
+
   // Wheel interceptor: desktop only, locks content scroll while header collapses
   useEffect(() => {
     if (!window.matchMedia('(min-width: 1024px)').matches) return
 
     const onWheel = (e: WheelEvent) => {
+      if (pathnameRef.current === "/explore") return
       if (!phaseLockedRef.current) return
       e.preventDefault()
       setHeaderTransition(false)
@@ -168,6 +174,7 @@ export function SiteHeader() {
     }
 
     const onScroll = () => {
+      if (pathnameRef.current === "/explore") return
       if (window.scrollY === 0 && !phaseLockedRef.current) {
         phaseLockedRef.current = true
         accumRef.current = 0
@@ -184,12 +191,32 @@ export function SiteHeader() {
     }
   }, [])
 
+  const handleChevronToggle = () => {
+    setHeaderTransition(false)
+    if (scrolled) {
+      accumRef.current = 0
+      phaseLockedRef.current = true
+      setHeaderHeight(HEADER_MAX)
+    } else {
+      accumRef.current = COLLAPSE_RANGE
+      phaseLockedRef.current = false
+      setHeaderHeight(HEADER_MIN)
+    }
+  }
+
+  const { extras, rightExtras } = useHeaderExtras()
+  const { setHeaderScrolled, setHeaderHeight: setContextHeaderHeight } = useHeaderScrolled()
+  useEffect(() => { setHeaderScrolled(scrolled) }, [scrolled, setHeaderScrolled])
+  useEffect(() => {
+    setContextHeaderHeight(headerHeight)
+    document.documentElement.style.setProperty('--header-bottom', `${16 + headerHeight}px`)
+  }, [headerHeight, setContextHeaderHeight])
+
   const currentColor = getPageColor(pathname)
   const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
   const pageLink = [...allLinks].sort((a, b) => b.href.length - a.href.length).find(link => pathname.startsWith(link.href))
   const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
   const pageHref = pageLink?.href ?? "/"
-  const { extras, rightExtras } = useHeaderExtras()
   const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
 
   if (pathname === "/") return null
@@ -426,10 +453,24 @@ export function SiteHeader() {
               ) : null}
             </div>
           </div>
-          {(pathname === "/explore" || pathname.startsWith("/about")) && !scrolled && (
+          {(pathname === "/explore" || pathname.startsWith("/about")) && (
             <div className="absolute bottom-0 left-24 right-24 h-0 border-b-4 border-[#D5D4CD] pointer-events-none" />
           )}
         </header>
+      {isExplorePage && (
+        <div
+          className="hidden lg:block pointer-events-none overflow-visible"
+          style={{ position: "sticky", top: `${16 + headerHeight}px`, height: 0, zIndex: 80 }}
+        >
+          <button
+            onClick={handleChevronToggle}
+            aria-label={scrolled ? "Expand header" : "Collapse header"}
+            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1] transition-colors"
+          >
+            {scrolled ? <ChevronDown size={18} strokeWidth={2} /> : <ChevronUp size={18} strokeWidth={2} />}
+          </button>
+        </div>
+      )}
     </>
   )
 }
