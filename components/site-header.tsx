@@ -9,7 +9,7 @@ import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
-export function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
+export function SearchBox({ color, open, onToggle, darkMode }: { color: string; open: boolean; onToggle: () => void; darkMode?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -24,11 +24,13 @@ export function SearchBox({ color, open, onToggle }: { color: string; open: bool
     if (q) router.push(`/explore?q=${encodeURIComponent(q)}`)
   }
 
+  const borderColor = darkMode ? "white" : "black"
+
   return (
     <form
       onSubmit={handleSubmit}
       className="flex items-center transition-all duration-300 rounded-md"
-      style={{ border: open ? "2px solid black" : "2px solid transparent" }}
+      style={{ border: open ? `2px solid ${borderColor}` : "2px solid transparent" }}
     >
       <div
         className="overflow-hidden transition-all duration-300 ease-out"
@@ -38,12 +40,12 @@ export function SearchBox({ color, open, onToggle }: { color: string; open: bool
           ref={inputRef}
           type="text"
           className="font-alte-haas text-sm tracking-[0.1em] bg-transparent outline-none px-3 w-full"
-          style={{ color: "black" }}
+          style={{ color: darkMode ? "white" : "black" }}
         />
       </div>
       <button onClick={toggle} className="relative flex items-center justify-center bg-transparent border-none cursor-pointer p-0">
-        <Image src="/search-icon/search-closed.png" alt="Search" width={48} height={48} className={`object-contain transition-opacity ${open ? "duration-700" : "duration-0"}`} style={{ opacity: open ? 0 : 1 }} />
-        <Image src="/search-icon/search-open.png" alt="Search" width={48} height={48} className="object-contain absolute transition-opacity duration-300" style={{ opacity: open ? 1 : 0 }} />
+        <Image src="/search-icon/search-closed.png" alt="Search" width={48} height={48} className={`object-contain transition-opacity ${open ? "duration-700" : "duration-0"}`} style={{ opacity: open ? 0 : 1, filter: darkMode ? "invert(1)" : "none" }} />
+        <Image src="/search-icon/search-open.png" alt="Search" width={48} height={48} className="object-contain absolute transition-opacity duration-300" style={{ opacity: open ? 1 : 0, filter: darkMode ? "invert(1)" : "none" }} />
       </button>
     </form>
   )
@@ -266,7 +268,7 @@ export function SiteHeader() {
             ))}
           </div>
           <div className="absolute right-11 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
-            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
             <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
               <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: darkMode ? "white" : "rgb(43, 52, 133)" }}>
                 <div className="flex gap-1.5 text-xl leading-none font-alte-haas">
@@ -324,7 +326,7 @@ export function SiteHeader() {
                 ))}
               </div>
             </div>
-            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
           </div>
 
           {/* Maximised nav — fades out when scrolled */}
@@ -344,7 +346,7 @@ export function SiteHeader() {
                 <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} darkMode={darkMode} />
               ))}
             </div>
-            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} />
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
           </nav>
 
           {/* Menu button — always present, cross-fades between states */}

@@ -7,6 +7,7 @@ import type { CSSProperties } from "react"
 import { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled } from "@/components/header-extras-context"
+import { getPageColor } from "@/lib/page-colors"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -485,6 +486,9 @@ export default function CurrentIssuePage() {
 
   const handleContribSelect = (id: number) => setOpenContribId(prev => prev === id ? null : id)
 
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
   const [fullscreen, setFullscreen] = useState(false)
 
   useEffect(() => {
@@ -520,7 +524,7 @@ export default function CurrentIssuePage() {
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-0">
 
         {/* ── FlipBook Container ── */}
-        <div className="flex flex-col items-center justify-center relative overflow-hidden" style={{ minHeight: "calc(100svh - var(--header-bottom, 266px))" }}>
+        <div className="flex flex-col items-center justify-center relative overflow-hidden pt-6 pb-12">
           {/* Ambient glow */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
@@ -534,20 +538,24 @@ export default function CurrentIssuePage() {
             <FlipBook pages={pages} width={420} height={600} />
           </ClientOnly>
 
-          {/* Expand button */}
-          <button
-            onClick={() => setFullscreen(true)}
-            className={`absolute bottom-4 right-4 p-2 rounded transition-colors ${darkMode ? "text-white/30 hover:text-white/70" : "text-black/25 hover:text-black/60"}`}
-            title="Fullscreen"
-          >
-            <Maximize2 size={16} />
-          </button>
-
         </div>
       </div>
 
+      {/* ── Fullscreen expand button — fixed, same z as page frame ── */}
+      {mounted && !fullscreen && createPortal(
+        <button
+          onClick={() => setFullscreen(true)}
+          className="fixed bottom-5 right-5 p-2 transition-opacity hover:opacity-70"
+          style={{ zIndex: 9999, color: darkMode ? "#39FF14" : getPageColor("/current-issue") }}
+          title="Fullscreen"
+        >
+          <Maximize2 size={24} />
+        </button>,
+        document.body
+      )}
+
       {/* ── Fullscreen overlay — portalled to body to escape transform stacking context ── */}
-      {fullscreen && createPortal(
+      {mounted && fullscreen && createPortal(
         <div className="fixed inset-0 bg-black flex items-center justify-center" style={{ zIndex: 99999 }}>
           <button
             onClick={() => setFullscreen(false)}
