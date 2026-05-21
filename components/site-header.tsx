@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras } from "@/components/header-extras-context"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 export function SearchBox({ color, open, onToggle }: { color: string; open: boolean; onToggle: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -99,7 +100,7 @@ const NAV_LINKS = [
   { href: "/issues", label: "ALL ISSUES" },
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why Sassafras?" }] },
-  { href: "/submissions", label: "SUBMISSIONS" },
+  ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
 
