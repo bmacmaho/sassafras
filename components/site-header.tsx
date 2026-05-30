@@ -117,8 +117,8 @@ export function SiteHeader() {
   const pathname = usePathname()
   const isExplorePage = pathname === "/explore"
   const isCurrentIssuePage = pathname === "/current-issue"
-  const hasChevron = isExplorePage || isCurrentIssuePage
-  const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+  const hasChevron = isExplorePage
+const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
@@ -169,7 +169,7 @@ export function SiteHeader() {
     if (!window.matchMedia('(min-width: 1024px)').matches) return
 
     const onWheel = (e: WheelEvent) => {
-      if (pathnameRef.current === "/explore" || pathnameRef.current === "/current-issue") return
+      if (pathnameRef.current === "/explore") return
       if (!phaseLockedRef.current) return
       e.preventDefault()
       setHeaderTransition(false)
@@ -184,7 +184,7 @@ export function SiteHeader() {
     }
 
     const onScroll = () => {
-      if (pathnameRef.current === "/explore" || pathnameRef.current === "/current-issue") return
+      if (pathnameRef.current === "/explore") return
       if (window.scrollY === 0 && !phaseLockedRef.current) {
         phaseLockedRef.current = true
         accumRef.current = 0
@@ -200,6 +200,7 @@ export function SiteHeader() {
       window.removeEventListener('scroll', onScroll)
     }
   }, [])
+
 
   const handleChevronToggle = () => {
     setHeaderTransition(false)
@@ -224,7 +225,7 @@ export function SiteHeader() {
   useEffect(() => { setDarkMode(pathname === "/current-issue") }, [pathname, setDarkMode])
 
   const currentColor = getPageColor(pathname)
-  const accentColor = darkMode ? "#39FF14" : currentColor
+  const accentColor = currentColor
   const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
   const pageLink = [...allLinks].sort((a, b) => b.href.length - a.href.length).find(link => pathname.startsWith(link.href))
   const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
@@ -255,7 +256,7 @@ export function SiteHeader() {
       </div>
 
         {/* Mobile slim bar */}
-        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px" }}>
+        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px", transition: "background-color 500ms ease" }}>
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-start">
               <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
@@ -271,7 +272,7 @@ export function SiteHeader() {
           <div className="absolute right-11 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
             <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
             <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
-              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: darkMode ? "white" : "rgb(43, 52, 133)" }}>
+              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: darkMode ? "#39FF14" : "rgb(43, 52, 133)", opacity: darkMode ? 0.5 : 1 }}>
                 <div className="flex gap-1.5 text-xl leading-none font-alte-haas">
                   <span>M</span><span>E</span>
                 </div>
@@ -292,7 +293,7 @@ export function SiteHeader() {
           style={{
             backgroundColor: darkMode ? "#000" : "#fbfaf1",
             height: `${headerHeight}px`,
-            transition: headerTransition ? "height 0.4s ease" : "none",
+            transition: `background-color 500ms ease${headerTransition ? ", height 0.4s ease" : ""}`,
           }}
         >
           {/* Minimised row — fades in when scrolled */}
@@ -358,7 +359,7 @@ export function SiteHeader() {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center z-[80]"
-              style={{ color: darkMode ? "white" : "rgb(43, 52, 133)", width: "56px", height: scrolled ? "56px" : "100px" }}
+              style={{ color: darkMode ? "#39FF14" : "rgb(43, 52, 133)", opacity: darkMode ? 0.5 : 1, width: "56px", height: scrolled ? "56px" : "100px" }}
             >
               {/* Hamburger/Cross — fades in when minimised */}
               <div
@@ -501,8 +502,8 @@ export function SiteHeader() {
               ) : null}
             </div>
           </div>
-          {(pathname === "/explore" || pathname.startsWith("/about") || pathname === "/current-issue") && (
-            <div className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none" style={{ borderColor: darkMode ? accentColor : "#D5D4CD" }} />
+          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch"))) && (
+            <div className={`absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none ${darkMode ? "border-white/20" : "border-[#D5D4CD]"}`} />
           )}
         </header>
       {hasChevron && (

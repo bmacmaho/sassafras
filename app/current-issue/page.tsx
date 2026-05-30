@@ -4,7 +4,7 @@ import { FlipBook, type BookPage } from "@/components/flip-book"
 import Link from "next/link"
 import { ArrowRight, Maximize2, X } from "lucide-react"
 import type { CSSProperties } from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
@@ -480,6 +480,16 @@ export default function CurrentIssuePage() {
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
 
+  // Sync body background with dark mode so the full viewport (incl. main side padding) transitions in lock-step with the header
+  useLayoutEffect(() => {
+    document.body.style.transition = "background-color 500ms ease"
+    document.body.style.backgroundColor = dm ? "#000" : ""
+    return () => {
+      document.body.style.backgroundColor = ""
+      document.body.style.transition = ""
+    }
+  }, [dm])
+
   const [openContribId, setOpenContribId] = useState<number | null>(null)
   const contribNameRef = useRef<HTMLParagraphElement>(null)
   const contribNameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -520,11 +530,11 @@ export default function CurrentIssuePage() {
   }, [openContribId])
 
   return (
-    <div className={`pb-16 font-sans overflow-x-hidden ${darkMode ? "bg-black text-white selection:bg-white/20" : "bg-transparent"}`}>
+    <div className={`pb-16 font-sans overflow-x-hidden ${darkMode ? "selection:bg-white/20" : ""}`} style={{ backgroundColor: darkMode ? "#000" : "#fcfaf2", color: darkMode ? "#fff" : "#222", transition: "background-color 500ms ease, color 500ms ease" }}>
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-0">
 
         {/* ── FlipBook Container ── */}
-        <div className="flex flex-col items-center justify-center relative overflow-hidden pt-6 pb-12">
+        <div className="flex flex-col items-center justify-center relative overflow-hidden pb-12">
           {/* Ambient glow */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
@@ -546,7 +556,7 @@ export default function CurrentIssuePage() {
         <button
           onClick={() => setFullscreen(true)}
           className="fixed bottom-5 right-5 p-2 transition-opacity hover:opacity-70"
-          style={{ zIndex: 9999, color: darkMode ? "#39FF14" : getPageColor("/current-issue") }}
+          style={{ zIndex: 9999, color: getPageColor("/current-issue") }}
           title="Fullscreen"
         >
           <Maximize2 size={24} />
@@ -573,26 +583,26 @@ export default function CurrentIssuePage() {
 
       {/* ── Separator ── */}
       <div
-        className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
+        className={`h-0 border-b-4 mb-8 transition-colors duration-500 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
         style={{ width: 'calc(100vw - 12rem)', marginLeft: 'calc(-50vw + 50% + 6rem)' }}
       />
 
       {/* ── Contributors ── */}
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-16">
         <h2
-          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none"
+          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none transition-colors duration-500"
           style={dm ? { color: "#111", WebkitTextStroke: "1.5px white" } : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }}
         >
           Contributors
         </h2>
-        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+        <div className={`w-1/2 border-2 transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
           {contributorsData.map((person, i) => (
-            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
+            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 transition-colors duration-500 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
-                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
+                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-500 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
                 onClick={() => handleContribSelect(person.id)}
               >
-                <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
+                <span className={`font-alte-haas text-2xl tracking-[0.05em] transition-colors duration-500 ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
                 <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
                   {(() => {
                     const words = person.role.split(" ")
@@ -607,26 +617,26 @@ export default function CurrentIssuePage() {
                 className="grid transition-[grid-template-rows] duration-400 ease-in-out"
                 style={{ gridTemplateRows: openContribId === person.id ? "1fr" : "0fr" }}
               >
-                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                <div className={`overflow-hidden transition-colors duration-500 ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center transition-colors duration-500 ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
                       {person.photo ? (
                         <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        <span className={`text-xs font-mono uppercase tracking-widest transition-colors duration-500 ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
                       )}
                     </div>
-                    <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                    <div className={`flex-1 border-l-2 flex overflow-hidden transition-colors duration-500 ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
                       <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
-                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 transition-colors duration-500 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
                         <div className="relative pr-3">
-                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
-                            {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                          <p className={`font-alte-haas text-xl leading-relaxed transition-colors duration-500 ${dm ? "text-white/80" : "text-[#444]"}`}>
+                            {person.bio || <span className={`italic transition-colors duration-500 ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                           </p>
-                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
+                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] transition-colors duration-500 ${dm ? "bg-white" : "bg-black"}`} />
                         </div>
                       </div>
-                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
+                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
                         <span
                           className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
                           style={{ color: "#5D9800", writingMode: "vertical-rl" }}

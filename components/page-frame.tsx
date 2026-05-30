@@ -8,7 +8,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const frameColor = getPageColor(pathname)
   const { darkMode } = useHeaderScrolled()
-  const displayColor = darkMode ? "#39FF14" : frameColor
+  const displayColor = frameColor
 
   const isHome = pathname === "/"
 
