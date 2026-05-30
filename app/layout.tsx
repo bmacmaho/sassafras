@@ -14,6 +14,32 @@ const geistMono = localFont({
   weight: "100 900",
 })
 
+const charter = localFont({
+  src: [
+    {
+      path: "../public/fonts/Charter 210112/WOFF2 format (best for web)/Charter/charter_regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Charter 210112/WOFF2 format (best for web)/Charter/charter_italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/Charter 210112/WOFF2 format (best for web)/Charter/charter_bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Charter 210112/WOFF2 format (best for web)/Charter/charter_bold_italic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-charter",
+})
+
 const alteHaasGrotesk = localFont({
   src: [
     {
@@ -57,8 +83,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable}`}>
-      <body className="font-mono antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable} ${charter.variable}`}>
+      <body className="font-sans antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
         <HeaderExtrasProvider>
         <PageFrame>
           <MouseGlow />

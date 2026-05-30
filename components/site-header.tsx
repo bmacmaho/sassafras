@@ -103,7 +103,7 @@ const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why Sassafras?" }] },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why are we called Sassafras?" }] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
 ]
@@ -463,7 +463,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
           {/* Logo + page title — fades out when scrolled */}
           <div
-            className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
+            className="absolute bottom-4 left-24 flex flex-col items-start gap-4 transition-opacity duration-300"
             style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
           >
             <div className="flex items-start gap-2">
@@ -483,9 +483,31 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                   </div>
                 </Link>
               ))}
+              {pathname === "/about/why-sassafras" && (
+                <div className="flex gap-5">
+                  {[
+                    "/why-sassafras-squares/IMG_6372.JPG",
+                    "/why-sassafras-squares/IMG_6552.JPG",
+                    "/why-sassafras-squares/IMG_6553.JPG",
+                    "/why-sassafras-squares/IMG_6554.JPG",
+                    "/why-sassafras-squares/IMG_6555.JPG",
+                    "/why-sassafras-squares/IMG_6556.JPG",
+                  ].map((src) => (
+                    <div key={src} className="relative flex-shrink-0 overflow-hidden" style={{ width: 80, height: 80 }}>
+                      <Image src={src} alt="" fill className="object-cover" unoptimized />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex items-end gap-8">
-              <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: darkMode ? "white" : "#1a1a1a" }}>
+              <Link
+                href={pageHref}
+                className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
+                style={pathname === "/about/why-sassafras"
+                  ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
+                  : { color: darkMode ? "white" : "#1a1a1a" }}
+              >
                 {pageLabel}
               </Link>
               {extras ? (

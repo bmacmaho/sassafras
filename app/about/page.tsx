@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { createPortal } from "react-dom"
 import { useHeaderScrolled } from "@/components/header-extras-context"
 
 const peopleData = [
@@ -17,6 +18,7 @@ const peopleData = [
 export default function AboutPage() {
   const { darkMode: dm } = useHeaderScrolled()
   const [openId, setOpenId] = useState<number | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const nameRef = useRef<HTMLParagraphElement>(null)
   const nameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -43,9 +45,9 @@ export default function AboutPage() {
   return (
     <div className={`relative pt-9 min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 transition-colors duration-300 ${dm ? "bg-black text-white" : "bg-[#fcfaf2] text-[#222]"}`}>
       <div className="relative">
-        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-9 pb-6">
+        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
           <section className="mb-16">
-            <div className={`text-xl md:text-2xl leading-relaxed font-title text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
+            <div className={`text-xl md:text-2xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
                 We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which &apos;legitimate&apos; academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.
               </p>
@@ -74,7 +76,17 @@ export default function AboutPage() {
         >
           Our Team
         </h2>
-        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+        <div className="relative">
+          <div className="absolute top-3 right-0 cursor-pointer" style={{ left: "calc(50% + 1rem)" }} onClick={() => setLightboxOpen(true)}>
+            <img src="/people-photos/IMG_3716.jpg" alt="" className="w-full h-full object-cover" />
+          </div>
+          {lightboxOpen && createPortal(
+            <div className="fixed inset-0 z-[10001] bg-black/90 flex items-center justify-center" onClick={() => setLightboxOpen(false)}>
+              <img src="/people-photos/IMG_3716.jpg" alt="" className="max-w-full max-h-full object-contain" onClick={e => e.stopPropagation()} />
+            </div>,
+            document.body
+          )}
+        <div className={`relative z-10 w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
           {peopleData.map((person, i) => (
             <div key={person.id} className={i > 0 && openId !== peopleData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
@@ -134,6 +146,7 @@ export default function AboutPage() {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>
