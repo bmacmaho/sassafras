@@ -32,9 +32,8 @@ export function SiteFooter() {
 
         {/* 1 — Address */}
         <div className="flex flex-col">
-          <span className={colLabel}>Sassafras E.V.</span>
-          <span className={colText}>Badstr. 23</span>
-          <span className={colText}>13357 Berlin</span>
+          <span className={colLabel}>Sassafras</span>
+          <span className={colText}>Berlin</span>
           <Link href="/impressum" className={colLink}>Impressum</Link>
         </div>
 
@@ -59,9 +58,9 @@ export function SiteFooter() {
           <span className={colText}>Chenlu Ni</span>
           <span className={colText}>
             Typeface:{" "}
-            <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors underline">Alte Haas Grotesk</a>
+            <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Alte Haas Grotesk</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
             {" "}
-            <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors underline">Charter</a>
+            <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Charter</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
           </span>
         </div>
 
