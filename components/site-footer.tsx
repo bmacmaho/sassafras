@@ -10,7 +10,7 @@ export function SiteFooter() {
   const { darkMode } = useHeaderScrolled()
   const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions" || pathname === "/issues"
 
-  const usePurple = isAbout || darkMode
+  const usePurple = isAbout
   const bgColor = usePurple ? "#A39DC3" : "#B8D160"
   const marqueeStroke = usePurple ? "#48464B" : "#5D9800"
   const textColor = "#35362E"
@@ -41,8 +41,7 @@ export function SiteFooter() {
         {/* 2 — Contact */}
         <div className="flex flex-col">
           <span className={colLabel}>Contact:</span>
-          <a href="mailto:info@sassafras.com" className={colLink}>info@sassafras.com</a>
-          <a href="mailto:submissions@sassafras.com" className={colLink}>submissions@sassafras.com</a>
+          <a href="mailto:sassafrasinitiative@gmail.com" className={colLink}>sassafrasinitiative@gmail.com</a>
         </div>
 
         {/* 3 — Support */}
