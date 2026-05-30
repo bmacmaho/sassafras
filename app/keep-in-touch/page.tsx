@@ -1,12 +1,25 @@
 "use client"
 
+import { useEffect } from "react"
 import { useHeaderScrolled } from "@/components/header-extras-context"
 
 export default function KeepInTouchPage() {
   const { darkMode: dm } = useHeaderScrolled()
 
+  useEffect(() => {
+    document.body.style.transition = "background-color 500ms ease"
+    document.body.style.backgroundColor = dm ? "#000" : "#fcfaf2"
+    return () => {
+      document.body.style.backgroundColor = ""
+      document.body.style.transition = ""
+    }
+  }, [dm])
+
   return (
-    <div className={`pt-12 min-h-screen font-sans transition-colors duration-300 ${dm ? "bg-black text-white" : "text-[#222]"}`}>
+    <div
+      className={`pt-12 min-h-screen font-sans ${dm ? "text-white" : "text-[#222]"}`}
+      style={{ backgroundColor: dm ? "#000" : "#fcfaf2", transition: "background-color 500ms ease, color 500ms ease" }}
+    >
       <div className="mx-auto max-w-5xl py-12">
 
         {/* ── Header ── */}

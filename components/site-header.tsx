@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
 import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
@@ -53,14 +54,22 @@ export function SearchBox({ color, open, onToggle, darkMode }: { color: string; 
 
 function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[]; darkMode?: boolean }) {
   const [hovered, setHovered] = useState(false)
+  const [rect, setRect] = useState<DOMRect | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
   const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
 
+  const handleMouseEnter = () => {
+    if (containerRef.current) setRect(containerRef.current.getBoundingClientRect())
+    setHovered(true)
+  }
+
   return (
     <div
+      ref={containerRef}
       className="relative flex flex-col items-center"
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
     >
       <Link
@@ -74,19 +83,23 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
           style={{ backgroundColor: linkColor, transform: hovered || isActive ? "scaleX(1)" : "scaleX(0)" }}
         />
       </Link>
-      {submenu && (
-        <div className={`absolute top-full pt-3 flex flex-col items-center gap-2 transition-all duration-200 z-10 ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}>
+      {submenu && rect && createPortal(
+        <div
+          className={`flex flex-col items-start gap-2 transition-all duration-200 z-[10000] ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}
+          style={{ position: "fixed", top: rect.bottom + 12, left: rect.left }}
+        >
           {submenu.map(item => (
             <Link
               key={item.href}
               href={item.href}
-              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60"
-              style={{ color: "#FBFAF1", WebkitTextStroke: "0.5px black" }}
+              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60 text-left"
+              style={{ color: darkMode ? "#111" : "#FBFAF1", WebkitTextStroke: darkMode ? "0.5px white" : "0.5px black" }}
             >
               {item.label}
             </Link>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
@@ -289,7 +302,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
         {/* Desktop header */}
         <header
-          className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
+          className="hidden lg:flex sticky top-4 z-50 relative"
           style={{
             backgroundColor: darkMode ? "#000" : "#fbfaf1",
             height: `${headerHeight}px`,
@@ -525,7 +538,10 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
             </div>
           </div>
           {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch"))) && (
-            <div className={`absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none ${darkMode ? "border-white/20" : "border-[#D5D4CD]"}`} />
+            <div
+              className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
+              style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
+            />
           )}
         </header>
       {hasChevron && (

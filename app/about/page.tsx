@@ -24,6 +24,16 @@ export default function AboutPage() {
 
   const handleSelect = (id: number) => setOpenId(prev => prev === id ? null : id)
 
+  // Sync body background with dark mode
+  useEffect(() => {
+    document.body.style.transition = "background-color 500ms ease"
+    document.body.style.backgroundColor = dm ? "#000" : "#fcfaf2"
+    return () => {
+      document.body.style.backgroundColor = ""
+      document.body.style.transition = ""
+    }
+  }, [dm])
+
   // Typewriter for bio name
   useEffect(() => {
     if (nameTypingInterval.current) clearInterval(nameTypingInterval.current)
@@ -43,7 +53,10 @@ export default function AboutPage() {
   }, [openId])
 
   return (
-    <div className={`relative pt-9 min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 transition-colors duration-300 ${dm ? "bg-black text-white" : "bg-[#fcfaf2] text-[#222]"}`}>
+    <div
+      className={`relative pt-9 min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 ${dm ? "text-white" : "text-[#222]"}`}
+      style={{ backgroundColor: dm ? "#000" : "#fcfaf2", transition: "background-color 500ms ease, color 500ms ease" }}
+    >
       <div className="relative">
         <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
           <section className="mb-16">

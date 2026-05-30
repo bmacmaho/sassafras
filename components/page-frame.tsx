@@ -33,7 +33,7 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
         />
       ))}
       {/* Scrollable Document Body */}
-      <div className={`flex-1 relative flex flex-col min-h-screen ${darkMode ? "bg-black" : "bg-transparent"}`}>
+      <div className="flex-1 relative flex flex-col min-h-screen">
         {children}
       </div>
     </>

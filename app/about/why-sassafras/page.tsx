@@ -1,9 +1,19 @@
 "use client"
 
+import { useEffect } from "react"
 import { useHeaderScrolled } from "@/components/header-extras-context"
 
 export default function WhySassafrasPage() {
   const { darkMode: dm } = useHeaderScrolled()
+
+  useEffect(() => {
+    document.body.style.transition = "background-color 500ms ease"
+    document.body.style.backgroundColor = dm ? "#000" : "#fcfaf2"
+    return () => {
+      document.body.style.backgroundColor = ""
+      document.body.style.transition = ""
+    }
+  }, [dm])
   return (
     <div className={`min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 transition-colors duration-300 ${dm ? "bg-black text-white" : "bg-[#fcfaf2] text-[#222]"}`}>
       <div className="relative z-10 pl-24 pr-8 md:pr-16 pt-12 pb-6">
