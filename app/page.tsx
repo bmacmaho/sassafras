@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Bird, Flower, Leaf, Bug } from "lucide-react"
 import { ScrollAnimator } from "@/components/scroll-animator"
+import { ScrollDrivenVideo } from "@/components/home/scroll-driven-video"
 
 export const revalidate = 3600
 
@@ -9,26 +10,7 @@ export default function HomePage() {
     <div className="w-[100vw] relative left-[calc(-50vw+50%)] -mb-32 md:-mb-56 bg-[#1a1a1a] text-white overflow-x-hidden font-sans">
       <ScrollAnimator />
       {/* ── First Page ── */}
-      <section className="relative w-full h-screen bg-[#b9cdef] flex flex-col items-center justify-center overflow-hidden">
-        <div className="absolute top-10 flex items-center justify-center gap-2 text-white text-xs tracking-widest uppercase">
-          <Bug size={14} className="opacity-80" />
-          <Bird size={14} className="opacity-80" />
-          <Flower size={14} className="opacity-80" />
-          <Leaf size={14} className="opacity-80" />
-          <span className="ml-2 font-medium">WELCOME TO SASSAFRAS</span>
-        </div>
-        
-        <div className="relative w-[85vw] md:w-[40vw] max-w-[450px] aspect-[3/4] border-[8px] md:border-[12px] border-white overflow-hidden shadow-2xl">
-          <video 
-            src="/IMG_4255.MOV" 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            className="w-full h-full object-cover" 
-          />
-        </div>
-      </section>
+      <ScrollDrivenVideo />
 
       {/* ── Second Page ── */}
       <section className="relative w-full min-h-screen bg-[#1a1a1a] overflow-hidden">
