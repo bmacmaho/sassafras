@@ -25,6 +25,9 @@
 
 
 :root {
+  /* set to actual px value by ScrollAnimator on mount */
+  --scrollbar-width: 0px;
+
   /* ── Live-site palette (Soft Contemporary Art Space Vibe) ── */
   --background: #fcfaf2;
   /* Cream/Off-white */
@@ -94,14 +97,24 @@
     background-color: transparent;
   }
 
-  html,
-  body,
-  a,
-  button,
-  input,
-  select,
-  textarea {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 4C18.2 4 20 6.6 20 10C20 13.4 18.2 16 16 16C13.8 16 12 13.4 12 10C12 6.6 13.8 4 16 4ZM16 28C18.2 28 20 25.4 20 22C20 18.6 18.2 16 16 16C13.8 16 12 18.6 12 22C12 25.4 13.8 28 16 28ZM28 16C28 13.8 25.4 12 22 12C18.6 12 16 13.8 16 16C16 18.2 18.6 20 22 20C25.4 20 28 18.2 28 16ZM4 16C4 13.8 6.6 12 10 12C13.4 12 16 13.8 16 16C16 18.2 13.4 20 10 20C6.6 20 4 18.2 4 16Z' fill='%23c5d940' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23222'/%3E%3C/svg%3E") 16 16, auto !important;
+  /* Leaf 4 — default cursor (inverted for light backgrounds) */
+  html, body, * {
+    cursor: url('/cursors/Leaf 4 inverted.PNG') 16 16, auto !important;
+  }
+
+  /* Leaf 2 — text / input context */
+  p, h1, h2, h3, h4, h5, h6, li, blockquote, label, td, th, input, textarea {
+    cursor: url('/cursors/Leaf 2 inverted.PNG') 16 16, text !important;
+  }
+
+  /* Leaf 3 — clickable elements */
+  a, button, [role="button"], select, .cursor-pointer {
+    cursor: url('/cursors/Leaf 3 inverted.PNG') 16 16, pointer !important;
+  }
+
+  /* Leaf 1 — home page (dark bg, use original non-inverted) */
+  .home-page, .home-page * {
+    cursor: url('/cursors/Leaf 1 with border.PNG') 16 16, auto !important;
   }
 }
 

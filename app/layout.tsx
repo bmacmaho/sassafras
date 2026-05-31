@@ -58,7 +58,6 @@ const alteHaasGrotesk = localFont({
 
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { MouseGlow } from "@/components/mouse-glow"
 import { PageFrame } from "@/components/page-frame"
 import { HeaderExtrasProvider } from "@/components/header-extras-context"
 import { BackToTop } from "@/components/back-to-top"
@@ -106,8 +105,7 @@ export default function RootLayout({
       <body className="font-sans antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
         <HeaderExtrasProvider>
         <PageFrame>
-          <MouseGlow />
-          <SiteHeader />
+<SiteHeader />
           <main className="flex-1 flex flex-col px-6 sm:px-12 md:px-16 lg:px-24 xl:px-32 pb-4 md:pb-6 w-full max-w-[1920px] mx-auto">{children}<BackToTop /></main>
           <SiteFooter />
         </PageFrame>

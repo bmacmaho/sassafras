@@ -1,91 +1,85 @@
 import Link from "next/link"
-import { Bird, Flower, Leaf, Bug } from "lucide-react"
 import { ScrollAnimator } from "@/components/scroll-animator"
 import { ScrollDrivenVideo } from "@/components/home/scroll-driven-video"
+import { WelcomeTypewriter } from "@/components/home/welcome-typewriter"
+import { AnimatedLeaves } from "@/components/home/animated-leaves"
+import { SectionScrollAnimator } from "@/components/home/section-scroll-animator"
+import { PathTrails } from "@/components/home/path-trails"
 
 export const revalidate = 3600
 
 export default function HomePage() {
   return (
-    <div className="w-[100vw] relative left-[calc(-50vw+50%)] -mb-32 md:-mb-56 bg-[#1a1a1a] text-white overflow-x-hidden font-sans">
+    <div
+      className="home-page relative bg-[#1a1a1a] text-white overflow-x-clip font-sans"
+      style={{
+        width: 'calc(100vw - var(--scrollbar-width, 0px))',
+        left: 'calc(-50vw + var(--scrollbar-width, 0px) / 2 + 50%)',
+        marginBottom: 'calc(-14rem - 400vh)',
+      }}
+    >
       <ScrollAnimator />
       {/* ── First Page ── */}
       <ScrollDrivenVideo />
 
       {/* ── Second Page ── */}
-      <section className="relative w-full min-h-screen bg-[#1a1a1a] overflow-hidden">
+      <div className="relative" style={{ height: '500vh' }} data-leaves-scroll-container="true">
+        <div className="sticky top-0 w-full h-screen bg-[#FF730F]">
+        <section className="absolute inset-[12px] md:inset-[16px] bg-[#1a1a1a] overflow-hidden">
+          <PathTrails />
+          {/* Blurred inner edges */}
+          <div className="absolute top-0 left-0 right-0 h-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to bottom, #FF730F, transparent)' }} />
+          <div className="absolute bottom-0 left-0 right-0 h-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to top, #FF730F, transparent)' }} />
+          <div className="absolute top-0 bottom-0 left-0 w-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to right, #FF730F, transparent)' }} />
+          <div className="absolute top-0 bottom-0 right-0 w-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to left, #FF730F, transparent)' }} />
         <div className="relative w-full h-full max-w-[1920px] mx-auto pt-[1px]">
-          {/* Moving Marquee Banner */}
-          <div className="absolute top-8 left-0 w-full z-20 overflow-hidden py-4 border-y border-white/20 bg-[#1a1a1a]/80 backdrop-blur-md flex items-center">
-            <div className="flex whitespace-nowrap animate-marquee text-white text-3xl md:text-5xl font-light tracking-[0.2em] uppercase">
-              <span>WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp;&nbsp;</span>
-              <span>WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp; WELCOME TO SASSAFRAS &nbsp;&bull;&nbsp;&nbsp;</span>
-            </div>
+          {/* Title + Leaves */}
+          <div className="absolute top-6 left-6 md:left-10 z-20 flex flex-col gap-1">
+            <WelcomeTypewriter />
+            <AnimatedLeaves />
           </div>
+          <SectionScrollAnimator />
 
-          {/* Icons */}
-          <div className="absolute top-32 left-6 md:left-12 z-20 flex flex-col items-start">
-            {/* <h2 className="text-white text-3xl md:text-5xl tracking-wide uppercase">
-              WELCOME TO SASSAFRAS
-            </h2> */}
-            <div className="flex flex-col gap-6 mt-8 text-white ml-2">
-              <Flower size={32} strokeWidth={1.5} />
-              <Leaf size={32} strokeWidth={1.5} />
-              <Bird size={32} strokeWidth={1.5} />
-              <Bug size={32} strokeWidth={1.5} />
-            </div>
-          </div>
 
-          {/* Abstract SVG Lines & Curved Text */}
-          <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-            <svg width="100%" height="100%" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1600 1000">
-              {/* Background abstract lines extended across the full width to the absolute edges */}
-              <path d="M -200 500 C 300 400, 300 700, 500 500 S 1100 200, 1800 400" fill="transparent" stroke="white" strokeWidth="0.5" opacity="0.5" />
-              <path d="M -100 800 C 400 100, 800 400, 1000 600 S 1400 800, 1800 1000" fill="transparent" stroke="white" strokeWidth="0.5" opacity="0.5" />
-              <path d="M 200 100 C 600 -100, 1100 300, 1300 500 S 1500 700, 1800 900" fill="transparent" stroke="white" strokeWidth="0.5" opacity="0.5" />
-              {/* Path for text: Original S-curve from the beginning, starting at top left */}
-              <path id="curved-text-path" d="M 0 150 C 800 150, 640 400, 720 550 S 960 850, 1600 950" fill="transparent" />
-              
-              <text className="text-white font-sans text-lg md:text-3xl font-light tracking-[0.2em]" fill="white">
-                <textPath id="animated-text-path" href="#curved-text-path" startOffset="0%">
-                  a platform for experimental thoughts and publication
-                </textPath>
-              </text>
-            </svg>
-          </div>
 
-          {/* Images Grid / Two Column Layout */}
-          <div className="relative z-10 w-full h-[1400px] md:h-[1200px] mt-12 md:mt-16">            {/* --- LEFT COLUMN --- */}
+{/* Images Grid / Two Column Layout */}
+          <div className="relative z-10 w-full h-full">            {/* --- LEFT COLUMN --- */}
             
             {/* 1. CURRENT ISSUE */}
-            <div className="absolute left-[4%] md:left-[12%] top-[22%] md:top-[25%] scroll-animate-wrapper col-left">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/current-issue" className="group flex flex-col items-start gap-2 transform -rotate-2 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[70vw] md:w-[350px] aspect-[1.8/1] bg-white border-[6px] md:border-[10px] border-[#27ae60] shadow-2xl overflow-hidden p-2 relative">
+            <div className="absolute left-[4%] md:left-[12%] top-[22%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
+              <div data-scroll-item style={{ opacity: 0 }}>
+                <Link href="/current-issue" className="group flex flex-col items-start gap-2 transition-all duration-300">
+                  <div className="w-[70vw] md:w-[350px] aspect-[1.8/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full flex overflow-hidden">
                       <img src="/explore_gardens_new.jpg" alt="Current Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <img src="/explore_botanical_new.jpg" alt="Current Issue Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    CURRENT ISSUE - THE TOWER
-                  </p>
+                  <div className="flex items-center gap-1">
+                    <img src="/leaves/Leaf 4.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
+                    <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
+                      CURRENT ISSUE - THE TOWER
+                    </p>
+                  </div>
                 </Link>
               </div>
             </div>
 
             {/* 3. EXPLORE */}
-            <div className="absolute left-[16%] md:left-[26%] top-[66%] md:top-[68%] scroll-animate-wrapper col-left">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/explore" className="group flex flex-col items-start gap-2 transform rotate-2 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[50vw] md:w-[220px] aspect-square bg-white border-[6px] md:border-[10px] border-[#2b3485] shadow-2xl overflow-hidden p-2 relative">
+            <div className="absolute left-[16%] md:left-[26%] top-[58%] md:top-[60%]" data-scroll-step="2" data-scroll-col="left">
+              <div data-scroll-item style={{ opacity: 0 }}>
+                <Link href="/explore" className="group flex flex-col items-start gap-2 transition-all duration-300">
+                  <div className="w-[50vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/explore_flower_new.jpg" alt="Explore" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    EXPLORE
-                  </p>
+                  <div className="flex items-center gap-1">
+                    <img src="/leaves/Leaf 3.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
+                    <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
+                      EXPLORE
+                    </p>
+                  </div>
                 </Link>
               </div>
             </div>
@@ -93,39 +87,47 @@ export default function HomePage() {
             {/* --- RIGHT COLUMN --- */}
 
             {/* 4. ABOUT US */}
-            <div className="absolute right-[20%] md:right-[32%] top-[10%] md:top-[12%] scroll-animate-wrapper col-right">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/about" className="group flex flex-col items-start gap-2 transform rotate-3 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[40vw] md:w-[220px] aspect-square bg-white border-[6px] md:border-[10px] border-[#e95e0e] shadow-2xl overflow-hidden p-2 relative">
+            <div className="absolute right-[20%] md:right-[32%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
+              <div data-scroll-item style={{ opacity: 0 }}>
+                <Link href="/about" className="group flex flex-col items-start gap-2 transition-all duration-300">
+                  <div className="w-[40vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/explore_flower_new.jpg" alt="About" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    ABOUT US
-                  </p>
+                  <div className="flex items-center gap-1">
+                    <img src="/leaves/Leaf 2.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
+                    <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
+                      ABOUT US
+                    </p>
+                  </div>
                 </Link>
               </div>
             </div>
 
             {/* 6. CONTACT/SUPPORT */}
-            <div className="absolute right-[4%] md:right-[10%] top-[60%] md:top-[64%] scroll-animate-wrapper col-right">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/keep-in-touch" className="group flex flex-col items-start gap-2 transform rotate-2 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[50vw] md:w-[280px] aspect-[1.6/1] bg-white border-[6px] md:border-[10px] border-[#c5d940] shadow-2xl overflow-hidden p-2 relative">
+            <div className="absolute right-[4%] md:right-[10%] top-[60%] md:top-[64%]" data-scroll-step="4" data-scroll-col="right">
+              <div data-scroll-item style={{ opacity: 0 }}>
+                <Link href="/keep-in-touch" className="group flex flex-col items-start gap-2 transition-all duration-300">
+                  <div className="w-[50vw] md:w-[280px] aspect-[1.6/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/explore_resin_new.jpg" alt="Contact Support" className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    CONTACT/SUPPORT
-                  </p>
+                  <div className="flex items-center gap-1">
+                    <img src="/leaves/Leaf 1.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
+                    <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
+                      CONTACT/SUPPORT
+                    </p>
+                  </div>
                 </Link>
               </div>
             </div>
           </div>
         </div>
-      </section>
+        </section>
+        </div>
+      </div>
     </div>
   )
 }

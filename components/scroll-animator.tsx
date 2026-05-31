@@ -24,9 +24,20 @@ export function ScrollAnimator() {
       })
     }
 
+    // Measure actual scrollbar width (window.innerWidth includes scrollbar, clientWidth excludes it)
+    // and expose it as a CSS variable so the home-page full-width breakout can compensate
+    const updateScrollbarWidth = () => {
+      const sw = window.innerWidth - document.documentElement.clientWidth
+      document.documentElement.style.setProperty('--scrollbar-width', `${sw}px`)
+    }
+    updateScrollbarWidth()
+
     // Cache once on mount and whenever the window resizes
     cacheWrapperOffsets()
-    const resizeObserver = new ResizeObserver(cacheWrapperOffsets)
+    const resizeObserver = new ResizeObserver(() => {
+      updateScrollbarWidth()
+      cacheWrapperOffsets()
+    })
     resizeObserver.observe(document.body)
 
     const handleScroll = () => {
