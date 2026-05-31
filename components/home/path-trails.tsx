@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 // Mirrors the cubic bezier parameters in SectionScrollAnimator:
 //   B(p) = (1-p)³·P0 + 3(1-p)²p·P1 + 3(1-p)p²·P2 + p³·P3  (P3 = card centre)
@@ -10,6 +10,8 @@ const STEP_BEZIERS = [
   { step: 3, sx: -850, sy: -600, cx1:  300, cy1: -800, cx2:  400, cy2:  300 },
   { step: 4, sx:  920, sy:  700, cx1: -300, cy1:  800, cx2:  150, cy2: -400 },
 ]
+
+const SENTENCE = "a platform for experimental research and publication"
 
 function cardAnchor(step: number, w: number, h: number, isMd: boolean, vw: number) {
   switch (step) {
@@ -21,24 +23,71 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vw: numbe
   }
 }
 
+// Inverse-S curve from above Current Issue (top-left) to above Contact/Support
+// (bottom-right). x increases monotonically so letters never flip; y swings
+// low then high between the endpoints to form the S.
+function sentencePathD(w: number, h: number, isMd: boolean, vw: number) {
+  const ciCw = isMd ? 350 : vw * 0.70
+  const startY = (isMd ? 0.25 : 0.22) * h - 40   // above Current Issue card
+
+  const contCw = isMd ? 280 : vw * 0.50
+  const contTlx = w * (1 - (isMd ? 0.10 : 0.04)) - contCw
+  const endY = (isMd ? 0.64 : 0.60) * h - 40      // above Contact/Support card
+
+  // Pull both endpoints horizontally toward the centre so the whole curve spans
+  // a shorter width → the same peak-to-trough drop happens over less horizontal
+  // distance, making it steeper.
+  const rawStartX = (isMd ? 0.12 : 0.04) * w + ciCw / 2
+  const rawEndX = contTlx + contCw / 2
+  const midX = (rawStartX + rawEndX) / 2
+  const PULL = 0.40
+  const SHIFT = w * 0.06   // nudge the whole curve left
+  const startX = rawStartX + (midX - rawStartX) * PULL - SHIFT
+  const endX = rawEndX + (midX - rawEndX) * PULL - SHIFT
+
+  const dx = endX - startX
+
+  // cos(x) from 0→π: starts at the peak (horizontal tangent), descends to the
+  // trough (horizontal tangent at the end). Both control points sit at the
+  // endpoint heights to flatten the tangents; pulling their x's close to the
+  // centre keeps short flat plateaus at the ends and compresses the descent into
+  // a short, steep middle band (effectively a shorter wavelength).
+  const c1x = startX + dx * 0.44, c1y = startY   // flat peak at start
+  const c2x = startX + dx * 0.56, c2y = endY     // flat trough at end
+
+  // Extend the end as a horizontal line (the end tangent is already horizontal)
+  // so the text has extra room to spread out across the path.
+  const tailX = endX + dx * 0.35
+
+  return `M ${startX} ${startY} C ${c1x} ${c1y} ${c2x} ${c2y} ${endX} ${endY} L ${tailX} ${endY}`
+}
+
 export function PathTrails() {
   const pathRefs = useRef<(SVGPathElement | null)[]>(Array(STEP_BEZIERS.length).fill(null))
+  const sentenceRef = useRef<SVGPathElement | null>(null)
+  const [dims, setDims] = useState<{ vw: number; vh: number } | null>(null)
+  const [pathLen, setPathLen] = useState<number | null>(null)
 
   useEffect(() => {
     let ticking = false
-    const dims = { vw: window.innerWidth, vh: window.innerHeight }
+    const d = { vw: window.innerWidth, vh: window.innerHeight }
+
+    const sync = () => {
+      d.vw = window.innerWidth
+      d.vh = window.innerHeight
+      setDims({ vw: d.vw, vh: d.vh })
+    }
 
     const updatePaths = () => {
       const container = document.querySelector("[data-leaves-scroll-container]") as HTMLElement | null
       if (!container) { ticking = false; return }
 
-      const { vw, vh } = dims
+      const { vw, vh } = d
       const isMd = vw >= 768
       const inset = isMd ? 16 : 12
       const w = vw - 2 * inset
       const h = vh - 2 * inset
 
-      // Same progress formula as SectionScrollAnimator
       const containerRect = container.getBoundingClientRect()
       const extraScroll = container.offsetHeight - vh
       const scrolledThrough = Math.max(0, -containerRect.top)
@@ -50,22 +99,21 @@ export function PathTrails() {
         const { step, sx, sy, cx1, cy1, cx2, cy2 } = STEP_BEZIERS[i]
         const { x: ex, y: ey } = cardAnchor(step, w, h, isMd, vw)
 
-        const P0x = ex + sx,  P0y = ey + sy   // start (off-screen origin)
-        const P1x = ex + cx1, P1y = ey + cy1  // first control point
-        const P2x = ex + cx2, P2y = ey + cy2  // second control point
-        const P3x = ex,       P3y = ey        // end (card centre)
+        const P0x = ex + sx,  P0y = ey + sy
+        const P1x = ex + cx1, P1y = ey + cy1
+        const P2x = ex + cx2, P2y = ey + cy2
+        const P3x = ex,       P3y = ey
 
         if (p <= 0) { el.setAttribute('d', ''); return }
         if (p >= 1) { el.setAttribute('d', `M ${P0x} ${P0y} C ${P1x} ${P1y} ${P2x} ${P2y} ${P3x} ${P3y}`); return }
 
-        // Cubic de Casteljau split at p — sub-curve M P0 C P01 P012 B(p)
         const P01x = P0x + p*(P1x-P0x), P01y = P0y + p*(P1y-P0y)
         const P12x = P1x + p*(P2x-P1x), P12y = P1y + p*(P2y-P1y)
         const P23x = P2x + p*(P3x-P2x), P23y = P2y + p*(P3y-P2y)
         const P012x = P01x + p*(P12x-P01x), P012y = P01y + p*(P12y-P01y)
         const P123x = P12x + p*(P23x-P12x), P123y = P12y + p*(P23y-P12y)
-        const Bx = P012x + p*(P123x-P012x)   // current element x
-        const By = P012y + p*(P123y-P012y)   // current element y
+        const Bx = P012x + p*(P123x-P012x)
+        const By = P012y + p*(P123y-P012y)
 
         el.setAttribute('d', `M ${P0x} ${P0y} C ${P01x} ${P01y} ${P012x} ${P012y} ${Bx} ${By}`)
       })
@@ -80,14 +128,11 @@ export function PathTrails() {
       }
     }
 
-    const onResize = () => {
-      dims.vw = window.innerWidth
-      dims.vh = window.innerHeight
-      updatePaths()
-    }
+    const onResize = () => { sync(); updatePaths() }
 
     window.addEventListener("scroll", onScroll, { passive: true })
     window.addEventListener("resize", onResize)
+    sync()
     updatePaths()
     return () => {
       window.removeEventListener("scroll", onScroll)
@@ -95,11 +140,35 @@ export function PathTrails() {
     }
   }, [])
 
+  // Measure the sentence path after it re-renders so the text can be stretched
+  // to span the full curve (start above Current Issue → end above Contact).
+  useEffect(() => {
+    if (!dims) return
+    requestAnimationFrame(() => {
+      if (sentenceRef.current) setPathLen(sentenceRef.current.getTotalLength())
+    })
+  }, [dims])
+
+  if (!dims) return null
+
+  const { vw, vh } = dims
+  const isMd = vw >= 768
+  const inset = isMd ? 16 : 12
+  const w = vw - 2 * inset
+  const h = vh - 2 * inset
+
+  const sentenceD = sentencePathD(w, h, isMd, vw)
+  const fontSize = isMd ? 30 : 22
+
   return (
     <svg
       className="absolute inset-0 w-full h-full pointer-events-none"
       overflow="visible"
     >
+      <defs>
+        <path id="sentence-arc" ref={sentenceRef} d={sentenceD} />
+      </defs>
+
       {STEP_BEZIERS.map(({ step }, i) => (
         <path
           key={step}
@@ -110,6 +179,24 @@ export function PathTrails() {
           strokeOpacity="0.4"
         />
       ))}
+
+      <text
+        fontSize={fontSize}
+        fontFamily="'Alte Haas Grotesk', sans-serif"
+        fill="black"
+        stroke="white"
+        strokeWidth="3"
+        paintOrder="stroke fill"
+        letterSpacing="1"
+      >
+        <textPath
+          href="#sentence-arc"
+          startOffset="0%"
+          {...(pathLen ? { textLength: pathLen, lengthAdjust: "spacingAndGlyphs" } : {})}
+        >
+          {SENTENCE}
+        </textPath>
+      </text>
     </svg>
   )
 }
