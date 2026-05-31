@@ -6,7 +6,7 @@ import { ArrowRight, Maximize2, X } from "lucide-react"
 import type { CSSProperties } from "react"
 import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
-import { useHeaderScrolled } from "@/components/header-extras-context"
+import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
@@ -583,26 +583,26 @@ export default function CurrentIssuePage() {
 
       {/* ── Separator ── */}
       <div
-        className={`h-0 border-b-4 mb-8 transition-colors duration-500 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
+        className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
         style={{ width: 'calc(100vw - 12rem)', marginLeft: 'calc(-50vw + 50% + 6rem)' }}
       />
 
       {/* ── Contributors ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-16">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1">
         <h2
-          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none transition-colors duration-500"
+          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none"
           style={dm ? { color: "#111", WebkitTextStroke: "1.5px white" } : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }}
         >
           Contributors
         </h2>
-        <div className={`w-1/2 border-2 transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
+        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
           {contributorsData.map((person, i) => (
-            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 transition-colors duration-500 ${dm ? "border-white" : "border-black"}` : ""}>
+            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
-                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-500 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
+                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
                 onClick={() => handleContribSelect(person.id)}
               >
-                <span className={`font-alte-haas text-2xl tracking-[0.05em] transition-colors duration-500 ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
+                <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
                 <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
                   {(() => {
                     const words = person.role.split(" ")
@@ -617,26 +617,26 @@ export default function CurrentIssuePage() {
                 className="grid transition-[grid-template-rows] duration-400 ease-in-out"
                 style={{ gridTemplateRows: openContribId === person.id ? "1fr" : "0fr" }}
               >
-                <div className={`overflow-hidden transition-colors duration-500 ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center transition-colors duration-500 ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
                       {person.photo ? (
                         <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className={`text-xs font-mono uppercase tracking-widest transition-colors duration-500 ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
                       )}
                     </div>
-                    <div className={`flex-1 border-l-2 flex overflow-hidden transition-colors duration-500 ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                    <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
                       <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
-                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 transition-colors duration-500 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
                         <div className="relative pr-3">
-                          <p className={`font-alte-haas text-xl leading-relaxed transition-colors duration-500 ${dm ? "text-white/80" : "text-[#444]"}`}>
-                            {person.bio || <span className={`italic transition-colors duration-500 ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
+                            {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                           </p>
-                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] transition-colors duration-500 ${dm ? "bg-white" : "bg-black"}`} />
+                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
                         </div>
                       </div>
-                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 transition-colors duration-500 ${dm ? "border-white" : "border-black"}`}>
+                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
                         <span
                           className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
                           style={{ color: "#5D9800", writingMode: "vertical-rl" }}
@@ -652,6 +652,16 @@ export default function CurrentIssuePage() {
           ))}
         </div>
       </div>
+
+      <BottomLeftSlot>
+        <Link
+          href="/explore"
+          className="font-alte-haas text-sm tracking-[0.1em] transition-opacity hover:opacity-60"
+          style={{ color: "#5D9800" }}
+        >
+          <span className="underline underline-offset-2">Explore</span>{" >"}
+        </Link>
+      </BottomLeftSlot>
     </div>
   )
 }

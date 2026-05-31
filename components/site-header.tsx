@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
 import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
@@ -53,15 +54,33 @@ export function SearchBox({ color, open, onToggle, darkMode }: { color: string; 
 
 function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[]; darkMode?: boolean }) {
   const [hovered, setHovered] = useState(false)
+  const [rect, setRect] = useState<DOMRect | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
   const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
 
+  const cancelLeave = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current)
+  }
+
+  const scheduleLeave = () => {
+    leaveTimer.current = setTimeout(() => setHovered(false), 120)
+  }
+
+  const handleMouseEnter = () => {
+    cancelLeave()
+    if (containerRef.current) setRect(containerRef.current.getBoundingClientRect())
+    setHovered(true)
+  }
+
   return (
     <div
+      ref={containerRef}
       className="relative flex flex-col items-center"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={scheduleLeave}
     >
       <Link
         href={href}
@@ -74,19 +93,25 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
           style={{ backgroundColor: linkColor, transform: hovered || isActive ? "scaleX(1)" : "scaleX(0)" }}
         />
       </Link>
-      {submenu && (
-        <div className={`absolute top-full pt-3 flex flex-col items-center gap-2 transition-all duration-200 z-10 ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}>
+      {submenu && rect && createPortal(
+        <div
+          className={`flex flex-col items-start gap-2 transition-all duration-200 z-[10000] ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}
+          style={{ position: "fixed", top: rect.bottom + 12, left: rect.left }}
+          onMouseEnter={cancelLeave}
+          onMouseLeave={scheduleLeave}
+        >
           {submenu.map(item => (
             <Link
               key={item.href}
               href={item.href}
-              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60"
-              style={{ color: "#FBFAF1", WebkitTextStroke: "0.5px black" }}
+              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60 text-left"
+              style={{ color: darkMode ? "#111" : "#FBFAF1", WebkitTextStroke: darkMode ? "0.5px white" : "0.5px black" }}
             >
               {item.label}
             </Link>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
@@ -103,9 +128,9 @@ const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why Sassafras?" }] },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why are we called Sassafras?" }] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
-  { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
+  { href: "/keep-in-touch", label: "CONTACT / SUPPORT", pageTitle: "Contact" },
 ]
 
 const HEADER_MAX = 250
@@ -289,7 +314,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
         {/* Desktop header */}
         <header
-          className="hidden lg:flex sticky top-4 z-50 relative overflow-hidden"
+          className="hidden lg:flex sticky top-4 z-50 relative"
           style={{
             backgroundColor: darkMode ? "#000" : "#fbfaf1",
             height: `${headerHeight}px`,
@@ -463,7 +488,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
           {/* Logo + page title — fades out when scrolled */}
           <div
-            className="absolute bottom-8 left-24 flex flex-col items-start gap-2 transition-opacity duration-300"
+            className="absolute bottom-4 left-24 flex flex-col items-start gap-4 transition-opacity duration-300"
             style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
           >
             <div className="flex items-start gap-2">
@@ -483,9 +508,31 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                   </div>
                 </Link>
               ))}
+              {pathname === "/about/why-sassafras" && (
+                <div className="flex gap-5">
+                  {[
+                    "/why-sassafras-squares/IMG_6372.JPG",
+                    "/why-sassafras-squares/IMG_6552.JPG",
+                    "/why-sassafras-squares/IMG_6553.JPG",
+                    "/why-sassafras-squares/IMG_6554.JPG",
+                    "/why-sassafras-squares/IMG_6555.JPG",
+                    "/why-sassafras-squares/IMG_6556.JPG",
+                  ].map((src) => (
+                    <div key={src} className="relative flex-shrink-0 overflow-hidden" style={{ width: 80, height: 80 }}>
+                      <Image src={src} alt="" fill className="object-cover" unoptimized />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex items-end gap-8">
-              <Link href={pageHref} className="font-alte-haas text-5xl tracking-widest hover:opacity-60 transition-opacity" style={{ color: darkMode ? "white" : "#1a1a1a" }}>
+              <Link
+                href={pageHref}
+                className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
+                style={pathname === "/about/why-sassafras"
+                  ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
+                  : { color: darkMode ? "white" : "#1a1a1a" }}
+              >
                 {pageLabel}
               </Link>
               {extras ? (
@@ -503,7 +550,10 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
             </div>
           </div>
           {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch"))) && (
-            <div className={`absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none ${darkMode ? "border-white/20" : "border-[#D5D4CD]"}`} />
+            <div
+              className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
+              style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
+            />
           )}
         </header>
       {hasChevron && (

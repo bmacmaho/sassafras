@@ -9,7 +9,7 @@ function EssayBody({ body }: { body: string }) {
   return (
     <div className="flex flex-col gap-6">
       {paragraphs.map((p, i) => (
-        <p key={i} className="font-serif text-base leading-[1.8] text-foreground md:text-lg">
+        <p key={`${i}-${p.slice(0, 32)}`} className="font-serif text-base leading-[1.8] text-foreground md:text-lg">
           {i === 0 ? (
             <>
               <span className="float-left mr-3 mt-1 font-serif text-5xl leading-none text-accent">
@@ -33,7 +33,7 @@ function PoetryBody({ body }: { body: string }) {
       {sections.map((section, si) => {
         const stanzas = section.split("\n\n")
         return (
-          <div key={si} className="flex flex-col gap-6">
+          <div key={`s-${si}`} className="flex flex-col gap-6">
             {stanzas.map((stanza, sti) => {
               const lines = stanza.split("\n")
               const isTitle =
@@ -43,7 +43,7 @@ function PoetryBody({ body }: { body: string }) {
               if (isTitle) {
                 return (
                   <h3
-                    key={sti}
+                    key={`${si}-${sti}`}
                     className="mt-4 text-center text-xs uppercase tracking-[0.4em] text-muted-foreground"
                   >
                     {lines[0]}
@@ -51,10 +51,10 @@ function PoetryBody({ body }: { body: string }) {
                 )
               }
               return (
-                <div key={sti} className="flex flex-col gap-0.5">
+                <div key={`${si}-${sti}`} className="flex flex-col gap-0.5">
                   {lines.map((line, li) => (
                     <p
-                      key={li}
+                      key={`${si}-${sti}-${li}`}
                       className="font-serif text-base italic leading-relaxed text-foreground md:text-lg"
                     >
                       {line || "\u00A0"}
@@ -122,7 +122,7 @@ function AudioBody({ body }: { body: string }) {
       <div className="flex flex-col gap-6">
         {paragraphs.map((p, i) => (
           <p
-            key={i}
+            key={`${i}-${p.slice(0, 32)}`}
             className="font-serif text-base leading-[1.8] text-foreground md:text-lg"
           >
             {p}
@@ -160,7 +160,7 @@ function VideoBody({ body }: { body: string }) {
       <div className="flex flex-col gap-6">
         {paragraphs.map((p, i) => (
           <p
-            key={i}
+            key={`${i}-${p.slice(0, 32)}`}
             className="font-serif text-base leading-[1.8] text-foreground md:text-lg"
           >
             {p}
@@ -204,7 +204,7 @@ function VisualBody({ body }: { body: string }) {
       <div className="flex flex-col gap-6">
         {paragraphs.map((p, i) => (
           <p
-            key={i}
+            key={`${i}-${p.slice(0, 32)}`}
             className="font-serif text-base leading-[1.8] text-foreground md:text-lg"
           >
             {p}

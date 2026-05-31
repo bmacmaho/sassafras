@@ -74,23 +74,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 2. ALL ISSUES */}
-            <div className="absolute left-[10%] md:left-[19%] top-[44%] md:top-[46%] scroll-animate-wrapper col-left">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/issues" className="group flex flex-col items-start gap-2 transform rotate-2 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[70vw] md:w-[350px] aspect-[1.8/1] bg-white border-[6px] md:border-[10px] border-[#16a085] shadow-2xl overflow-hidden p-2 relative">
-                     <div className="w-full h-full flex overflow-hidden">
-                      <img src="/explore_struggle_new.jpg" alt="All Issues Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <img src="/explore_charcoal_new.jpg" alt="All Issues Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    ALL ISSUES
-                  </p>
-                </Link>
-              </div>
-            </div>
-
             {/* 3. EXPLORE */}
             <div className="absolute left-[16%] md:left-[26%] top-[66%] md:top-[68%] scroll-animate-wrapper col-left">
               <div className="scroll-animate-item opacity-0">
@@ -120,22 +103,6 @@ export default function HomePage() {
                   </div>
                   <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
                     ABOUT US
-                  </p>
-                </Link>
-              </div>
-            </div>
-
-            {/* 5. UPCOMING ISSUE/SUBMISSIONS */}
-            <div className="absolute right-[12%] md:right-[21%] top-[35%] md:top-[38%] scroll-animate-wrapper col-right">
-              <div className="scroll-animate-item opacity-0">
-                <Link href="/submissions" className="group flex flex-col items-start gap-2 transform -rotate-2 hover:rotate-0 transition-all duration-300">
-                  <div className="w-[45vw] md:w-[250px] aspect-[4/3] bg-white border-[6px] md:border-[10px] border-[#e74c3c] shadow-2xl overflow-hidden p-2 relative">
-                     <div className="w-full h-full overflow-hidden flex items-center justify-center">
-                        <img src="/explore_jellyfish_new.jpg" alt="Submissions" className="w-full h-full object-cover grayscale brightness-150 contrast-125 group-hover:scale-105 transition-transform duration-500" />
-                     </div>
-                  </div>
-                  <p className="text-white text-[10px] md:text-xs tracking-widest uppercase group-hover:underline">
-                    UPCOMING ISSUE/SUBMISSIONS
                   </p>
                 </Link>
               </div>

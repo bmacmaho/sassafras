@@ -6,7 +6,7 @@
   src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -14,7 +14,7 @@
   src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
 }
 
 .font-alte-haas {
@@ -57,8 +57,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-serif: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: var(--font-charter), Charter, Georgia, serif;
+  --font-serif: var(--font-charter), Charter, Georgia, serif;
   --font-title: var(--font-alte-haas), sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 

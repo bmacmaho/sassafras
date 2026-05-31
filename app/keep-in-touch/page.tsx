@@ -1,93 +1,106 @@
 "use client"
 
+import { useEffect } from "react"
+import Link from "next/link"
 import { useHeaderScrolled } from "@/components/header-extras-context"
 
 export default function KeepInTouchPage() {
   const { darkMode: dm } = useHeaderScrolled()
 
+  useEffect(() => {
+    document.body.style.transition = "background-color 500ms ease"
+    document.body.style.backgroundColor = dm ? "#000" : "#fcfaf2"
+    return () => {
+      document.body.style.backgroundColor = ""
+      document.body.style.transition = ""
+    }
+  }, [dm])
+
+  const titleStyle = dm
+    ? { color: "#111", WebkitTextStroke: "1.5px white" }
+    : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }
+
   return (
-    <div className={`pt-12 min-h-screen font-sans transition-colors duration-300 ${dm ? "bg-black text-white" : "text-[#222]"}`}>
-      <div className="mx-auto max-w-5xl py-12">
+    <div
+      className={`relative pt-9 min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 ${dm ? "text-white" : "text-[#222]"}`}
+      style={{ backgroundColor: dm ? "#000" : "#fcfaf2", transition: "background-color 500ms ease, color 500ms ease" }}
+    >
 
-        {/* ── Header ── */}
-        <header className={`mb-24 pb-16 border-b ${dm ? "border-white/10" : "border-black/10"}`}>
-          <div className="max-w-2xl">
-            <p className={`text-xl md:text-2xl font-serif italic leading-relaxed ${dm ? "text-white/90" : "text-[#222]"}`}>
-              Sassafras is a space for dialogue, experimentation, and critical engagement. Reach out to collaborate, contribute, or support our mission.
-            </p>
-          </div>
-        </header>
-
-        {/* ── Content Grid ── */}
-        <div className="grid md:grid-cols-2 gap-20">
-
-          {/* Left Side: Contact */}
-          <div className="space-y-16">
-            <section>
-              <h2 className={`text-[10px] font-black uppercase tracking-[0.4em] mb-8 ${dm ? "text-white/30" : "text-black/30"}`}>Inquiries</h2>
-              <div className="space-y-10">
-                <div className="group">
-                  <span className={`text-[9px] uppercase tracking-widest block mb-1 ${dm ? "text-white/40" : "text-black/40"}`}>Email</span>
-                  <a href="mailto:sassafrasinitiative@gmail.com" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors break-all">
-                    sassafrasinitiative@gmail.com
-                  </a>
-                </div>
-                <div className="group">
-                  <span className={`text-[9px] uppercase tracking-widest block mb-1 ${dm ? "text-white/40" : "text-black/40"}`}>Instagram</span>
-                  <a href="https://instagram.com/sassafrasinitiative" target="_blank" rel="noopener noreferrer" className="text-xl md:text-2xl font-serif italic hover:text-[#c5d940] transition-colors">
-                    @sassafrasinitiative
-                  </a>
-                </div>
-              </div>
-            </section>
-
-            <section className={`pt-12 border-t ${dm ? "border-white/5" : "border-black/5"}`}>
-              <h2 className={`text-[10px] font-black uppercase tracking-[0.4em] mb-6 ${dm ? "text-white/30" : "text-black/30"}`}>Contributions</h2>
-              <p className={`text-sm leading-relaxed mb-6 font-mono ${dm ? "text-white/60" : "text-black/60"}`}>
-                Interested in submitting work or collaborating? We welcome inquiries from researchers, artists, and experimenters.
+      {/* ── Contact section ── */}
+      <div className="relative">
+        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
+          <section className="mb-16">
+            <div className={`text-base leading-relaxed font-sans ${dm ? "text-white/80" : "text-[#444]"}`}>
+              <p className="mb-1">Sassafras Initiative</p>
+              <p className="mb-1">Berlin, Germany</p>
+              <p className="mb-1">
+                <a
+                  href="mailto:sassafrasinitiative@gmail.com"
+                  className="underline underline-offset-2 hover:opacity-60 transition-opacity"
+                >
+                  sassafrasinitiative@gmail.com
+                </a>
               </p>
-              <a
-                href="mailto:sassafrasinitiative@gmail.com?subject=Submission Inquiry"
-                className={`text-xs font-bold uppercase tracking-widest border-b pb-1 transition-all hover:text-[#c5d940] hover:border-[#c5d940] ${dm ? "border-white" : "border-black"}`}
-              >
-                Submission Guidelines
-              </a>
-            </section>
-          </div>
-
-          {/* Right Side: Support */}
-          <div className={`border p-10 md:p-12 ${dm ? "bg-white/5 border-white/10" : "bg-black/[0.02] border-black/5"}`}>
-            <h2 className={`text-[10px] font-black uppercase tracking-[0.4em] mb-8 ${dm ? "text-white/30" : "text-black/30"}`}>Support Sassafras</h2>
-            <p className={`text-base font-serif italic leading-relaxed mb-10 ${dm ? "text-white/90" : "text-[#222]"}`}>
-              Sassafras is an independent, volunteer-led initiative. We believe in open access and radical experimentation of form.
-            </p>
-
-            <div className="flex flex-col gap-4">
-              <a
-                href="mailto:sassafrasinitiative@gmail.com?subject=Donation Inquiry"
-                className={`flex items-center justify-between border px-6 py-4 transition-all group ${dm ? "border-white hover:bg-white hover:text-black" : "border-black hover:bg-black hover:text-[#FBFAF1]"}`}
-              >
-                <span className="text-xs font-bold uppercase tracking-widest">Support Monetarily</span>
-                <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </a>
-              <a
-                href="mailto:sassafrasinitiative@gmail.com?subject=Volunteer Inquiry"
-                className={`flex items-center justify-between border px-6 py-4 transition-all group ${dm ? "border-white hover:bg-white hover:text-black" : "border-black hover:bg-black hover:text-[#FBFAF1]"}`}
-              >
-                <span className="text-xs font-bold uppercase tracking-widest">Join the Collective</span>
-                <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </a>
-            </div>
-
-            <div className={`mt-12 pt-12 border-t ${dm ? "border-white/5" : "border-black/5"}`}>
-              <p className={`text-[10px] font-mono leading-relaxed uppercase tracking-widest ${dm ? "text-white/40" : "text-black/40"}`}>
-                All contributions directly fund the production and distribution of radical academic experimentation.
+              <p className="mb-1">
+                <a
+                  href="https://instagram.com/sassafrasinitiative"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:opacity-60 transition-opacity"
+                >
+                  @sassafrasinitiative
+                </a>
+              </p>
+              <p className={`mt-6 text-sm ${dm ? "text-white/40" : "text-black/40"}`}>
+                Responsible for content: The Sassafras Collective
               </p>
             </div>
-          </div>
+          </section>
+        </div>
 
+        {/* Separator */}
+        <div
+          className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
+          style={{ width: "calc(100vw - 12rem)", marginLeft: "calc(-50vw + 50% + 6rem)" }}
+        />
+
+        {/* Walking people image */}
+        <img
+          src="/Walking-people.PNG"
+          alt=""
+          aria-hidden="true"
+          className="absolute z-20 bottom-0 h-36 sm:h-32 md:h-28 lg:h-24 w-auto pointer-events-none select-none"
+          style={{ right: "-0.4rem", transform: "rotate(-90deg)", transformOrigin: "center center" }}
+        />
+      </div>
+
+      {/* ── Support us section ── */}
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-4">
+        <h2
+          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-8 leading-none select-none"
+          style={titleStyle}
+        >
+          Support us
+        </h2>
+
+        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+          <Link
+            href="/donate"
+            className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 border-b-2 ${dm ? "border-white hover:bg-white/10" : "border-black hover:bg-[#f0efe7]"}`}
+          >
+            <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Donate</span>
+            <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
+          </Link>
+          <Link
+            href="/volunteer"
+            className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
+          >
+            <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Volunteer</span>
+            <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
+          </Link>
         </div>
       </div>
+
     </div>
   )
 }
