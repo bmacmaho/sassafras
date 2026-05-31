@@ -56,11 +56,21 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
   const [hovered, setHovered] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
   const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
   const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
 
+  const cancelLeave = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current)
+  }
+
+  const scheduleLeave = () => {
+    leaveTimer.current = setTimeout(() => setHovered(false), 120)
+  }
+
   const handleMouseEnter = () => {
+    cancelLeave()
     if (containerRef.current) setRect(containerRef.current.getBoundingClientRect())
     setHovered(true)
   }
@@ -70,7 +80,7 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
       ref={containerRef}
       className="relative flex flex-col items-center"
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={scheduleLeave}
     >
       <Link
         href={href}
@@ -87,6 +97,8 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
         <div
           className={`flex flex-col items-start gap-2 transition-all duration-200 z-[10000] ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}
           style={{ position: "fixed", top: rect.bottom + 12, left: rect.left }}
+          onMouseEnter={cancelLeave}
+          onMouseLeave={scheduleLeave}
         >
           {submenu.map(item => (
             <Link
@@ -118,7 +130,7 @@ const NAV_LINKS = [
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why are we called Sassafras?" }] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
-  { href: "/keep-in-touch", label: "CONTACT / SUPPORT" },
+  { href: "/keep-in-touch", label: "CONTACT / SUPPORT", pageTitle: "Contact" },
 ]
 
 const HEADER_MAX = 250

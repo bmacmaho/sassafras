@@ -6,7 +6,7 @@ import { ArrowRight, Maximize2, X } from "lucide-react"
 import type { CSSProperties } from "react"
 import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
-import { useHeaderScrolled } from "@/components/header-extras-context"
+import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
@@ -588,7 +588,7 @@ export default function CurrentIssuePage() {
       />
 
       {/* ── Contributors ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-16">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1">
         <h2
           className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none"
           style={dm ? { color: "#111", WebkitTextStroke: "1.5px white" } : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }}
@@ -652,6 +652,16 @@ export default function CurrentIssuePage() {
           ))}
         </div>
       </div>
+
+      <BottomLeftSlot>
+        <Link
+          href="/explore"
+          className="font-alte-haas text-sm tracking-[0.1em] transition-opacity hover:opacity-60"
+          style={{ color: "#5D9800" }}
+        >
+          <span className="underline underline-offset-2">Explore</span>{" >"}
+        </Link>
+      </BottomLeftSlot>
     </div>
   )
 }

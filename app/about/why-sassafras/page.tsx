@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import { useHeaderScrolled } from "@/components/header-extras-context"
+import Link from "next/link"
+import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 
 export default function WhySassafrasPage() {
   const { darkMode: dm } = useHeaderScrolled()
@@ -34,6 +35,16 @@ export default function WhySassafrasPage() {
           </div>
         </section>
       </div>
+
+      <BottomLeftSlot>
+        <Link
+          href="/about"
+          className="font-alte-haas text-sm tracking-[0.1em] transition-opacity hover:opacity-60"
+          style={{ color: "#5D9800" }}
+        >
+          {"< "}<span className="underline underline-offset-2">Our Team</span>
+        </Link>
+      </BottomLeftSlot>
     </div>
   )
 }

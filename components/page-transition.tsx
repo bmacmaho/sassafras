@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState, ReactNode } from "react"
-import { usePathname } from "next/navigation"
+import { ReactNode } from "react"
 
 export function PageTransition({ children }: { children: ReactNode }) {
   return (

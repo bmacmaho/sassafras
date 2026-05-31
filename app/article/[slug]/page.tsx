@@ -20,10 +20,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const data = await getArticleBySlug(slug)
-  if (!data) return { title: "Not Found" }
+  if (!data) return { title: "Not Found", robots: { index: false } }
+  const title = `${data.title} — ${data.author}`
   return {
-    title: `${data.title} — ${data.author}`,
+    title,
     description: data.excerpt,
+    openGraph: {
+      type: "article",
+      title,
+      description: data.excerpt,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: data.excerpt,
+    },
   }
 }
 
@@ -33,10 +44,15 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [data, currentIssue] = await Promise.all([
-    getArticleBySlug(slug),
-    getCurrentIssue(),
-  ])
+  let data, currentIssue
+  try {
+    ;[data, currentIssue] = await Promise.all([
+      getArticleBySlug(slug),
+      getCurrentIssue(),
+    ])
+  } catch {
+    notFound()
+  }
   if (!data) notFound()
 
   const isCurrentIssue =

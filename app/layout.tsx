@@ -75,6 +75,25 @@ export const metadata: Metadata = {
     icon: "/sassafras-logo.png",
     apple: "/sassafras-logo.png",
   },
+  openGraph: {
+    type: "website",
+    siteName: "Sassafras Initiative",
+    title: "Sassafras Initiative",
+    description:
+      "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form.",
+    images: [{ url: "/sassafras-logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sassafras Initiative",
+    description:
+      "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form.",
+    images: ["/sassafras-logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({

@@ -7,7 +7,9 @@ const HeaderExtrasContext = createContext<{
   setExtras: (node: ReactNode) => void
   rightExtras: ReactNode
   setRightExtras: (node: ReactNode) => void
-}>({ extras: null, setExtras: () => {}, rightExtras: null, setRightExtras: () => {} })
+  bottomLeft: ReactNode
+  setBottomLeft: (node: ReactNode) => void
+}>({ extras: null, setExtras: () => {}, rightExtras: null, setRightExtras: () => {}, bottomLeft: null, setBottomLeft: () => {} })
 
 const HeaderScrolledContext = createContext<{
   headerScrolled: boolean
@@ -21,10 +23,11 @@ const HeaderScrolledContext = createContext<{
 export function HeaderExtrasProvider({ children }: { children: ReactNode }) {
   const [extras, setExtras] = useState<ReactNode>(null)
   const [rightExtras, setRightExtras] = useState<ReactNode>(null)
+  const [bottomLeft, setBottomLeft] = useState<ReactNode>(null)
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(0)
   const [darkMode, setDarkMode] = useState(false)
-  const extrasValue = useMemo(() => ({ extras, setExtras, rightExtras, setRightExtras }), [extras, rightExtras])
+  const extrasValue = useMemo(() => ({ extras, setExtras, rightExtras, setRightExtras, bottomLeft, setBottomLeft }), [extras, rightExtras, bottomLeft])
   const scrolledValue = useMemo(() => ({ headerScrolled, setHeaderScrolled, headerHeight, setHeaderHeight, darkMode, setDarkMode }), [headerScrolled, headerHeight, darkMode])
   return (
     <HeaderScrolledContext.Provider value={scrolledValue}>
@@ -49,7 +52,10 @@ export function HeaderSlot({ children }: { children: ReactNode }) {
   useEffect(() => {
     setExtras(children)
     return () => setExtras(null)
-  })
+    // children is intentionally excluded — it's a React element and would change reference
+    // every render, causing an infinite loop. The slot is only ever mounted once per page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setExtras])
   return null
 }
 
@@ -59,6 +65,18 @@ export function HeaderRightSlot({ children }: { children: ReactNode }) {
   useEffect(() => {
     setRightExtras(children)
     return () => setRightExtras(null)
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setRightExtras])
+  return null
+}
+
+/** Render this inside a page to inject content into the bottom-left corner, aligned with the back-to-top button. */
+export function BottomLeftSlot({ children }: { children: ReactNode }) {
+  const { setBottomLeft } = useHeaderExtras()
+  useEffect(() => {
+    setBottomLeft(children)
+    return () => setBottomLeft(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setBottomLeft])
   return null
 }

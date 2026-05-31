@@ -8,7 +8,7 @@ import { useHeaderScrolled } from "@/components/header-extras-context"
 export function SiteFooter() {
   const pathname = usePathname()
   const { darkMode } = useHeaderScrolled()
-  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/submissions" || pathname === "/issues"
+  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/issues"
 
   const usePurple = isAbout
   const bgColor = usePurple ? "#A39DC3" : "#B8D160"
@@ -34,7 +34,7 @@ export function SiteFooter() {
         <div className="flex flex-col">
           <span className={colLabel}>Sassafras</span>
           <span className={colText}>Berlin</span>
-          <Link href="/impressum" className={colLink}>Impressum</Link>
+          <Link href="/keep-in-touch" className={colLink}>Impressum</Link>
         </div>
 
         {/* 2 — Contact */}

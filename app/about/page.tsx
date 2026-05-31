@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
-import { useHeaderScrolled } from "@/components/header-extras-context"
+import Link from "next/link"
+import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 
 const peopleData = [
   { id: 1, name: "Anjana Ramesh",      role: "Content Editor",                 photo: null, bio: "" },
@@ -162,6 +163,16 @@ export default function AboutPage() {
         </div>
         </div>
       </div>
+
+      <BottomLeftSlot>
+        <Link
+          href="/about/why-sassafras"
+          className="font-alte-haas text-sm tracking-[0.1em] transition-opacity hover:opacity-60"
+          style={{ color: "#5D9800" }}
+        >
+          <span className="underline underline-offset-2">Why Sassafras?</span>{" >"}
+        </Link>
+      </BottomLeftSlot>
     </div>
   )
 }
