@@ -71,7 +71,7 @@ export default function HomePage() {
                 <Link href="/explore" className="group flex flex-col items-start gap-2 transition-all duration-300">
                   <div className="w-[50vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
-                      <img src="/explore_flower_new.jpg" alt="Explore" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/home-page-squares/ExploreSquare.png" alt="Explore" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -87,12 +87,12 @@ export default function HomePage() {
             {/* --- RIGHT COLUMN --- */}
 
             {/* 4. ABOUT US */}
-            <div className="absolute right-[20%] md:right-[32%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
+            <div className="absolute right-[16%] md:right-[26%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
               <div data-scroll-item style={{ opacity: 0 }}>
                 <Link href="/about" className="group flex flex-col items-start gap-2 transition-all duration-300">
                   <div className="w-[40vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
-                      <img src="/explore_flower_new.jpg" alt="About" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/home-page-squares/AboutSquare.JPG" alt="About" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -111,7 +111,7 @@ export default function HomePage() {
                 <Link href="/keep-in-touch" className="group flex flex-col items-start gap-2 transition-all duration-300">
                   <div className="w-[50vw] md:w-[280px] aspect-[1.6/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
-                      <img src="/explore_resin_new.jpg" alt="Contact Support" className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/home-page-squares/ContactSupportSquare.JPG" alt="Contact Support" className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1">

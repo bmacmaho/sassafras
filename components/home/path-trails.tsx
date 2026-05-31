@@ -12,12 +12,31 @@ const STEP_BEZIERS = [
 ]
 
 const SENTENCE = "a platform for experimental research and publication"
+const WORDS = SENTENCE.split(" ")
+
+// Resting position of each word as a fraction of the sentence's character span,
+// measured at the word's centre. Mapping char-centre → arc-length fraction keeps
+// the spacing close to an evenly-stretched line of text along the path.
+const WORD_FRACS = (() => {
+  const total = SENTENCE.length
+  let idx = 0
+  return WORDS.map((wd) => {
+    const centre = idx + wd.length / 2
+    idx += wd.length + 1 // +1 for the space
+    return centre / total
+  })
+})()
+
+// Entrance timing: each word starts a little after the previous (stagger) and
+// takes SPAN of scroll progress to travel from the start point to its slot.
+const STAGGER = 0.07
+const SPAN = 0.55
 
 function cardAnchor(step: number, w: number, h: number, isMd: boolean, vw: number) {
   switch (step) {
     case 1: { const cw = isMd ? 350 : vw * 0.70; const ch = cw / 1.8;  return { x: (isMd ? 0.12 : 0.04) * w + cw / 2, y: (isMd ? 0.25 : 0.22) * h + ch / 2 } }
     case 2: { const cw = isMd ? 220 : vw * 0.50;                        return { x: (isMd ? 0.26 : 0.16) * w + cw / 2, y: (isMd ? 0.60 : 0.58) * h + cw / 2 } }
-    case 3: { const cw = isMd ? 220 : vw * 0.40; const tlx = w * (1 - (isMd ? 0.32 : 0.20)) - cw; return { x: tlx + cw / 2, y: (isMd ? 0.12 : 0.10) * h + cw / 2 } }
+    case 3: { const cw = isMd ? 220 : vw * 0.40; const tlx = w * (1 - (isMd ? 0.26 : 0.16)) - cw; return { x: tlx + cw / 2, y: (isMd ? 0.12 : 0.10) * h + cw / 2 } }
     case 4: { const cw = isMd ? 280 : vw * 0.50; const ch = cw / 1.6; const tlx = w * (1 - (isMd ? 0.10 : 0.04)) - cw; return { x: tlx + cw / 2, y: (isMd ? 0.64 : 0.60) * h + ch / 2 } }
     default: return { x: 0, y: 0 }
   }
@@ -65,8 +84,8 @@ function sentencePathD(w: number, h: number, isMd: boolean, vw: number) {
 export function PathTrails() {
   const pathRefs = useRef<(SVGPathElement | null)[]>(Array(STEP_BEZIERS.length).fill(null))
   const sentenceRef = useRef<SVGPathElement | null>(null)
+  const wordRefs = useRef<(SVGTextElement | null)[]>(Array(WORDS.length).fill(null))
   const [dims, setDims] = useState<{ vw: number; vh: number } | null>(null)
-  const [pathLen, setPathLen] = useState<number | null>(null)
 
   useEffect(() => {
     let ticking = false
@@ -118,6 +137,26 @@ export function PathTrails() {
         el.setAttribute('d', `M ${P0x} ${P0y} C ${P01x} ${P01y} ${P012x} ${P012y} ${Bx} ${By}`)
       })
 
+      // Animate each word along the sentence path: it starts at the path origin
+      // (the flat peak → horizontal) and travels into its resting slot, rotating
+      // to follow the curve's tangent. Words are staggered so they stream in.
+      const sp = sentenceRef.current
+      if (sp) {
+        const total = sp.getTotalLength()
+        wordRefs.current.forEach((el, i) => {
+          if (!el) return
+          const wp = Math.max(0, Math.min(1, (p - i * STAGGER) / SPAN))
+          const e = 1 - (1 - wp) * (1 - wp) // easeOut
+          const curLen = total * WORD_FRACS[i] * e
+          const pt = sp.getPointAtLength(curLen)
+          const a = sp.getPointAtLength(Math.max(0, curLen - 2))
+          const b = sp.getPointAtLength(Math.min(total, curLen + 2))
+          const angle = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI
+          el.setAttribute("transform", `translate(${pt.x} ${pt.y}) rotate(${angle})`)
+          el.style.opacity = `${Math.max(0, Math.min(1, wp * 1.4))}`
+        })
+      }
+
       ticking = false
     }
 
@@ -140,15 +179,6 @@ export function PathTrails() {
     }
   }, [])
 
-  // Measure the sentence path after it re-renders so the text can be stretched
-  // to span the full curve (start above Current Issue → end above Contact).
-  useEffect(() => {
-    if (!dims) return
-    requestAnimationFrame(() => {
-      if (sentenceRef.current) setPathLen(sentenceRef.current.getTotalLength())
-    })
-  }, [dims])
-
   if (!dims) return null
 
   const { vw, vh } = dims
@@ -158,7 +188,12 @@ export function PathTrails() {
   const h = vh - 2 * inset
 
   const sentenceD = sentencePathD(w, h, isMd, vw)
-  const fontSize = isMd ? 30 : 22
+  // Scale the text with the curve width so the text-to-curve ratio is constant.
+  // (Browser zoom shrinks the layout viewport / `w`; a fixed px font would then
+  // cram the words. Proportional sizing makes zoom just scale everything.)
+  const fontSize = w * 0.0185
+  const strokeW = fontSize * 0.12
+  const letterSp = fontSize * 0.04
 
   return (
     <svg
@@ -180,23 +215,23 @@ export function PathTrails() {
         />
       ))}
 
-      <text
-        fontSize={fontSize}
-        fontFamily="'Alte Haas Grotesk', sans-serif"
-        fill="black"
-        stroke="white"
-        strokeWidth="3"
-        paintOrder="stroke fill"
-        letterSpacing="1"
-      >
-        <textPath
-          href="#sentence-arc"
-          startOffset="0%"
-          {...(pathLen ? { textLength: pathLen, lengthAdjust: "spacingAndGlyphs" } : {})}
+      {isMd && WORDS.map((word, i) => (
+        <text
+          key={word + i}
+          ref={el => { wordRefs.current[i] = el }}
+          fontSize={fontSize}
+          fontFamily="'Alte Haas Grotesk', sans-serif"
+          fill="black"
+          stroke="white"
+          strokeWidth={strokeW}
+          paintOrder="stroke fill"
+          letterSpacing={letterSp}
+          textAnchor="middle"
+          style={{ opacity: 0 }}
         >
-          {SENTENCE}
-        </textPath>
-      </text>
+          {word}
+        </text>
+      ))}
     </svg>
   )
 }
