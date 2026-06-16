@@ -8,7 +8,8 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
-import { contributorsData, getRoleLines, getRoleText } from "@/lib/people"
+import { contributorsData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
+import { ScrollableBio } from "@/components/scrollable-bio"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -469,6 +470,7 @@ function buildPages(): BookPage[] {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
   const pages = buildPages()
+  const contributors = sortByName(contributorsData)
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
 
@@ -508,7 +510,7 @@ export default function CurrentIssuePage() {
     if (contribNameTypingInterval.current) clearInterval(contribNameTypingInterval.current)
     const el = contribNameRef.current
     if (!el || !openContribId) { if (el) el.textContent = ""; return }
-    const person = contributorsData.find(p => p.id === openContribId)
+    const person = contributors.find(p => p.id === openContribId)
     if (!person) return
     const name = person.name
     el.textContent = ""
@@ -588,8 +590,8 @@ export default function CurrentIssuePage() {
           Contributors
         </h2>
         <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
-          {contributorsData.map((person, i) => (
-            <div key={person.id} className={i > 0 && openContribId !== contributorsData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
+          {contributors.map((person, i) => (
+            <div key={person.id} className={i > 0 && openContribId !== contributors[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
                 className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openContribId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
                 onClick={() => handleContribSelect(person.id)}
@@ -604,8 +606,8 @@ export default function CurrentIssuePage() {
                 style={{ gridTemplateRows: openContribId === person.id ? "1fr" : "0fr" }}
               >
                 <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
                       {person.photo ? (
                         <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
                       ) : (
@@ -613,14 +615,13 @@ export default function CurrentIssuePage() {
                       )}
                     </div>
                     <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
-                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
-                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
-                        <div className="relative pr-3">
-                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
+                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
+                        <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <ScrollableBio dark={dm}>
+                          <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
                             {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                           </p>
-                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
-                        </div>
+                        </ScrollableBio>
                       </div>
                       <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
                         <span

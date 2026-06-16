@@ -38,6 +38,7 @@ export const mediaTypeLabels: Record<MediaType, string> = {
 export interface Person {
   id: number
   name: string
+  pronouns: string
   role: string | string[]
   photo: string | null
   bio: string

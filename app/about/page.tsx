@@ -4,9 +4,11 @@ import { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
-import { teamData as peopleData, getRoleLines, getRoleText } from "@/lib/people"
+import { teamData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
+import { ScrollableBio } from "@/components/scrollable-bio"
 
 export default function AboutPage() {
+  const peopleData = sortByName(teamData)
   const { darkMode: dm } = useHeaderScrolled()
   const [openId, setOpenId] = useState<number | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -108,9 +110,9 @@ export default function AboutPage() {
                 style={{ gridTemplateRows: openId === person.id ? "1fr" : "0fr" }}
               >
                 <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
                     {/* Photo — left quarter of full width (= full list width) */}
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
                       {person.photo ? (
                         <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
                       ) : (
@@ -120,14 +122,13 @@ export default function AboutPage() {
                     {/* Bio — remaining space to the right of the photo */}
                     <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
                       {/* Main content */}
-                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
-                        <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
-                        <div className="relative pr-3">
-                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
+                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
+                        <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <ScrollableBio dark={dm}>
+                          <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
                             {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                           </p>
-                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
-                        </div>
+                        </ScrollableBio>
                       </div>
                       {/* Role strip — rotated 90° on the right */}
                       <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
