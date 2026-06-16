@@ -52,14 +52,11 @@ export function SiteFooter() {
 
         {/* 5 — Credits */}
         <div className="flex flex-col">
-          <span className={colLabel}>Design & Programming:</span>
-          <span className={colText}>Anna Phaidra</span>
-          <span className={colText}>Barra MacMahon</span>
-          <span className={colText}>Chenlu Ni</span>
+          <span className={colLabel}>Typefaces:</span>
           <span className={colText}>
-            Typeface:{" "}
             <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Alte Haas Grotesk</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
-            {" "}
+          </span>
+          <span className={colText}>
             <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Charter</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
           </span>
         </div>
