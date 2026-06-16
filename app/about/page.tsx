@@ -4,17 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
-
-const peopleData = [
-  { id: 1, name: "Anjana Ramesh",      role: "Content Editor",                 photo: null, bio: "" },
-  { id: 2, name: "Anna Phaidra",       role: "Artistic Director/Designer",     photo: null, bio: "Anna Phaidra is an award-winning artist and researcher specializing in illustration, woodcarving, and installation. Her work attends to living, extinct, and speculative beings through an interdisciplinary lens—bringing together historical symbolism and folklore with environmental humanities research." },
-  { id: 3, name: "Barra MacMahon",     role: "Web Developer/Designer",         photo: null, bio: "" },
-  { id: 4, name: "Chenlu Ni",          role: "Designer/Web Developer",         photo: null, bio: "" },
-  { id: 5, name: "Diana Rudic",        role: "Community Manager",              photo: null, bio: "" },
-  { id: 6, name: "Gabrielle Francois", role: "Social Media and Branding",      photo: "Upload-test.JPG", bio: "" },
-  { id: 7, name: "Javiera Bilbao",     role: "Project Manager/Content Editor", photo: null, bio: "Javiera directs the initiative's operational strategy, ensuring that Sassafras remains at the vanguard of redefining accessible academic discourse." },
-  { id: 8, name: "Malin Menzel",       role: "Event Coordinator",              photo: null, bio: "" },
-]
+import { teamData as peopleData, getRoleLines, getRoleText } from "@/lib/people"
 
 export default function AboutPage() {
   const { darkMode: dm } = useHeaderScrolled()
@@ -109,13 +99,7 @@ export default function AboutPage() {
               >
                 <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
                 <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
-                  {(() => {
-                    const words = person.role.split(" ")
-                    const lines = words.length === 4
-                      ? [words[0], words[1] + " " + words[2], words[3]]
-                      : words
-                    return lines.map((line, j) => <span key={j} className="block">{line}</span>)
-                  })()}
+                  {getRoleLines(person.role).map((line, j) => <span key={j} className="block">{line}</span>)}
                 </span>
               </button>
               {/* Accordion panel: 2× list width — photo left half, bio right half */}
@@ -151,7 +135,7 @@ export default function AboutPage() {
                           className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
                           style={{ color: "#5D9800", writingMode: "vertical-rl" }}
                         >
-                          {person.role}
+                          {getRoleText(person.role)}
                         </span>
                       </div>
                     </div>

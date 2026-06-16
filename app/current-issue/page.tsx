@@ -8,6 +8,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
+import { contributorsData, getRoleLines, getRoleText } from "@/lib/people"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -50,15 +51,6 @@ const pageNum: CSSProperties = {
   letterSpacing: "0.15em",
   color: "#b5a994",
 }
-
-/* ── Contributors data ──────────────────────────────────────────── */
-const contributorsData = [
-  { id: 1, name: "Elena Vasquez",    role: "Essayist",     photo: null, bio: "" },
-  { id: 2, name: "Felix Okonkwo",    role: "Audio Essay",  photo: null, bio: "" },
-  { id: 3, name: "Priya Sunderajan", role: "Poet",         photo: null, bio: "" },
-  { id: 4, name: "Tomás Reinholt",   role: "Illustrator",  photo: null, bio: "" },
-  { id: 5, name: "Yuki Nakashima",   role: "Photographer", photo: null, bio: "" },
-]
 
 /* ── Sub-themes data ────────────────────────────────────────────── */
 const subThemes = [
@@ -604,13 +596,7 @@ export default function CurrentIssuePage() {
               >
                 <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
                 <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
-                  {(() => {
-                    const words = person.role.split(" ")
-                    const lines = words.length === 4
-                      ? [words[0], words[1] + " " + words[2], words[3]]
-                      : words
-                    return lines.map((line, j) => <span key={j} className="block">{line}</span>)
-                  })()}
+                  {getRoleLines(person.role).map((line, j) => <span key={j} className="block">{line}</span>)}
                 </span>
               </button>
               <div
@@ -641,7 +627,7 @@ export default function CurrentIssuePage() {
                           className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
                           style={{ color: "#5D9800", writingMode: "vertical-rl" }}
                         >
-                          {person.role}
+                          {getRoleText(person.role)}
                         </span>
                       </div>
                     </div>

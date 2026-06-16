@@ -35,6 +35,14 @@ export const mediaTypeLabels: Record<MediaType, string> = {
   visual: "Visual",
 }
 
+export interface Person {
+  id: number
+  name: string
+  role: string | string[]
+  photo: string | null
+  bio: string
+}
+
 export interface Artwork {
   id: number;
   slug: string;
