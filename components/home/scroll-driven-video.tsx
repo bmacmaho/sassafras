@@ -2,9 +2,15 @@
 
 import { useEffect, useRef } from "react"
 
+const TITLE_TEXT = "WELCOME TO SASSAFRAS"
+
+const SUBTITLE_TEXT = "a platform for experimental thought and publication"
+
 export function ScrollDrivenVideo() {
-  const titleRef = useRef<HTMLDivElement>(null)
-  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const titlePathRef = useRef<SVGTextPathElement>(null)
+  const titleCurveRef = useRef<SVGPathElement>(null)
+  const subtitlePathRef = useRef<SVGTextPathElement>(null)
+  const subtitleCurveRef = useRef<SVGPathElement>(null)
   const videoRef = useRef<HTMLDivElement>(null)
   const verticalTextRef = useRef<HTMLDivElement>(null)
   const scrollTextRef = useRef<HTMLParagraphElement>(null)
@@ -15,6 +21,41 @@ export function ScrollDrivenVideo() {
       const vh = window.innerHeight
       const scrollY = window.scrollY
       const ease = Math.max(0, Math.min(1, scrollY / (4 * vh)))
+
+      // Title: slides along the curve path as the user scrolls — the flat
+      // start of the path reads as moving right, then it rides up the curve.
+      // The curve shouldn't begin until the text reaches 30% of the screen
+      // width from the right edge — wrapper sits at 20vw from the left (the
+      // section's pl-[20vw]), so the flat run is (70vw - 20vw) long.
+      if (titleCurveRef.current) {
+        const flatLength = vw * 0.5
+        titleCurveRef.current.setAttribute(
+          "d",
+          `M 0 496 L ${flatLength} 496 C ${flatLength + 200} 496 ${flatLength + 250} 266 ${flatLength + 500} 36`
+        )
+      }
+      if (titlePathRef.current) {
+        titlePathRef.current.setAttribute("startOffset", `${ease * 55}%`)
+      }
+
+      // Subtitle: moves right, curves downward through a U-turn until
+      // upside down, then continues straight left off-screen. The curve
+      // shouldn't begin until the text reaches 15% of the screen width
+      // from the right edge — the wrapper sits at 20vw from the left
+      // (the section's pl-[20vw]), so the flat run is (85vw - 20vw) long.
+      if (subtitleCurveRef.current) {
+        const flatLength = vw * 0.65
+        const leftLength = vw * 1.3
+        const curveStartX = flatLength
+        const curveEndX = curveStartX - leftLength
+        subtitleCurveRef.current.setAttribute(
+          "d",
+          `M 0 40 L ${curveStartX} 40 A 150 150 0 0 1 ${curveStartX} 340 L ${curveEndX} 340`
+        )
+      }
+      if (subtitlePathRef.current) {
+        subtitlePathRef.current.setAttribute("startOffset", `${ease * 85}%`)
+      }
 
       // Curved path: X linear (left), Y quadratic (accelerates upward)
       // Delayed: video doesn't start moving until 30% through the scroll
@@ -47,17 +88,54 @@ export function ScrollDrivenVideo() {
   return (
     <section className="relative bg-[#aac3ef] h-[500vh]">
       <div className="sticky top-0 h-screen overflow-hidden z-10 w-full flex flex-col items-start justify-center pl-[20vw]">
-        <div className="flex flex-col items-start gap-0">
-          <div ref={titleRef} className="flex items-center gap-0 text-white tracking-widest uppercase font-alte-haas">
-            <span className="font-medium text-4xl leading-none self-center">WELCOME TO SASSAFRAS</span>
+        <div className="flex flex-col items-start gap-0" style={{ transform: "translateY(40px)" }}>
+          <div style={{ position: "relative", height: 0 }}>
+            <svg
+              width="3000"
+              height="500"
+              viewBox="0 0 3000 500"
+              style={{ position: "absolute", left: 0, bottom: 0, overflow: "visible" }}
+            >
+              <path ref={titleCurveRef} id="title-curve" fill="none" stroke="none" />
+              <text
+                fill="white"
+                style={{
+                  fontFamily: "var(--font-alte-haas), sans-serif",
+                  fontWeight: 500,
+                  fontSize: 38,
+                  letterSpacing: "0.1em",
+                }}
+              >
+                <textPath ref={titlePathRef} href="#title-curve" startOffset="0%">
+                  {TITLE_TEXT}
+                </textPath>
+              </text>
+            </svg>
           </div>
-          <p
-            ref={subtitleRef}
-            className="font-alte-haas tracking-widest text-4xl leading-none mb-3 mt-1"
-            style={{ color: "rgba(255,255,255,0.15)", WebkitTextStroke: "1px rgba(255,255,255,0.7)" }}
-          >
-            a platform for experimental thought and publication
-          </p>
+          <div style={{ position: "relative", height: 50, marginBottom: 12 }}>
+            <svg
+              width="6000"
+              height="400"
+              viewBox="-3000 0 6000 400"
+              style={{ position: "absolute", top: 0, left: -3000, overflow: "visible" }}
+            >
+              <path ref={subtitleCurveRef} id="subtitle-curve" fill="none" stroke="none" />
+              <text
+                style={{
+                  fontFamily: "var(--font-alte-haas), sans-serif",
+                  fontSize: 36,
+                  letterSpacing: "0.1em",
+                  fill: "rgba(255,255,255,0.15)",
+                  stroke: "rgba(255,255,255,0.7)",
+                  strokeWidth: 1,
+                }}
+              >
+                <textPath ref={subtitlePathRef} href="#subtitle-curve" startOffset="0%">
+                  {SUBTITLE_TEXT}
+                </textPath>
+              </text>
+            </svg>
+          </div>
           <div className="flex items-end gap-4">
             <div className="relative w-[68vw] md:w-[32vw] max-w-[365px] aspect-[3/4]">
               {/* Vertical text — animates straight up independently */}

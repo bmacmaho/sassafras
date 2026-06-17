@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* Leaf snake overlay: native position:sticky (no JS scroll-compensation
           jitter) inside a spacer spanning the full page (first + second
           section, ~1000vh) so it never un-sticks before the page ends. */}
-      <div className="absolute top-0 left-9 md:left-14 z-[200]" style={{ height: "1000vh" }} aria-hidden="true">
+      <div className="absolute top-0 left-6 md:left-10 z-[200]" style={{ height: "1000vh" }} aria-hidden="true">
         <LeafSnake />
       </div>
 
@@ -42,7 +42,7 @@ export default function HomePage() {
           <div className="absolute top-0 bottom-0 right-0 w-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to left, #FF730F, transparent)' }} />
         <div className="relative w-full h-full max-w-[1920px] mx-auto pt-[1px]">
           {/* Title + Leaves */}
-          <div className="absolute top-6 left-6 md:left-10 z-20 flex flex-col gap-1">
+          <div className="absolute top-6 left-3 md:left-6 z-20 flex flex-col gap-1">
             <WelcomeTypewriter />
           </div>
 
@@ -52,7 +52,7 @@ export default function HomePage() {
 
 {/* Images Grid / Two Column Layout */}
           <div className="relative z-10 w-full h-full">            {/* --- LEFT COLUMN --- */}
-            
+
             {/* 1. CURRENT ISSUE */}
             <div className="absolute left-[4%] md:left-[12%] top-[22%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
               <div data-scroll-item style={{ opacity: 0 }}>
