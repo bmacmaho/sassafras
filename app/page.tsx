@@ -1,8 +1,8 @@
 import Link from "next/link"
 import { ScrollAnimator } from "@/components/scroll-animator"
 import { ScrollDrivenVideo } from "@/components/home/scroll-driven-video"
+import { LeafSnake } from "@/components/home/leaf-snake"
 import { WelcomeTypewriter } from "@/components/home/welcome-typewriter"
-import { AnimatedLeaves } from "@/components/home/animated-leaves"
 import { SectionScrollAnimator } from "@/components/home/section-scroll-animator"
 import { PathTrails } from "@/components/home/path-trails"
 
@@ -19,6 +19,14 @@ export default function HomePage() {
       }}
     >
       <ScrollAnimator />
+
+      {/* Leaf snake overlay: native position:sticky (no JS scroll-compensation
+          jitter) inside a spacer spanning the full page (first + second
+          section, ~1000vh) so it never un-sticks before the page ends. */}
+      <div className="absolute top-0 left-9 md:left-14 z-[200]" style={{ height: "1000vh" }} aria-hidden="true">
+        <LeafSnake />
+      </div>
+
       {/* ── First Page ── */}
       <ScrollDrivenVideo />
 
@@ -36,8 +44,8 @@ export default function HomePage() {
           {/* Title + Leaves */}
           <div className="absolute top-6 left-6 md:left-10 z-20 flex flex-col gap-1">
             <WelcomeTypewriter />
-            <AnimatedLeaves />
           </div>
+
           <SectionScrollAnimator />
 
 

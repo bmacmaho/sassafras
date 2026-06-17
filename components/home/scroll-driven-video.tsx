@@ -10,8 +10,6 @@ export function ScrollDrivenVideo() {
   const scrollTextRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
-    let ticking = false
-
     const update = () => {
       const vw = window.innerWidth
       const vh = window.innerHeight
@@ -36,26 +34,19 @@ export function ScrollDrivenVideo() {
       if (scrollTextRef.current) {
         scrollTextRef.current.style.transform = `translateX(${ease * vw * 1.5}px)`
       }
-
-      ticking = false
     }
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update)
-        ticking = true
-      }
-    }
+    let rafId = requestAnimationFrame(function loop() {
+      update()
+      rafId = requestAnimationFrame(loop)
+    })
 
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    return () => cancelAnimationFrame(rafId)
   }, [])
 
   return (
     <section className="relative bg-[#aac3ef] h-[500vh]">
       <div className="sticky top-0 h-screen overflow-hidden z-10 w-full flex flex-col items-start justify-center pl-[20vw]">
-        <img src="/Little leaves.png" alt="" aria-hidden="true" className="absolute top-0 left-0 h-20 w-auto opacity-90" />
-
         <div className="flex flex-col items-start gap-0">
           <div ref={titleRef} className="flex items-center gap-0 text-white tracking-widest uppercase font-alte-haas">
             <span className="font-medium text-4xl leading-none self-center">WELCOME TO SASSAFRAS</span>
