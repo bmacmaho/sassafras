@@ -124,7 +124,7 @@ export function ScrollDrivenVideo() {
               <text
                 style={{
                   fontFamily: "var(--font-alte-haas), sans-serif",
-                  fontSize: 36,
+                  fontSize: 32,
                   letterSpacing: "0.1em",
                   fill: "rgba(255,255,255,0.15)",
                   stroke: "rgba(255,255,255,0.7)",

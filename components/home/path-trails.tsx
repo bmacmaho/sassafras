@@ -23,14 +23,12 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vw: numbe
 }
 
 // Sentence path: a long flat run from off-screen left into an anchor point in
-// the right half of the Current Issue card, then an S-curve (down, then
-// flattening back to horizontal) ending at an anchor point in the left half
-// of the Contact/Support card. Both anchors are fixed fractions of each
-// card's own geometry, so they track the cards exactly at any zoom/screen
-// size. `curve` (the S-curve alone, start anchor to end anchor) is measured
-// to get its exact arc length — the sentence is then force-fit to that exact
-// length via the text element's `textLength`, so it always begins and ends
-// precisely on those two anchors regardless of how long it renders naturally.
+// the right half of the Current Issue card, an S-curve (down, then flattening
+// back to horizontal) passing the anchor point in the left half of the
+// Contact/Support card, then a long flat run continuing off-screen right.
+// The text renders at its natural size (no stretching/compressing) — it
+// always *starts* exactly on the Current Issue anchor, but how far it gets
+// before running off the right edge depends on its own natural length.
 function sentencePathSegments(w: number, h: number, isMd: boolean, vw: number) {
   const ABOVE_CARD_OFFSET = 15   // vertical gap above each card's top edge
 
@@ -54,13 +52,14 @@ function sentencePathSegments(w: number, h: number, isMd: boolean, vw: number) {
   const c1x = midX, c1y = startY
   const c2x = midX, c2y = endY
 
-  // Comfortably further left than the screen edge, regardless of viewport
-  // width, so the sentence starts fully hidden.
+  // Comfortably further left/right than the screen edges, regardless of
+  // viewport width, so the sentence starts fully hidden and has plenty of
+  // room to run off the right edge rather than being clipped early.
   const leadX = startX - Math.max(vw * 1.4, 1600)
+  const tailX = endX + Math.max(vw * 1.4, 1600)
 
-  const curve = `M ${startX} ${startY} C ${c1x} ${c1y} ${c2x} ${c2y} ${endX} ${endY}`
-  const full = `M ${leadX} ${startY} L ${startX} ${startY} C ${c1x} ${c1y} ${c2x} ${c2y} ${endX} ${endY}`
-  return { full, curve, leadLength: startX - leadX }
+  const full = `M ${leadX} ${startY} L ${startX} ${startY} C ${c1x} ${c1y} ${c2x} ${c2y} ${endX} ${endY} L ${tailX} ${endY}`
+  return { full, leadLength: startX - leadX }
 }
 
 export function PathTrails() {
@@ -70,26 +69,18 @@ export function PathTrails() {
   const sentenceMaxOffsetRef = useRef(0)
   const [dims, setDims] = useState<{ vw: number; vh: number } | null>(null)
 
-  // Re-measure the curve's arc length (start anchor → end anchor) whenever the
-  // viewport changes, and force the text to exactly that length via
-  // `textLength`/`lengthAdjust`. That's what guarantees the sentence always
-  // begins on the Current Issue anchor and ends on the Contact/Support
-  // anchor — its natural rendered width is irrelevant, it's stretched or
-  // compressed to fit the real, live-measured gap between the two anchors.
+  // Re-derive how far the lead-in run is (a straight line, so no DOM
+  // measurement needed) whenever the viewport changes — this is the offset
+  // at which the sentence's first character lands exactly on the Current
+  // Issue anchor.
   useEffect(() => {
-    if (!dims || !sentenceTextPathRef.current) return
+    if (!dims) return
     const { vw, vh } = dims
     const isMd = vw >= 768
     const inset = isMd ? 16 : 12
     const w = vw - 2 * inset
     const h = vh - 2 * inset
-    const { curve, leadLength } = sentencePathSegments(w, h, isMd, vw)
-    const measure = document.createElementNS("http://www.w3.org/2000/svg", "path")
-    measure.setAttribute("d", curve)
-    const curveLength = measure.getTotalLength()
-    sentenceTextPathRef.current.setAttribute("textLength", String(curveLength))
-    sentenceTextPathRef.current.setAttribute("lengthAdjust", "spacingAndGlyphs")
-    sentenceMaxOffsetRef.current = leadLength
+    sentenceMaxOffsetRef.current = sentencePathSegments(w, h, isMd, vw).leadLength
   }, [dims])
 
   useEffect(() => {
