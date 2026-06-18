@@ -96,7 +96,7 @@ export default function HomePage() {
 
             {/* 4. ABOUT US */}
             <div className="absolute right-[16%] md:right-[21%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
-              <div data-scroll-item style={{ opacity: 0 }}>
+              <div data-scroll-item className="relative" style={{ opacity: 0 }}>
                 <Link href="/about" className="group flex flex-col items-start gap-2 transition-all duration-300">
                   <div className="w-[40vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
@@ -110,6 +110,13 @@ export default function HomePage() {
                     </p>
                   </div>
                 </Link>
+                <img
+                  src="/Walking-people.PNG"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute h-20 md:h-24 w-auto pointer-events-none select-none animate-walk-bounce"
+                  style={{ left: "calc(100% - 1.75rem)", bottom: "5.25rem", transformOrigin: "center center", filter: "invert(1)" }}
+                />
               </div>
             </div>
 

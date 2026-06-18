@@ -190,6 +190,22 @@
   }
 }
 
+@keyframes walk-bounce {
+
+  0%,
+  100% {
+    transform: translateY(-3.75rem) rotate(90deg);
+  }
+
+  50% {
+    transform: translateY(3.75rem) rotate(90deg);
+  }
+}
+
+.animate-walk-bounce {
+  animation: walk-bounce 4s linear infinite;
+}
+
 @keyframes scroll-line {
   0% {
     transform: scaleY(0);
