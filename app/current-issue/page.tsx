@@ -10,6 +10,7 @@ import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-co
 import { getPageColor } from "@/lib/page-colors"
 import { contributorsData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
 import { ScrollableBio } from "@/components/scrollable-bio"
+import { CitationPopover, CitationLayer } from "@/components/citation-popover"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -175,7 +176,7 @@ function buildPages(): BookPage[] {
   /* ── Page 3 (The theme) / Page 4 (Continued) ───────────── */
   pages.push({
     front: (
-      <div style={pageContainer}>
+      <div style={pageContainer} data-citation-page>
         <div style={pageHeaderBorder} />
         <p style={subLabel}>THEME</p>
         <h2
@@ -192,7 +193,11 @@ function buildPages(): BookPage[] {
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
           <p style={{ fontSize: 11.5, lineHeight: 1.9, color: "#5a5048" }}>
-            Central to this is the notion of the &apos;Ivory Tower&apos;, which captures the tendency
+            Central to this is the notion of the &apos;
+            <CitationPopover citation="Shumar, W. (1997). College for Sale: A Critique of the Commodification of Higher Education. Falmer Press.">
+              Ivory Tower
+            </CitationPopover>
+            &apos;, which captures the tendency
             of academic institutions to enclose knowledge within exclusive spaces, reinforced
             by paywalls and specialised jargon.
           </p>
@@ -211,13 +216,16 @@ function buildPages(): BookPage[] {
       </div>
     ),
     back: (
-      <div style={pageContainer}>
+      <div style={pageContainer} data-citation-page>
         <div style={pageHeaderBorder} />
         <p style={subLabel}>THEME — CONTINUED</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1, marginTop: 8 }}>
           <p style={{ fontSize: 11.5, lineHeight: 1.9, color: "#5a5048" }}>
             As a complex historical symbol, The Tower evokes images of hubris, grandeur,
-            hierarchy, and exclusion. Where shadows of Towers continue to draw lines across
+            <CitationPopover citation="Foucault, M. (1975). Discipline and Punish: The Birth of the Prison. Vintage Books.">
+              {" "}hierarchy, and exclusion
+            </CitationPopover>
+            . Where shadows of Towers continue to draw lines across
             social and spatial boundaries, speaking to how cities, institutions, and governments
             form and inform themselves and others.
           </p>
@@ -528,21 +536,23 @@ export default function CurrentIssuePage() {
       <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-0">
 
         {/* ── FlipBook Container ── */}
-        <div className="flex flex-col items-center justify-center relative overflow-hidden pb-12">
-          {/* Ambient glow */}
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse, rgba(205,170,120,0.06) 0%, transparent 70%)",
-            }}
-          />
+        <CitationLayer>
+          <div className="flex flex-col items-center justify-center relative overflow-hidden pb-12">
+            {/* Ambient glow */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[60vh] pointer-events-none"
+              style={{
+                background: "radial-gradient(ellipse, rgba(205,170,120,0.06) 0%, transparent 70%)",
+              }}
+            />
 
-          {/* The Book */}
-          <ClientOnly>
-            <FlipBook pages={pages} width={420} height={600} />
-          </ClientOnly>
+            {/* The Book */}
+            <ClientOnly>
+              <FlipBook pages={pages} width={420} height={600} />
+            </ClientOnly>
 
-        </div>
+          </div>
+        </CitationLayer>
       </div>
 
       {/* ── Fullscreen expand button — fixed, same z as page frame ── */}
@@ -568,9 +578,11 @@ export default function CurrentIssuePage() {
           >
             <X size={22} />
           </button>
-          <ClientOnly>
-            <FlipBook pages={pages} width={420} height={600} />
-          </ClientOnly>
+          <CitationLayer>
+            <ClientOnly>
+              <FlipBook pages={pages} width={420} height={600} />
+            </ClientOnly>
+          </CitationLayer>
         </div>,
         document.body
       )}

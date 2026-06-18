@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import Link from "next/link"
 
 const TITLE_TEXT = "WELCOME TO SASSAFRAS"
 
-const SUBTITLE_TEXT = "a platform for experimental thought and publication"
+export const SUBTITLE_TEXT = "a platform for experimental thought and publication"
 
 export function ScrollDrivenVideo() {
   const titlePathRef = useRef<SVGTextPathElement>(null)
@@ -161,14 +162,16 @@ export function ScrollDrivenVideo() {
                 ref={videoRef}
                 className="absolute inset-0 border-[4px] md:border-[6px] border-white overflow-hidden shadow-2xl"
               >
-                <video
-                  src="/IMG_4255.MOV"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
+                <Link href="/current-issue" className="block w-full h-full">
+                  <video
+                    src="/IMG_4255.MOV"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
               </div>
             </div>
             <p

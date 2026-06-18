@@ -95,7 +95,7 @@ export default function HomePage() {
             {/* --- RIGHT COLUMN --- */}
 
             {/* 4. ABOUT US */}
-            <div className="absolute right-[16%] md:right-[26%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
+            <div className="absolute right-[16%] md:right-[21%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
               <div data-scroll-item style={{ opacity: 0 }}>
                 <Link href="/about" className="group flex flex-col items-start gap-2 transition-all duration-300">
                   <div className="w-[40vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">

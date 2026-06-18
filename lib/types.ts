@@ -42,6 +42,8 @@ export interface Person {
   role: string | string[]
   photo: string | null
   bio: string
+  personalLink?: string
+  languages?: string[]
 }
 
 export interface Artwork {

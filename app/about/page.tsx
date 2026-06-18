@@ -123,7 +123,12 @@ export default function AboutPage() {
                     <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
                       {/* Main content */}
                       <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
-                        <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
+                        <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
+                          <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
+                          {person.pronouns && (
+                            <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
+                          )}
+                        </div>
                         <ScrollableBio dark={dm}>
                           <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
                             {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
