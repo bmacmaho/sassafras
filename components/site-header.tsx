@@ -133,7 +133,7 @@ const NAV_LINKS = [
   { href: "/keep-in-touch", label: "CONTACT / SUPPORT", pageTitle: "Contact" },
 ]
 
-const HEADER_MAX = 250
+const HEADER_MAX = 220
 const HEADER_MIN = 64
 const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
 const SNAP_THRESHOLD = 60
@@ -365,7 +365,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               pointerEvents: !scrolled && menuOpen ? "auto" : "none",
               paddingLeft: "6rem",
               paddingRight: "6rem",
-              top: "2rem",
+              top: "1rem",
             }}
           >
             <div className="flex items-center justify-between flex-1 pr-8">
@@ -379,7 +379,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
           {/* Menu button — always present, cross-fades between states */}
           <div
             className="absolute right-16 z-[70] flex items-center transition-all duration-300 ease-out"
-            style={{ top: scrolled ? "0px" : "3.5rem", height: scrolled ? "64px" : "auto" }}
+            style={{ top: scrolled ? "0px" : "2.5rem", height: scrolled ? "64px" : "auto" }}
           >
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -450,46 +450,10 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
             </div>
           )}
 
-          {/* Dark / light mode toggle */}
-          {hasThemeToggle && (
-            <div
-              className="absolute bottom-8 right-24 transition-opacity duration-300"
-              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
-            >
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="flex items-center gap-2 font-alte-haas text-[10px] tracking-[0.2em] cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-70"
-              >
-                <Sun size={12} style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.55)" }} />
-                <div
-                  className="relative rounded-full transition-colors duration-300 flex-shrink-0"
-                  style={{
-                    width: 30,
-                    height: 16,
-                    backgroundColor: darkMode ? accentColor : "transparent",
-                    border: `1.5px solid ${darkMode ? accentColor : "rgba(0,0,0,0.3)"}`,
-                  }}
-                >
-                  <div
-                    className="absolute rounded-full transition-all duration-300"
-                    style={{
-                      top: 2,
-                      width: 10,
-                      height: 10,
-                      backgroundColor: darkMode ? "#000" : "rgba(0,0,0,0.4)",
-                      transform: darkMode ? "translateX(15px)" : "translateX(2px)",
-                    }}
-                  />
-                </div>
-                <Moon size={12} style={{ color: darkMode ? "white" : "rgba(0,0,0,0.35)" }} />
-              </button>
-            </div>
-          )}
-
           {/* Logo + page title — fades out when scrolled */}
           <div
-            className="absolute bottom-4 left-24 flex flex-col items-start gap-4 transition-opacity duration-300"
-            style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+            className="absolute left-24 right-24 flex flex-col items-start gap-4 transition-opacity duration-300"
+            style={{ top: "3.5rem", opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
           >
             <div className="flex items-start gap-2">
               <Link href="/" className="flex items-start">
@@ -525,28 +489,59 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                 </div>
               )}
             </div>
-            <div className="flex items-end gap-8">
-              <Link
-                href={pageHref}
-                className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
-                style={pathname === "/about/why-sassafras"
-                  ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
-                  : { color: darkMode ? "white" : "#1a1a1a" }}
-              >
-                {pageLabel}
-              </Link>
-              {extras ? (
-                <div className="flex flex-col justify-end pb-1 gap-1 h-12">{extras}</div>
-              ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
-                <div className="flex flex-col justify-end pb-1 gap-1">
-                  <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white" : "text-black/40"}`}>
-                    {PAGE_SUBTITLES[subtitleKey].line1}
-                  </span>
-                  <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white/70" : "text-black/20"}`}>
-                    {PAGE_SUBTITLES[subtitleKey].line2}
-                  </span>
-                </div>
-              ) : null}
+            <div className="flex items-end justify-between gap-8 w-full">
+              <div className="flex items-end gap-8">
+                <Link
+                  href={pageHref}
+                  className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
+                  style={pathname === "/about/why-sassafras"
+                    ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
+                    : { color: darkMode ? "white" : "#1a1a1a" }}
+                >
+                  {pageLabel}
+                </Link>
+                {extras ? (
+                  <div className="flex flex-col justify-end pb-1 gap-1 h-12">{extras}</div>
+                ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
+                  <div className="flex flex-col justify-end pb-1 gap-1">
+                    <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white" : "text-black/40"}`}>
+                      {PAGE_SUBTITLES[subtitleKey].line1}
+                    </span>
+                    <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white/70" : "text-black/20"}`}>
+                      {PAGE_SUBTITLES[subtitleKey].line2}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+              {hasThemeToggle && (
+                <button
+                  onClick={() => setDarkMode(!darkMode)}
+                  className="flex flex-shrink-0 items-center gap-2 pb-1 font-alte-haas text-[10px] tracking-[0.2em] cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-70"
+                >
+                  <Sun size={12} style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.55)" }} />
+                  <div
+                    className="relative rounded-full transition-colors duration-300 flex-shrink-0"
+                    style={{
+                      width: 30,
+                      height: 16,
+                      backgroundColor: darkMode ? accentColor : "transparent",
+                      border: `1.5px solid ${darkMode ? accentColor : "rgba(0,0,0,0.3)"}`,
+                    }}
+                  >
+                    <div
+                      className="absolute rounded-full transition-all duration-300"
+                      style={{
+                        top: 2,
+                        width: 10,
+                        height: 10,
+                        backgroundColor: darkMode ? "#000" : "rgba(0,0,0,0.4)",
+                        transform: darkMode ? "translateX(15px)" : "translateX(2px)",
+                      }}
+                    />
+                  </div>
+                  <Moon size={12} style={{ color: darkMode ? "white" : "rgba(0,0,0,0.35)" }} />
+                </button>
+              )}
             </div>
           </div>
           {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch"))) && (

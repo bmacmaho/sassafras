@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import Link from "next/link"
 import { useHeaderScrolled } from "@/components/header-extras-context"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 export default function KeepInTouchPage() {
   const { darkMode: dm } = useHeaderScrolled()
@@ -22,8 +23,12 @@ export default function KeepInTouchPage() {
 
   return (
     <div
-      className={`relative pt-9 min-h-screen font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 ${dm ? "text-white" : "text-[#222]"}`}
-      style={{ backgroundColor: dm ? "#000" : "#fcfaf2", transition: "background-color 500ms ease, color 500ms ease" }}
+      className={`relative pt-9 font-sans overflow-x-hidden -mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 ${dm ? "text-white" : "text-[#222]"}`}
+      style={{
+        backgroundColor: dm ? "#000" : "#fcfaf2",
+        transition: "background-color 500ms ease, color 500ms ease",
+        minHeight: "calc(100vh - var(--header-bottom, 236px))",
+      }}
     >
 
       {/* ── Contact section ── */}
@@ -59,10 +64,12 @@ export default function KeepInTouchPage() {
         </div>
 
         {/* Separator */}
-        <div
-          className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
-          style={{ width: "calc(100vw - 12rem)", marginLeft: "calc(-50vw + 50% + 6rem)" }}
-        />
+        {FEATURE_FLAGS.supportUs && (
+          <div
+            className={`h-0 border-b-4 mb-8 ${dm ? "border-white/20" : "border-[#D5D4CD]"}`}
+            style={{ width: "calc(100vw - 12rem)", marginLeft: "calc(-50vw + 50% + 6rem)" }}
+          />
+        )}
 
         {/* Walking people image */}
         <img
@@ -75,31 +82,33 @@ export default function KeepInTouchPage() {
       </div>
 
       {/* ── Support us section ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-4">
-        <h2
-          className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-8 leading-none select-none"
-          style={titleStyle}
-        >
-          Support us
-        </h2>
+      {FEATURE_FLAGS.supportUs && (
+        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-4">
+          <h2
+            className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-8 leading-none select-none"
+            style={titleStyle}
+          >
+            Support us
+          </h2>
 
-        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
-          <Link
-            href="/donate"
-            className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 border-b-2 ${dm ? "border-white hover:bg-white/10" : "border-black hover:bg-[#f0efe7]"}`}
-          >
-            <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Donate</span>
-            <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
-          </Link>
-          <Link
-            href="/volunteer"
-            className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
-          >
-            <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Volunteer</span>
-            <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
-          </Link>
+          <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+            <Link
+              href="/donate"
+              className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 border-b-2 ${dm ? "border-white hover:bg-white/10" : "border-black hover:bg-[#f0efe7]"}`}
+            >
+              <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Donate</span>
+              <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
+            </Link>
+            <Link
+              href="/volunteer"
+              className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
+            >
+              <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Volunteer</span>
+              <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>→</span>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   )
