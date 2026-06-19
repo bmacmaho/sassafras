@@ -107,6 +107,17 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
   const coverTarget = isOpen ? -180 : 0
   const coverAngle = useSpring(coverTarget, 0.06, 0.68)
 
+  // While no interior page has been flipped yet, the cover is still
+  // sweeping (and recentering via translateX) from the closed position —
+  // mid-rotation it can briefly overlap the still-unflipped page 1 before
+  // the recentering finishes, and getSheetZIndex's angle-based branch would
+  // drop the cover's z-index right as its inside face becomes visible
+  // (crossing -90°), letting page 1 paint over it. Keep the cover above
+  // every unflipped page for that whole window; once a page has actually
+  // been turned, the cover has fully settled and can use the normal
+  // left-side ordering so later page-turns correctly stack on top of it.
+  const coverZIndex = currentPage === -1 ? totalSheets + 30 : getSheetZIndex(-1, coverAngle)
+
   /* ── spring-animated page flip ──────────────────────────────── */
   const flipTarget =
     flippingPage !== null
@@ -461,7 +472,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
         <div
           onClick={!isOpen ? openBook : undefined}
           style={{
-            ...pageStyle(getSheetZIndex(-1, isOpen ? coverAngle : 0), {
+            ...pageStyle(coverZIndex, {
               transform: `rotateY(${isOpen ? coverAngle : 0}deg)`,
               willChange: "transform",
               borderRadius: "2px 6px 6px 2px",
@@ -475,7 +486,6 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
               style={{
                 width: "100%",
                 height: "100%",
-                background: "linear-gradient(155deg, #2a2420 0%, #1a1614 30%, #0f0d0c 70%, #1a1614 100%)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -483,82 +493,20 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                 borderRight: "3px solid rgba(255,255,255,0.04)",
                 position: "relative",
                 overflow: "hidden",
+                backgroundColor: "#1a1614",
               }}
             >
-              {/* Decorative border */}
-              <div
+              <img
+                src="/the_tower_assets/cover/IMG_7167.PNG"
+                alt="The Tower — Issue 1, Sassafras"
                 style={{
                   position: "absolute",
-                  inset: 14,
-                  border: "1px solid rgba(205,170,120,0.2)",
-                  pointerEvents: "none",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
                 }}
               />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 18,
-                  border: "1px solid rgba(205,170,120,0.08)",
-                  pointerEvents: "none",
-                }}
-              />
-
-              {/* Title */}
-              <div style={{ textAlign: "center", color: "#e8ddd0", position: "relative", zIndex: 2 }}>
-                <p
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: "0.3em",
-                    opacity: 0.5,
-                    marginBottom: 18,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                  }}
-                >
-                  THE SASSAFRAS INITIATIVE
-                </p>
-                <h2
-                  style={{
-                    fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    lineHeight: 1.15,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                    maxWidth: "16ch",
-                  }}
-                >
-                  Issue 1
-                </h2>
-                <div
-                  style={{
-                    width: 40,
-                    height: 1,
-                    background: "linear-gradient(90deg, transparent, rgba(205,170,120,0.5), transparent)",
-                    margin: "16px auto",
-                  }}
-                />
-                <p
-                  style={{
-                    fontSize: "clamp(0.85rem, 2vw, 1.15rem)",
-                    fontStyle: "italic",
-                    opacity: 0.7,
-                    letterSpacing: "0.05em",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                  }}
-                >
-                  The Tower
-                </p>
-                <p
-                  style={{
-                    fontSize: 9,
-                    letterSpacing: "0.25em",
-                    opacity: 0.35,
-                    marginTop: 28,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                  }}
-                >
-                  JUNE 2026
-                </p>
-              </div>
 
               {/* Spine edge highlight */}
               <div
@@ -606,33 +554,6 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
                 position: "relative",
               }}
             >
-              <div style={{ textAlign: "center", padding: 40, color: "#3a3330" }}>
-                <p
-                  style={{
-                    fontSize: 9,
-                    letterSpacing: "0.3em",
-                    opacity: 0.4,
-                    marginBottom: 20,
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                  }}
-                >
-                  THE SASSAFRAS INITIATIVE PRESENTS
-                </p>
-                <p
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 1.9,
-                    opacity: 0.6,
-                    fontStyle: "italic",
-                    maxWidth: "28ch",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                  }}
-                >
-                  An interdisciplinary publication seeking to reimagine academic discourse
-                  through research, visual arts, oral histories, and radical experimentation
-                  of form.
-                </p>
-              </div>
               {/* Spine shadow */}
               <div
                 style={{
