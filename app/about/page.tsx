@@ -6,6 +6,64 @@ import Link from "next/link"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { teamData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
 import { ScrollableBio } from "@/components/scrollable-bio"
+import type { Person } from "@/lib/types"
+
+/** Vertical role label that bounces up and down on a loop when its text is taller than the strip. */
+function RoleStrip({ role, dark }: { role: Person["role"]; dark?: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    const text = textRef.current
+    if (!container || !text) return
+
+    let animation: Animation | null = null
+
+    const measure = () => {
+      animation?.cancel()
+      text.style.transform = ""
+      // Compare bottom edges (not just heights) so the top padding offset
+      // on the container is accounted for — otherwise the bounce falls
+      // short and clips the last couple letters.
+      const overflow = text.getBoundingClientRect().bottom - container.getBoundingClientRect().bottom
+      if (overflow > 4) {
+        animation = text.animate(
+          [
+            { transform: "translateY(0)", offset: 0 },
+            { transform: "translateY(0)", offset: 0.15 },
+            { transform: `translateY(-${overflow}px)`, offset: 0.5 },
+            { transform: `translateY(-${overflow}px)`, offset: 0.85 },
+            { transform: "translateY(0)", offset: 1 },
+          ],
+          { duration: Math.max(4000, overflow * 60), iterations: Infinity, easing: "ease-in-out" }
+        )
+      }
+    }
+
+    measure()
+    window.addEventListener("resize", measure)
+    return () => {
+      window.removeEventListener("resize", measure)
+      animation?.cancel()
+    }
+  }, [role])
+
+  return (
+    <div
+      ref={containerRef}
+      className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 overflow-hidden ${dark ? "border-white" : "border-black"}`}
+    >
+      <span
+        ref={textRef}
+        className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
+        style={{ color: "#5D9800", writingMode: "vertical-rl" }}
+      >
+        {getRoleText(role)}
+      </span>
+    </div>
+  )
+}
 
 export default function AboutPage() {
   const peopleData = sortByName(teamData)
@@ -16,6 +74,19 @@ export default function AboutPage() {
   const nameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const handleSelect = (id: number) => setOpenId(prev => prev === id ? null : id)
+
+  // Preload every team photo up front so opening a row for the first time
+  // doesn't stall on the image fetch/decode — without this the <img> only
+  // starts loading once its accordion row is expanded.
+  useEffect(() => {
+    const photoUrls = peopleData.map((person) => person.photo).filter((photo): photo is string => !!photo)
+    const images = photoUrls.map((src) => {
+      const img = new window.Image()
+      img.src = src
+      return img
+    })
+    return () => { images.length = 0 }
+  }, [peopleData])
 
   // Sync body background with dark mode
   useEffect(() => {
@@ -55,7 +126,7 @@ export default function AboutPage() {
           <section className="mb-16">
             <div className={`text-lg md:text-xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
-                We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which &apos;legitimate&apos; academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.
+                Sassafras Initiative is a collective of independent researchers, writers, artists, and creatives seeking to engage with new forms of knowledge production. We are critical of the exclusionary parameters in which ‘legitimate’ academic knowledge is produced and disseminated, since this is often inaccessible to the cultures, stories and people being spoken about. We aim to go beyond paywalls, expensive monographs, and gated lecture halls to bridge the gap between visual arts, oral histories, labour and traditional research. Through a series of publications and projects, we intend to unite interdisciplinary research and radical experimentation of form to make knowledge production both accessible and playful. As such, our work places the essay alongside the poem, the performance, the illustration, the home video, the recipe, and the craft as equally valid sources of knowledge. We envision Sassafras growing into a community that transcends physical and disciplinary borders, enabling these knowledges to speak to each other in fluid ways.
               </p>
             </div>
           </section>
@@ -70,7 +141,7 @@ export default function AboutPage() {
           alt=""
           aria-hidden="true"
           className="absolute z-20 bottom-0 h-36 sm:h-32 md:h-28 lg:h-24 w-auto pointer-events-none select-none"
-          style={{ right: "-0.4rem", transform: "rotate(-90deg)", transformOrigin: "center center" }}
+          style={{ right: "-0.4rem", transform: "rotate(-90deg)", transformOrigin: "center center", filter: dm ? "invert(1)" : undefined }}
         />
       </div>
 
@@ -136,14 +207,7 @@ export default function AboutPage() {
                         </ScrollableBio>
                       </div>
                       {/* Role strip — rotated 90° on the right */}
-                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
-                        <span
-                          className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
-                          style={{ color: "#5D9800", writingMode: "vertical-rl" }}
-                        >
-                          {getRoleText(person.role)}
-                        </span>
-                      </div>
+                      <RoleStrip role={person.role} dark={dm} />
                     </div>
                   </div>
                 </div>

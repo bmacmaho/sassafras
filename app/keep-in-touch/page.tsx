@@ -56,9 +56,6 @@ export default function KeepInTouchPage() {
                   @sassafrasinitiative
                 </a>
               </p>
-              <p className={`mt-6 text-sm ${dm ? "text-white/40" : "text-black/40"}`}>
-                Responsible for content: The Sassafras Collective
-              </p>
             </div>
           </section>
         </div>

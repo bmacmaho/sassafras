@@ -145,8 +145,9 @@ export function ScrollDrivenVideo() {
                 className="absolute"
                 style={{ right: "calc(100% + 10px)", bottom: "100%" }}
               >
-                <p
-                  className="font-alte-haas text-base tracking-wide"
+                <Link
+                  href="/current-issue"
+                  className="block font-alte-haas text-base tracking-wide hover:opacity-80 transition-opacity"
                   style={{
                     transformOrigin: "right bottom",
                     transform: "rotate(-90deg)",
@@ -155,7 +156,7 @@ export function ScrollDrivenVideo() {
                   }}
                 >
                   <span className="underline underline-offset-2">to the current issue</span>{" "}v
-                </p>
+                </Link>
               </div>
               {/* Video — animates on a curve independently */}
               <div

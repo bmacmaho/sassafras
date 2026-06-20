@@ -57,9 +57,9 @@ export default function HomePage() {
             <div className="absolute left-[4%] md:left-[12%] top-[22%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
               <div data-scroll-item style={{ opacity: 0 }}>
                 <Link href="/current-issue" className="group flex flex-col items-start gap-2 transition-all duration-300">
-                  <div className="w-[70vw] md:w-[350px] aspect-[1.8/1] bg-white shadow-2xl overflow-hidden p-1 relative">
+                  <div className="w-[70vw] md:w-[350px] aspect-[1.4/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full flex overflow-hidden">
-                      <img src="/explore_gardens_new.jpg" alt="Current Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/the_tower_assets/cover/IMG_7167.PNG" alt="Current Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <img src="/explore_botanical_new.jpg" alt="Current Issue Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>

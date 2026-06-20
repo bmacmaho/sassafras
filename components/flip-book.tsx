@@ -59,7 +59,18 @@ function useSpring(
     }
   }, [target, stiffness, damping])
 
-  return value
+  // Snaps the spring straight to a value, bypassing the physics — used to
+  // re-prime the shared flip angle right before a new flip starts, since
+  // the spring otherwise drifts back toward 0 once flippingPage resets to
+  // null after the previous flip commits (which broke the direction the
+  // very next flip would animate from).
+  const set = useCallback((v: number) => {
+    ref.current.value = v
+    ref.current.velocity = 0
+    setValue(v)
+  }, [])
+
+  return [value, set] as const
 }
 
 /* ──────────────────────────── component ──────────────────────────── */
@@ -105,7 +116,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
 
   /* ── spring-animated cover angle ────────────────────────────── */
   const coverTarget = isOpen ? -180 : 0
-  const coverAngle = useSpring(coverTarget, 0.06, 0.68)
+  const [coverAngle] = useSpring(coverTarget, 0.06, 0.68)
 
   // While no interior page has been flipped yet, the cover is still
   // sweeping (and recentering via translateX) from the closed position —
@@ -125,7 +136,7 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
         ? -180
         : 0
       : 0
-  const flipAngle = useSpring(flipTarget, 0.07, 0.7)
+  const [flipAngle, setFlipAngle] = useSpring(flipTarget, 0.07, 0.7)
 
   // When flip animation settles, commit state
   useEffect(() => {
@@ -162,9 +173,10 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
     if (flippingPage !== null) return
     const nextSheet = currentPage + 1
     if (nextSheet >= totalSheets) return
+    setFlipAngle(0)
     setFlippingDirection("forward")
     setFlippingPage(nextSheet)
-  }, [currentPage, totalSheets, flippingPage])
+  }, [currentPage, totalSheets, flippingPage, setFlipAngle])
 
   const goPrevPage = useCallback(() => {
     if (flippingPage !== null) return
@@ -172,9 +184,10 @@ export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
       closeBook()
       return
     }
+    setFlipAngle(-180)
     setFlippingDirection("backward")
     setFlippingPage(currentPage)
-  }, [currentPage, closeBook, flippingPage])
+  }, [currentPage, closeBook, flippingPage, setFlipAngle])
 
   /* ── drag handling ──────────────────────────────────────────── */
   const dragStart = useRef<{ x: number; y: number } | null>(null)

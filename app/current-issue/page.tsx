@@ -614,7 +614,7 @@ export default function CurrentIssuePage() {
 
   return (
     <div className={`pb-16 font-sans overflow-x-hidden ${darkMode ? "selection:bg-white/20" : ""}`} style={{ backgroundColor: darkMode ? "#000" : "#fcfaf2", color: darkMode ? "#fff" : "#222", transition: "background-color 500ms ease, color 500ms ease" }}>
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-0">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-24 pb-12">
 
         {/* ── FlipBook Container ── */}
         <CitationLayer>
@@ -675,7 +675,7 @@ export default function CurrentIssuePage() {
       />
 
       {/* ── Contributors ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-8">
         <h2
           className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-4 leading-none select-none"
           style={dm ? { color: "#111", WebkitTextStroke: "1.5px white" } : { color: "#fcfaf2", WebkitTextStroke: "1.5px black" }}

@@ -128,9 +128,9 @@ const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY SASSAFRAS", pageTitle: "Why are we called Sassafras?" }] },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
-  { href: "/keep-in-touch", label: "CONTACT / SUPPORT", pageTitle: "Contact" },
+  { href: "/keep-in-touch", label: FEATURE_FLAGS.supportUs ? "CONTACT / SUPPORT" : "CONTACT", pageTitle: "Contact" },
 ]
 
 const HEADER_MAX = 220
@@ -440,11 +440,14 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
             </button>
           </div>
 
-          {/* Bottom-right extras (e.g. search on explore page) */}
+          {/* Bottom-right extras (e.g. search on explore page) — explicit
+              z-index so it isn't covered by the Logo + page title block below,
+              which sits later in the DOM and overlaps it in the maximised
+              header, silently eating clicks on its remove ("×") buttons. */}
           {rightExtras && (
             <div
               className="absolute bottom-8 right-[4.5rem] transition-opacity duration-300"
-              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto", zIndex: 10 }}
             >
               {rightExtras}
             </div>
@@ -544,28 +547,32 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               )}
             </div>
           </div>
-          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch"))) && (
+          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname.startsWith("/explore/")))) && (
             <div
               className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
               style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
             />
           )}
+          {/* Chevron straddles the header's bottom seam — rendered inside the
+              header (rather than as a sticky sibling) so it stacks in front of
+              the header's own background but still behind the Filters dropdown
+              (extras), which lives in this same stacking context at z-[100]. */}
+          {hasChevron && (
+            <div
+              className="hidden lg:block absolute bottom-0 left-0 right-0 pointer-events-none overflow-visible"
+              style={{ height: 0, zIndex: 40 }}
+            >
+              <button
+                onClick={handleChevronToggle}
+                aria-label={scrolled ? "Expand header" : "Collapse header"}
+                className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 transition-colors ${darkMode ? "bg-black" : "border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1]"}`}
+                style={darkMode ? { borderColor: accentColor, color: accentColor } : undefined}
+              >
+                {scrolled ? <ChevronDown size={14} strokeWidth={2} /> : <ChevronUp size={14} strokeWidth={2} />}
+              </button>
+            </div>
+          )}
         </header>
-      {hasChevron && (
-        <div
-          className="hidden lg:block pointer-events-none overflow-visible"
-          style={{ position: "sticky", top: `${13 + headerHeight}px`, height: 0, zIndex: 80 }}
-        >
-          <button
-            onClick={handleChevronToggle}
-            aria-label={scrolled ? "Expand header" : "Collapse header"}
-            className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 transition-colors ${darkMode ? "bg-black" : "border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1]"}`}
-            style={darkMode ? { borderColor: accentColor, color: accentColor } : undefined}
-          >
-            {scrolled ? <ChevronDown size={14} strokeWidth={2} /> : <ChevronUp size={14} strokeWidth={2} />}
-          </button>
-        </div>
-      )}
     </>
   )
 }
