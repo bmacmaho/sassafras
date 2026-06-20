@@ -14,6 +14,7 @@ import { ScrollableBio } from "@/components/scrollable-bio"
 import { CitationLayer } from "@/components/citation-popover"
 
 const ebGaramond = EB_Garamond({ subsets: ["latin"], style: ["italic"], weight: ["400", "700"] })
+const ebGaramondRoman = EB_Garamond({ subsets: ["latin"], style: ["normal"], weight: ["400", "700"] })
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -222,6 +223,60 @@ function buildPages(): BookPage[] {
     ),
   }
 
+  // Page 10
+  pages[4] = {
+    ...pages[4],
+    back: (
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden", backgroundColor: "#040d1a" }}>
+        {/* Show only the left half of the image, with 24px cropped off the top, left and bottom */}
+        <div style={{ position: "absolute", top: 24, left: 24, bottom: 24, right: 0, overflow: "hidden" }}>
+          <img
+            src="/the_tower_assets/page_10/IMG_7177.PNG"
+            alt=""
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "200%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "left center",
+              display: "block",
+            }}
+          />
+        </div>
+        <p style={{ ...pageNumStyle, left: 36, color: "#FBFAF1" }}>10</p>
+      </div>
+    ),
+  }
+
+  // Page 11
+  pages[5] = {
+    ...pages[5],
+    front: (
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+        {/* Show only the right half of the image, with 24px cropped off the top, right and bottom */}
+        <div style={{ position: "absolute", top: 24, right: 24, bottom: 24, left: 0, overflow: "hidden" }}>
+          <img
+            src="/the_tower_assets/page_11/IMG_7180.PNG"
+            alt=""
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "200%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "right center",
+              display: "block",
+            }}
+          />
+        </div>
+        <p style={{ ...pageNumStyle, right: 36 }}>11</p>
+      </div>
+    ),
+  }
+
   const essayTextStyle: CSSProperties = {
     position: "absolute",
     inset: 0,
@@ -242,7 +297,37 @@ function buildPages(): BookPage[] {
     ...pages[5],
     back: (
       <>
-        <div style={{ position: "absolute", top: 20, bottom: 60, left: 14, width: 80, border: "1px solid #000" }} />
+        <div
+          style={{
+            position: "absolute",
+            top: 20,
+            bottom: 60,
+            left: 14,
+            width: 80,
+            border: "1px solid #000",
+            boxSizing: "border-box",
+            padding: "16px 14px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <p
+            className={ebGaramondRoman.className}
+            style={{ margin: 0, fontStyle: "normal", fontSize: 11, lineHeight: 1.2, color: "#2a2420", textAlign: "justify", textJustify: "inter-character" }}
+          >
+            "I have flown, To star-stained heights, On bent and battered wings (...), Sure that
+            everything of worth is in the sky and not the earth (...) Singing scraps of angel-song,
+            High is right and low is wrong, And I never taught, Myself to give, Down Down Down,
+            Where the iguanas live."
+          </p>
+          <p
+            className={ebGaramondRoman.className}
+            style={{ margin: 0, fontStyle: "normal", fontSize: 11, lineHeight: 1.2, color: "#2a2420", textAlign: "justify", textJustify: "inter-character" }}
+          >
+            - Dory Previn
+          </p>
+        </div>
         <div style={{ ...essayTextStyle, padding: "20px 20px 40px 100px" }}>
           <p style={{ margin: 0 }}>
             I recently came across the notion of &apos;iliggocene&apos; - the age of &apos;dizziness&apos; proposed
@@ -258,7 +343,7 @@ function buildPages(): BookPage[] {
             mainly think of height and the disequilibrium that comes from the thought of &lsquo;how
             far down?&rsquo;.
           </p>
-          <p style={{ margin: 0, marginTop: 20 }}>
+          <p style={{ margin: 0, marginTop: 20, textAlign: "justify", textAlignLast: "justify" }}>
             This writing frames itself around the question of height, and how height behaves as a
             critical tool in the ways we orient our social world. In his book Animal Fables after
             Darwin, Chris Danta describes how western humanist traditions have commonly envisioned
@@ -274,8 +359,7 @@ function buildPages(): BookPage[] {
             distinction between &apos;man&apos; and &apos;animal&apos;, but it is explicitly linked to moral
             predetermination in Western theological traditions. Ovid, in his first book
             &lsquo;Metamorphoses&rsquo;, describes &lsquo;the Creator&rsquo; as having designed man to stand erect so
-            that he may look towards the heavens and stars. Much the same is said by
-          </p>
+            that he may look towards the heavens and stars. Much the same is said by</p>
         </div>
         <p style={{ ...pageNumStyle, left: 36 }}>12</p>
       </>
@@ -287,9 +371,9 @@ function buildPages(): BookPage[] {
     ...pages[6],
     front: (
       <>
-        <div style={essayTextStyle}>
+        <div style={{ ...essayTextStyle, padding: "20px 92px 40px 24px" }}>
           <p style={{ margin: 0 }}>
-            (1624), who describes humans as &quot;naturally built and disposed to the contemplation of
+            John Donne (1624), who describes humans as &quot;naturally built and disposed to the contemplation of
             heaven&quot;. Danta highlights this further by bringing our attention to the story of the
             Babylonian King Nebuchadnezzar, who is punished by God for his boasting and made to
             live &apos;as an animal&apos;, walking on all fours and eating grass for seven years. It was
