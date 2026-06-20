@@ -6,7 +6,7 @@ import { useHeaderExtras } from "@/components/header-extras-context"
 export function BackToTop() {
   const pathname = usePathname()
   const { bottomLeft } = useHeaderExtras()
-  if (pathname === "/") return null
+  if (pathname === "/" || pathname === "/keep-in-touch") return null
 
   if (pathname === "/current-issue") {
     return (

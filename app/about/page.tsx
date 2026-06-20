@@ -4,19 +4,69 @@ import { useState, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
+import { teamData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
+import { ScrollableBio } from "@/components/scrollable-bio"
+import type { Person } from "@/lib/types"
 
-const peopleData = [
-  { id: 1, name: "Anjana Ramesh",      role: "Content Editor",                 photo: null, bio: "" },
-  { id: 2, name: "Anna Phaidra",       role: "Artistic Director/Designer",     photo: null, bio: "Anna Phaidra is an award-winning artist and researcher specializing in illustration, woodcarving, and installation. Her work attends to living, extinct, and speculative beings through an interdisciplinary lens—bringing together historical symbolism and folklore with environmental humanities research." },
-  { id: 3, name: "Barra MacMahon",     role: "Web Developer/Designer",         photo: null, bio: "" },
-  { id: 4, name: "Chenlu Ni",          role: "Designer/Web Developer",         photo: null, bio: "" },
-  { id: 5, name: "Diana Rudic",        role: "Community Manager",              photo: null, bio: "" },
-  { id: 6, name: "Gabrielle Francois", role: "Social Media and Branding",      photo: "Upload-test.JPG", bio: "" },
-  { id: 7, name: "Javiera Bilbao",     role: "Project Manager/Content Editor", photo: null, bio: "Javiera directs the initiative's operational strategy, ensuring that Sassafras remains at the vanguard of redefining accessible academic discourse." },
-  { id: 8, name: "Malin Menzel",       role: "Event Coordinator",              photo: null, bio: "" },
-]
+/** Vertical role label that bounces up and down on a loop when its text is taller than the strip. */
+function RoleStrip({ role, dark }: { role: Person["role"]; dark?: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    const text = textRef.current
+    if (!container || !text) return
+
+    let animation: Animation | null = null
+
+    const measure = () => {
+      animation?.cancel()
+      text.style.transform = ""
+      // Compare bottom edges (not just heights) so the top padding offset
+      // on the container is accounted for — otherwise the bounce falls
+      // short and clips the last couple letters.
+      const overflow = text.getBoundingClientRect().bottom - container.getBoundingClientRect().bottom
+      if (overflow > 4) {
+        animation = text.animate(
+          [
+            { transform: "translateY(0)", offset: 0 },
+            { transform: "translateY(0)", offset: 0.15 },
+            { transform: `translateY(-${overflow}px)`, offset: 0.5 },
+            { transform: `translateY(-${overflow}px)`, offset: 0.85 },
+            { transform: "translateY(0)", offset: 1 },
+          ],
+          { duration: Math.max(4000, overflow * 60), iterations: Infinity, easing: "ease-in-out" }
+        )
+      }
+    }
+
+    measure()
+    window.addEventListener("resize", measure)
+    return () => {
+      window.removeEventListener("resize", measure)
+      animation?.cancel()
+    }
+  }, [role])
+
+  return (
+    <div
+      ref={containerRef}
+      className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 overflow-hidden ${dark ? "border-white" : "border-black"}`}
+    >
+      <span
+        ref={textRef}
+        className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
+        style={{ color: "#5D9800", writingMode: "vertical-rl" }}
+      >
+        {getRoleText(role)}
+      </span>
+    </div>
+  )
+}
 
 export default function AboutPage() {
+  const peopleData = sortByName(teamData)
   const { darkMode: dm } = useHeaderScrolled()
   const [openId, setOpenId] = useState<number | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -24,6 +74,19 @@ export default function AboutPage() {
   const nameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const handleSelect = (id: number) => setOpenId(prev => prev === id ? null : id)
+
+  // Preload every team photo up front so opening a row for the first time
+  // doesn't stall on the image fetch/decode — without this the <img> only
+  // starts loading once its accordion row is expanded.
+  useEffect(() => {
+    const photoUrls = peopleData.map((person) => person.photo).filter((photo): photo is string => !!photo)
+    const images = photoUrls.map((src) => {
+      const img = new window.Image()
+      img.src = src
+      return img
+    })
+    return () => { images.length = 0 }
+  }, [peopleData])
 
   // Sync body background with dark mode
   useEffect(() => {
@@ -61,9 +124,9 @@ export default function AboutPage() {
       <div className="relative">
         <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
           <section className="mb-16">
-            <div className={`text-xl md:text-2xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
+            <div className={`text-lg md:text-xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
-                We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which &apos;legitimate&apos; academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.
+                Sassafras Initiative is a collective of independent researchers, writers, artists, and creatives seeking to engage with new forms of knowledge production. We are critical of the exclusionary parameters in which ‘legitimate’ academic knowledge is produced and disseminated, since this is often inaccessible to the cultures, stories and people being spoken about. We aim to go beyond paywalls, expensive monographs, and gated lecture halls to bridge the gap between visual arts, oral histories, labour and traditional research. Through a series of publications and projects, we intend to unite interdisciplinary research and radical experimentation of form to make knowledge production both accessible and playful. As such, our work places the essay alongside the poem, the performance, the illustration, the home video, the recipe, and the craft as equally valid sources of knowledge. We envision Sassafras growing into a community that transcends physical and disciplinary borders, enabling these knowledges to speak to each other in fluid ways.
               </p>
             </div>
           </section>
@@ -78,7 +141,7 @@ export default function AboutPage() {
           alt=""
           aria-hidden="true"
           className="absolute z-20 bottom-0 h-36 sm:h-32 md:h-28 lg:h-24 w-auto pointer-events-none select-none"
-          style={{ right: "-0.4rem", transform: "rotate(-90deg)", transformOrigin: "center center" }}
+          style={{ right: "-0.4rem", transform: "rotate(-90deg)", transformOrigin: "center center", filter: dm ? "invert(1)" : undefined }}
         />
       </div>
 
@@ -109,13 +172,7 @@ export default function AboutPage() {
               >
                 <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
                 <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
-                  {(() => {
-                    const words = person.role.split(" ")
-                    const lines = words.length === 4
-                      ? [words[0], words[1] + " " + words[2], words[3]]
-                      : words
-                    return lines.map((line, j) => <span key={j} className="block">{line}</span>)
-                  })()}
+                  {getRoleLines(person.role).map((line, j) => <span key={j} className="block">{line}</span>)}
                 </span>
               </button>
               {/* Accordion panel: 2× list width — photo left half, bio right half */}
@@ -124,9 +181,9 @@ export default function AboutPage() {
                 style={{ gridTemplateRows: openId === person.id ? "1fr" : "0fr" }}
               >
                 <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`}>
+                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
                     {/* Photo — left quarter of full width (= full list width) */}
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`} style={{ height: "420px" }}>
+                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
                       {person.photo ? (
                         <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
                       ) : (
@@ -136,24 +193,21 @@ export default function AboutPage() {
                     {/* Bio — remaining space to the right of the photo */}
                     <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
                       {/* Main content */}
-                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col">
-                        <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 ${dm ? "text-white border-white" : "text-[#222] border-black"}`}></p>
-                        <div className="relative pr-3">
-                          <p className={`font-alte-haas text-xl leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
+                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
+                        <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
+                          <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
+                          {person.pronouns && (
+                            <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
+                          )}
+                        </div>
+                        <ScrollableBio dark={dm}>
+                          <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
                             {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                           </p>
-                          <div className={`absolute right-0 top-[5px] bottom-[5px] w-[2px] ${dm ? "bg-white" : "bg-black"}`} />
-                        </div>
+                        </ScrollableBio>
                       </div>
                       {/* Role strip — rotated 90° on the right */}
-                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
-                        <span
-                          className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
-                          style={{ color: "#5D9800", writingMode: "vertical-rl" }}
-                        >
-                          {person.role}
-                        </span>
-                      </div>
+                      <RoleStrip role={person.role} dark={dm} />
                     </div>
                   </div>
                 </div>

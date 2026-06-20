@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { artworks as initialArtworks } from "@/lib/mock-data"
-import { Artwork } from "@/lib/types"
+import { Artwork, ArtworkTag } from "@/lib/types"
 
 
 function ExploreContent() {
@@ -42,10 +42,10 @@ function ExploreContent() {
   const typingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const categories = [
-    { id: "year", label: "Year", options: ["2024", "2025", "2026"] },
-    { id: "issue", label: "Issue", options: ["Issue 01", "Issue 02", "Issue 03"] },
-    { id: "medium", label: "Medium", options: ["Painting", "Photography", "Textile", "Digital Art", "Mixed Media", "Illustration", "Typography", "Resin Art", "Digital Illustration", "Charcoal on Paper", "Gouache", "Linocut Print"] },
-    { id: "theme", label: "Tag", options: ["Urban", "Nature", "Sociology", "Cosmology", "Abstract", "Surrealism", "Mythology", "History", "Fluidity", "Botanical", "Human Condition", "Hierarchy", "Cinema"] },
+    { id: "year", label: "Year", options: ["2026"] },
+    { id: "issue", label: "Issue", options: ["Issue 01"] },
+    { id: "medium", label: "Medium", options: ["Essay", "Text + Illustration", "Audio", "Text + Video", "Poem"] },
+    { id: "tags", label: "Tag", options: Object.values(ArtworkTag) },
   ]
 
   // Sync searchQuery with URL q param
@@ -56,7 +56,7 @@ function ExploreContent() {
   // Canvas height = viewport minus header bottom (top offset + height), fixed bottom margin
   useEffect(() => {
     if (!mounted || contextHeaderHeight === 0) return
-    const HEADER_TOP_OFFSET = 16 // sticky top-4
+    const HEADER_TOP_OFFSET = 13 // sticky top-[13px]
     const bottom = HEADER_TOP_OFFSET + contextHeaderHeight
     setCanvasHeight(Math.max(400, window.innerHeight - bottom - 40))
   }, [mounted, contextHeaderHeight])
@@ -65,7 +65,7 @@ function ExploreContent() {
     if (!mounted) return
     const onResize = () => {
       if (contextHeaderHeight === 0) return
-      const HEADER_TOP_OFFSET = 16
+      const HEADER_TOP_OFFSET = 13
       const bottom = HEADER_TOP_OFFSET + contextHeaderHeight
       setCanvasHeight(Math.max(400, window.innerHeight - bottom - 40))
     }
@@ -257,7 +257,11 @@ function ExploreContent() {
       return acc
     }, {} as Record<string, string[]>)
     const categoryMatch = activeFilters.length === 0 ||
-      Object.entries(filtersByType).every(([type, values]) => values.includes((a as any)[type]))
+      Object.entries(filtersByType).every(([type, values]) =>
+        type === "tags"
+          ? values.some(v => a.tags?.includes(v as ArtworkTag))
+          : values.includes((a as any)[type])
+      )
     const searchMatch = searchQuery === "" ||
       a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.author.toLowerCase().includes(searchQuery.toLowerCase())
@@ -294,7 +298,7 @@ function ExploreContent() {
                   ))}
                 </svg>
               </div>
-              <div className="flex flex-row md:flex-col justify-center md:justify-between h-auto md:h-[120px] py-1 font-sans text-sm md:text-xl text-black/80 w-full md:w-24 gap-6 md:gap-0">
+              <div className="flex flex-row md:flex-col justify-center md:justify-between h-auto md:h-[120px] py-1 font-alte-haas text-sm md:text-xl text-black/80 w-full md:w-24 gap-6 md:gap-0">
                 {categories.map((cat) => (
                   <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
                     className={`text-center md:text-left transition-all leading-none ${activeCategory === cat.id ? 'font-bold text-black md:translate-x-2' : 'hover:text-black md:hover:translate-x-1'}`}>
@@ -305,11 +309,11 @@ function ExploreContent() {
               {activeCategory && (
                 <div className="w-full md:w-[480px] h-[220px] md:h-[150px] border border-black/60 bg-[#fcfaf2] relative flex flex-col shadow-xl md:shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
                   <button onClick={() => setActiveCategory("")} className="absolute -right-6 top-0 text-black/30 hover:text-black transition-colors text-xl leading-none">✕</button>
-                  <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+                  <div className="flex-1 overflow-y-auto p-2 md:p-3 custom-scrollbar">
                     <div className="flex flex-wrap gap-2 md:gap-3 justify-center md:justify-start">
                       {categories.find(c => c.id === activeCategory)?.options.map(opt => (
                         <button key={opt} onClick={() => toggleFilter(activeCategory, opt)}
-                          className="group flex items-center gap-2 border border-black/10 px-3 md:px-4 py-1.5 md:py-2 text-[9px] md:text-[10px] uppercase tracking-wider font-medium hover:border-black/30 transition-all bg-[#FBFAF1]/5">
+                          className="group flex items-center gap-2 border border-black/10 px-3 md:px-4 py-1.5 md:py-2 text-[9px] md:text-[10px] tracking-wider font-alte-haas hover:border-black/30 transition-all bg-[#FBFAF1]/5">
                           <div className={`w-3 md:w-3.5 h-3 md:h-3.5 border border-black/20 flex items-center justify-center transition-colors ${activeFilters.find(f => f.type === activeCategory && f.value === opt) ? 'bg-[#8d9c6b]/10 border-black/40' : ''}`}>
                             {activeFilters.find(f => f.type === activeCategory && f.value === opt) && <div className="w-1 md:w-1.5 h-1 md:h-1.5 bg-[#8d9c6b]" />}
                           </div>
@@ -333,19 +337,19 @@ function ExploreContent() {
       </HeaderSlot>
 
       {/* ── Canvas ── */}
-      <div className="-mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32 mt-4">
+      <div className="-mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32">
       <div
         ref={galleryRef}
         className="relative overflow-hidden mx-10 md:mx-11 lg:mx-24 border-l-4 border-r-4 border-b-4 border-[#D5D4CD] z-[49]"
         style={{
-          height: `calc(100svh - var(--header-bottom, 266px) - 40px)`,
+          height: `calc(100svh - var(--header-bottom, 233px) - 40px)`,
           backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px), linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)`,
           backgroundSize: '100px 100px',
         }}
       >
         {/* ── Pills when header is minimised ── */}
         {headerScrolled && (
-          <div className="absolute top-3 left-4 z-[60] flex gap-2 pointer-events-auto">
+          <div className="absolute top-6 left-4 z-[60] flex gap-2 pointer-events-auto">
             <button
               onClick={() => showFilters ? closeFilters() : setShowFilters(true)}
               className="px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-green-500 hover:border-black/40 transition-all"
@@ -364,7 +368,7 @@ function ExploreContent() {
 
         {/* ── Filter dropdown (canvas, minimised header only) ── */}
         {headerScrolled && (showFilters || closingFilters) && (
-          <div className={`absolute top-12 left-4 flex flex-row items-start pointer-events-auto z-[100] ${closingFilters ? "animate-out fade-out slide-out-to-top-2 duration-200" : "animate-in fade-in slide-in-from-top-2 duration-200"}`}>
+          <div className={`absolute top-16 left-4 flex flex-row items-start pointer-events-auto z-[100] ${closingFilters ? "animate-out fade-out slide-out-to-top-2 duration-200" : "animate-in fade-in slide-in-from-top-2 duration-200"}`}>
             <div className="flex flex-col border border-black/20 bg-[#fcfaf2] shadow-sm">
               {categories.map((cat) => (
                 <button
@@ -377,7 +381,7 @@ function ExploreContent() {
                       setActiveCategory(cat.id)
                     }
                   }}
-                  className={`px-4 py-2 text-left text-sm font-sans transition-all ${activeCategory === cat.id ? 'font-semibold text-black bg-black/5' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
+                  className={`px-4 py-2 text-left text-sm font-alte-haas transition-all ${activeCategory === cat.id ? 'font-semibold text-black bg-black/5' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
                 >
                   {cat.label}
                 </button>
@@ -388,13 +392,13 @@ function ExploreContent() {
                 key={activeCategory || lastCategoryRef.current}
                 className={`w-[320px] max-h-[180px] border border-l-0 border-black/20 bg-[#fcfaf2] shadow-sm flex flex-col ${closingCategory ? "animate-out fade-out slide-out-to-left-2 duration-150" : "animate-in fade-in slide-in-from-left-2 duration-150"}`}
               >
-                <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
                   <div className="flex flex-wrap gap-2">
                     {categories.find(c => c.id === (activeCategory || lastCategoryRef.current))?.options.map(opt => (
                       <button
                         key={opt}
                         onClick={() => toggleFilter(activeCategory || lastCategoryRef.current, opt)}
-                        className="flex items-center gap-1.5 border border-black/10 px-2.5 py-1 text-[9px] uppercase tracking-wider font-medium hover:border-black/30 transition-all bg-[#FBFAF1]/5"
+                        className="flex items-center gap-1.5 border border-black/10 px-2.5 py-1 text-[9px] tracking-wider font-alte-haas hover:border-black/30 transition-all bg-[#FBFAF1]/5"
                       >
                         <div className={`w-2.5 h-2.5 border border-black/20 flex items-center justify-center transition-colors ${activeFilters.find(f => f.type === (activeCategory || lastCategoryRef.current) && f.value === opt) ? 'bg-[#8d9c6b]/10 border-black/40' : ''}`}>
                           {activeFilters.find(f => f.type === (activeCategory || lastCategoryRef.current) && f.value === opt) && <div className="w-1 h-1 bg-[#8d9c6b]" />}
@@ -430,7 +434,7 @@ function ExploreContent() {
 
         {/* ── Filter pills (canvas, minimised header only) ── */}
         {headerScrolled && (activeFilters.length > 0 || searchQuery) && (
-          <div className="absolute top-3 right-4 z-[60] flex items-center gap-2 flex-wrap justify-end pointer-events-auto">
+          <div className="absolute top-6 right-4 z-[60] flex items-center gap-2 flex-wrap justify-end pointer-events-auto">
             {activeFilters.map(f => (
               <div key={`${f.type}-${f.value}`} className="flex items-center gap-2 bg-pink-100 border-2 border-black rounded-full px-2.5 py-0.5">
                 <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">{f.value}</span>

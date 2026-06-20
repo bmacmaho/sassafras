@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useHeaderScrolled } from "@/components/header-extras-context"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 export function SiteFooter() {
   const pathname = usePathname()
@@ -15,9 +16,9 @@ export function SiteFooter() {
   const marqueeStroke = usePurple ? "#48464B" : "#5D9800"
   const textColor = "#35362E"
 
-  const colLabel = "uppercase tracking-wide text-[18px] leading-tight"
-  const colText = "uppercase tracking-wide text-[18px] leading-tight"
-  const colLink = "uppercase tracking-wide text-[18px] transition-colors block leading-tight underline underline-offset-2"
+  const colLabel = "uppercase tracking-wide text-[14px] leading-tight"
+  const colText = "uppercase tracking-wide text-[14px] leading-tight"
+  const colLink = "uppercase tracking-wide text-[14px] transition-colors block leading-tight underline underline-offset-2"
   const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: textColor }
 
   if (pathname === "/") return null
@@ -44,22 +45,21 @@ export function SiteFooter() {
         </div>
 
         {/* 3 — Support */}
-        <div className="flex flex-col">
-          <span className={colLabel}>Support:</span>
-          <Link href="/donate" className={colLink}>Donate</Link>
-          <Link href="/volunteer" className={colLink}>Volunteer</Link>
-        </div>
+        {FEATURE_FLAGS.supportUs && (
+          <div className="flex flex-col">
+            <span className={colLabel}>Support:</span>
+            <Link href="/donate" className={colLink}>Donate</Link>
+            <Link href="/volunteer" className={colLink}>Volunteer</Link>
+          </div>
+        )}
 
         {/* 5 — Credits */}
         <div className="flex flex-col">
-          <span className={colLabel}>Design & Programming:</span>
-          <span className={colText}>Anna Phaidra</span>
-          <span className={colText}>Barra MacMahon</span>
-          <span className={colText}>Chenlu Ni</span>
+          <span className={colLabel}>Typefaces:</span>
           <span className={colText}>
-            Typeface:{" "}
             <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Alte Haas Grotesk</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
-            {" "}
+          </span>
+          <span className={colText}>
             <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Charter</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
           </span>
         </div>
@@ -75,14 +75,16 @@ export function SiteFooter() {
             >
               <Image src="/socials/instagram.PNG" alt="Instagram" width={40} height={40} className="object-contain" />
             </a>
-            <a
-              href="https://substack.com/sassafrasinitiative"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
-            >
-              <Image src="/socials/substack.PNG" alt="Substack" width={40} height={40} className="object-contain" />
-            </a>
+            {FEATURE_FLAGS.substack && (
+              <a
+                href="https://substack.com/sassafrasinitiative"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+              >
+                <Image src="/socials/substack.PNG" alt="Substack" width={40} height={40} className="object-contain" />
+              </a>
+            )}
           </div>
         </div>
 

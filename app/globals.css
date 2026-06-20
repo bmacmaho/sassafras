@@ -97,24 +97,32 @@
     background-color: transparent;
   }
 
-  /* Leaf 4 — default cursor (inverted for light backgrounds) */
+  /* Leaf 4 — default cursor */
   html, body, * {
-    cursor: url('/cursors/Leaf 4 inverted.PNG') 16 16, auto !important;
+    cursor: url('/cursors/leaf-4-with-border.png') 0 0, auto !important;
   }
 
   /* Leaf 2 — text / input context */
   p, h1, h2, h3, h4, h5, h6, li, blockquote, label, td, th, input, textarea {
-    cursor: url('/cursors/Leaf 2 inverted.PNG') 16 16, text !important;
+    cursor: url('/cursors/leaf-2-with-border.png') 0 0, text !important;
   }
 
   /* Leaf 3 — clickable elements */
   a, button, [role="button"], select, .cursor-pointer {
-    cursor: url('/cursors/Leaf 3 inverted.PNG') 16 16, pointer !important;
+    cursor: url('/cursors/leaf-3-with-border.png') 0 0, pointer !important;
   }
 
-  /* Leaf 1 — home page (dark bg, use original non-inverted) */
-  .home-page, .home-page * {
-    cursor: url('/cursors/Leaf 1 with border.PNG') 16 16, auto !important;
+  /* Leaf 1 — home page (dark bg); clickable elements still use Leaf 3 */
+  .home-page, .home-page p, .home-page h1, .home-page h2, .home-page h3,
+  .home-page h4, .home-page h5, .home-page h6, .home-page li,
+  .home-page blockquote, .home-page label, .home-page td, .home-page th,
+  .home-page input, .home-page textarea, .home-page span, .home-page div,
+  .home-page section, .home-page img {
+    cursor: url('/cursors/leaf-1-with-border.png') 0 0, auto !important;
+  }
+  .home-page a, .home-page button, .home-page [role="button"],
+  .home-page select, .home-page .cursor-pointer {
+    cursor: url('/cursors/leaf-3-with-border.png') 0 0, pointer !important;
   }
 }
 
@@ -180,6 +188,22 @@
   50% {
     transform: translateY(-10px);
   }
+}
+
+@keyframes walk-bounce {
+
+  0%,
+  100% {
+    transform: translateY(-3.75rem) rotate(90deg);
+  }
+
+  50% {
+    transform: translateY(3.75rem) rotate(90deg);
+  }
+}
+
+.animate-walk-bounce {
+  animation: walk-bounce 5s linear infinite;
 }
 
 @keyframes scroll-line {

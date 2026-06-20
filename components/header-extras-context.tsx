@@ -52,10 +52,7 @@ export function HeaderSlot({ children }: { children: ReactNode }) {
   useEffect(() => {
     setExtras(children)
     return () => setExtras(null)
-    // children is intentionally excluded — it's a React element and would change reference
-    // every render, causing an infinite loop. The slot is only ever mounted once per page.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setExtras])
+  }, [setExtras, children])
   return null
 }
 
@@ -65,8 +62,7 @@ export function HeaderRightSlot({ children }: { children: ReactNode }) {
   useEffect(() => {
     setRightExtras(children)
     return () => setRightExtras(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setRightExtras])
+  }, [setRightExtras, children])
   return null
 }
 
@@ -76,7 +72,6 @@ export function BottomLeftSlot({ children }: { children: ReactNode }) {
   useEffect(() => {
     setBottomLeft(children)
     return () => setBottomLeft(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setBottomLeft])
+  }, [setBottomLeft, children])
   return null
 }
