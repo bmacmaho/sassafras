@@ -53,7 +53,7 @@ export default function AboutPage() {
       <div className="relative">
         <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
           <section className="mb-16">
-            <div className={`text-xl md:text-2xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
+            <div className={`text-lg md:text-xl leading-relaxed font-sans text-left ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
                 We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which &apos;legitimate&apos; academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.
               </p>

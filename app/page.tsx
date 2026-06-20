@@ -33,13 +33,13 @@ export default function HomePage() {
       {/* ── Second Page ── */}
       <div className="relative" style={{ height: '500vh' }} data-leaves-scroll-container="true">
         <div className="sticky top-0 w-full h-screen bg-[#FF730F]">
-        <section className="absolute inset-[12px] md:inset-[16px] bg-[#1a1a1a] overflow-hidden">
+        <section className="absolute inset-[10px] md:inset-[13px] bg-[#1a1a1a] overflow-hidden">
           <PathTrails />
           {/* Blurred inner edges */}
-          <div className="absolute top-0 left-0 right-0 h-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to bottom, #FF730F, transparent)' }} />
-          <div className="absolute bottom-0 left-0 right-0 h-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to top, #FF730F, transparent)' }} />
-          <div className="absolute top-0 bottom-0 left-0 w-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to right, #FF730F, transparent)' }} />
-          <div className="absolute top-0 bottom-0 right-0 w-[10px] pointer-events-none z-50" style={{ background: 'linear-gradient(to left, #FF730F, transparent)' }} />
+          <div className="absolute top-0 left-0 right-0 h-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to bottom, #FF730F, transparent)' }} />
+          <div className="absolute bottom-0 left-0 right-0 h-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to top, #FF730F, transparent)' }} />
+          <div className="absolute top-0 bottom-0 left-0 w-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to right, #FF730F, transparent)' }} />
+          <div className="absolute top-0 bottom-0 right-0 w-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to left, #FF730F, transparent)' }} />
         <div className="relative w-full h-full max-w-[1920px] mx-auto pt-[1px]">
           {/* Title + Leaves */}
           <div className="absolute top-6 left-3 md:left-6 z-20 flex flex-col gap-1">

@@ -245,7 +245,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
   useEffect(() => { setHeaderScrolled(scrolled) }, [scrolled, setHeaderScrolled])
   useEffect(() => {
     setContextHeaderHeight(headerHeight)
-    document.documentElement.style.setProperty('--header-bottom', `${16 + headerHeight}px`)
+    document.documentElement.style.setProperty('--header-bottom', `${13 + headerHeight}px`)
   }, [headerHeight, setContextHeaderHeight])
   useEffect(() => { setDarkMode(pathname === "/current-issue") }, [pathname, setDarkMode])
 
@@ -281,7 +281,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
       </div>
 
         {/* Mobile slim bar */}
-        <header className="lg:hidden sticky top-3 z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px", transition: "background-color 500ms ease" }}>
+        <header className="lg:hidden sticky top-[10px] z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px", transition: "background-color 500ms ease" }}>
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-start">
               <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
@@ -314,7 +314,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
         {/* Desktop header */}
         <header
-          className="hidden lg:flex sticky top-4 z-50 relative"
+          className="hidden lg:flex sticky top-[13px] z-50 relative"
           style={{
             backgroundColor: darkMode ? "#000" : "#fbfaf1",
             height: `${headerHeight}px`,
@@ -554,7 +554,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
       {hasChevron && (
         <div
           className="hidden lg:block pointer-events-none overflow-visible"
-          style={{ position: "sticky", top: `${16 + headerHeight}px`, height: 0, zIndex: 80 }}
+          style={{ position: "sticky", top: `${13 + headerHeight}px`, height: 0, zIndex: 80 }}
         >
           <button
             onClick={handleChevronToggle}

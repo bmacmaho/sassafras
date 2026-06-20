@@ -27,7 +27,7 @@ export default function KeepInTouchPage() {
       style={{
         backgroundColor: dm ? "#000" : "#fcfaf2",
         transition: "background-color 500ms ease, color 500ms ease",
-        minHeight: "calc(100vh - var(--header-bottom, 236px))",
+        minHeight: "calc(100vh - var(--header-bottom, 233px))",
       }}
     >
 

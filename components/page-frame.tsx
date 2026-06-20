@@ -16,15 +16,15 @@ export function PageFrame({ children }: { children: React.ReactNode }) {
     <>
       {/* Viewport Fixed Frame Overlay */}
       {!isHome && <div
-        className="fixed inset-0 pointer-events-none z-[9999] border-[12px] md:border-[16px] transition-colors duration-[1500ms] ease-in-out"
+        className="fixed inset-0 pointer-events-none z-[9999] border-[10px] md:border-[13px] transition-colors duration-[1500ms] ease-in-out"
         style={{ borderColor: displayColor }}
       />}
       {/* Inner gradient edges — 4 strips */}
       {!isHome && ([
-        { top: 12,   left: 12,   right: 12,  height: 10, mask: "linear-gradient(to bottom, black 50%, transparent 100%)" },
-        { bottom: 12, left: 12,  right: 12,  height: 10, mask: "linear-gradient(to top,    black 50%, transparent 100%)" },
-        { top: 12,   bottom: 12, left: 12,   width: 10,  mask: "linear-gradient(to right,  black 50%, transparent 100%)" },
-        { top: 12,   bottom: 12, right: 12,  width: 10,  mask: "linear-gradient(to left,   black 50%, transparent 100%)" },
+        { top: 10,   left: 10,   right: 10,  height: 8, mask: "linear-gradient(to bottom, black 50%, transparent 100%)" },
+        { bottom: 10, left: 10,  right: 10,  height: 8, mask: "linear-gradient(to top,    black 50%, transparent 100%)" },
+        { top: 10,   bottom: 10, left: 10,   width: 8,  mask: "linear-gradient(to right,  black 50%, transparent 100%)" },
+        { top: 10,   bottom: 10, right: 10,  width: 8,  mask: "linear-gradient(to left,   black 50%, transparent 100%)" },
       ] as const).map(({ mask, ...pos }, i) => (
         <div
           key={i}

@@ -203,7 +203,7 @@
 }
 
 .animate-walk-bounce {
-  animation: walk-bounce 4s linear infinite;
+  animation: walk-bounce 5s linear infinite;
 }
 
 @keyframes scroll-line {

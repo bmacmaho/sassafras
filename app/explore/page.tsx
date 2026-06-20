@@ -56,7 +56,7 @@ function ExploreContent() {
   // Canvas height = viewport minus header bottom (top offset + height), fixed bottom margin
   useEffect(() => {
     if (!mounted || contextHeaderHeight === 0) return
-    const HEADER_TOP_OFFSET = 16 // sticky top-4
+    const HEADER_TOP_OFFSET = 13 // sticky top-[13px]
     const bottom = HEADER_TOP_OFFSET + contextHeaderHeight
     setCanvasHeight(Math.max(400, window.innerHeight - bottom - 40))
   }, [mounted, contextHeaderHeight])
@@ -65,7 +65,7 @@ function ExploreContent() {
     if (!mounted) return
     const onResize = () => {
       if (contextHeaderHeight === 0) return
-      const HEADER_TOP_OFFSET = 16
+      const HEADER_TOP_OFFSET = 13
       const bottom = HEADER_TOP_OFFSET + contextHeaderHeight
       setCanvasHeight(Math.max(400, window.innerHeight - bottom - 40))
     }
@@ -338,7 +338,7 @@ function ExploreContent() {
         ref={galleryRef}
         className="relative overflow-hidden mx-10 md:mx-11 lg:mx-24 border-l-4 border-r-4 border-b-4 border-[#D5D4CD] z-[49]"
         style={{
-          height: `calc(100svh - var(--header-bottom, 266px) - 40px)`,
+          height: `calc(100svh - var(--header-bottom, 233px) - 40px)`,
           backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px), linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)`,
           backgroundSize: '100px 100px',
         }}

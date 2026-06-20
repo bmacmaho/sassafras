@@ -97,14 +97,21 @@ export default function ExploreDetailPage() {
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-black/5 space-y-4">
-                <button className="w-full bg-black text-[#FBFAF1] py-4 text-[9px] tracking-[0.3em] uppercase hover:invert transition-all">
-                    Inquire
-                </button>
-                <button className="w-full border border-black/10 py-4 text-[9px] tracking-[0.3em] uppercase hover:bg-black/5 transition-all">
-                    Share Work
-                </button>
-              </div>
+              {artwork.tags && artwork.tags.length > 0 && (
+                <div className="pt-8 border-t border-black/5 space-y-3">
+                  <p className="text-[9px] tracking-widest text-black/40 uppercase">Tags</p>
+                  <div className="flex flex-wrap gap-2">
+                    {artwork.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[9px] tracking-widest uppercase border border-black/10 px-2.5 py-1 text-black/60"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Main Narrative Text */}
@@ -114,15 +121,33 @@ export default function ExploreDetailPage() {
                   About the Work
                 </h3>
                 <div className="font-serif text-lg md:text-xl leading-[1.7] text-[#333] space-y-8">
-                  <p>
-                    {artwork.description || "This piece is part of the inaugural Sassafras digital collection, exploring themes of growth, struggle, and the organic intersections between digital and physical forms."}
-                  </p>
-                  <p>
-                    Sassafras seeks to bridge the gap between traditional research and experimental visual practice. In this particular work, the artist navigates the complexities of {artwork.theme.toLowerCase()}, utilizing {artwork.medium.toLowerCase()} as a vessel for radical experimentation.
-                  </p>
-                  <p className="text-black/40 text-base italic">
-                    The work remains a living part of the Sassafras archive, subject to re-contextualization as new issues and themes emerge. It stands as a testament to the initiative's commitment to open-access knowledge and fluid scholarly engagement.
-                  </p>
+                  {artwork.description && <p>{artwork.description}</p>}
+                  {artwork.body
+                    ? artwork.body.split(/\n\n+/).map((paragraph, i) => (
+                        <p key={i}>
+                          {paragraph.split("\n").map((line, j) => (
+                            <span key={j}>
+                              {line}
+                              {j < paragraph.split("\n").length - 1 && <br />}
+                            </span>
+                          ))}
+                        </p>
+                      ))
+                    : !artwork.description && (
+                        <p className="text-black/40 italic">Full piece coming soon.</p>
+                      )}
+                  {artwork.bibliography && artwork.bibliography.length > 0 && (
+                    <div className="pt-4">
+                      <h4 className="text-[10px] tracking-[0.3em] uppercase text-black/60 font-bold mb-4">
+                        Bibliography
+                      </h4>
+                      <div className="text-sm leading-relaxed text-[#555] space-y-2">
+                        {artwork.bibliography.map((entry, i) => (
+                          <p key={i}>{entry}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

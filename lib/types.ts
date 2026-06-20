@@ -57,6 +57,9 @@ export interface Artwork {
   year: string;
   issue: string;
   description?: string;
+  tags?: string[];
+  body?: string;
+  bibliography?: string[];
   aspectRatio: number;
   pos: { x: number; y: number; width: number; height: number };
   float: { delay: string; dur: string };
