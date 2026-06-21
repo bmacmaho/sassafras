@@ -1,0 +1,137 @@
+"use client"
+
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { useHeaderScrolled } from "@/components/header-extras-context"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
+
+export function SiteFooter() {
+  const pathname = usePathname()
+  const { darkMode } = useHeaderScrolled()
+  const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/issues"
+
+  const usePurple = isAbout
+  const bgColor = usePurple ? "#A39DC3" : "#B8D160"
+  const marqueeStroke = usePurple ? "#48464B" : "#5D9800"
+  const textColor = "#35362E"
+
+  const colLabel = "uppercase tracking-wide text-[14px] leading-tight"
+  const colText = "uppercase tracking-wide text-[14px] leading-tight"
+  const colLink = "uppercase tracking-wide text-[14px] transition-colors block leading-tight underline underline-offset-2"
+  const alteFontStyle = { fontFamily: "var(--font-alte-haas)", fontWeight: 400, color: textColor }
+
+  if (pathname === "/") return null
+
+  return (
+    <footer
+      className="relative px-4 md:px-8 overflow-hidden"
+      style={{ backgroundColor: bgColor, zIndex: 10000, paddingTop: "calc(0.75rem + 2px)", marginTop: "-2px", borderTop: "1px solid black" }}
+    >
+      {/* ── Top Section ── */}
+      <div className="flex flex-row justify-between gap-12 pb-0 flex-wrap" style={alteFontStyle}>
+
+        {/* 1 — Address */}
+        <div className="flex flex-col">
+          <span className={colLabel}>Sassafras</span>
+          <span className={colText}>Berlin</span>
+          <Link href="/keep-in-touch" className={colLink}>Impressum</Link>
+        </div>
+
+        {/* 2 — Contact */}
+        <div className="flex flex-col">
+          <span className={colLabel}>Contact:</span>
+          <a href="mailto:sassafrasinitiative@gmail.com" className={colLink}>sassafrasinitiative@gmail.com</a>
+        </div>
+
+        {/* 3 — Support */}
+        {FEATURE_FLAGS.supportUs && (
+          <div className="flex flex-col">
+            <span className={colLabel}>Support:</span>
+            <Link href="/donate" className={colLink}>Donate</Link>
+            <Link href="/volunteer" className={colLink}>Volunteer</Link>
+          </div>
+        )}
+
+        {/* 5 — Credits */}
+        <div className="flex flex-col">
+          <span className={colLabel}>Typefaces:</span>
+          <span className={colText}>
+            <a href="https://www.1001fonts.com/alte-haas-grotesk-font.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Alte Haas Grotesk</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
+          </span>
+          <span className={colText}>
+            <a href="https://practicaltypography.com/charter.html" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><span className="underline underline-offset-2">Charter</span><svg viewBox="0 0 10 10" className="text-blue-600 inline-block align-super" style={{ width: "0.5em", height: "0.5em", marginLeft: "0.1em" }}><line x1="9" y1="1" x2="2" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="2" y2="1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="1" x2="9" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></a>
+          </span>
+        </div>
+
+        {/* 4 — Follow (right aligned) */}
+        <div className="flex flex-col ml-auto pr-8 md:pr-16 items-end">
+          <div className="flex gap-4">
+            <a
+              href="https://instagram.com/sassafrasinitiative"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+            >
+              <Image src="/socials/instagram.PNG" alt="Instagram" width={40} height={40} className="object-contain" />
+            </a>
+            {FEATURE_FLAGS.substack && (
+              <a
+                href="https://substack.com/sassafrasinitiative"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+              >
+                <Image src="/socials/substack.PNG" alt="Substack" width={40} height={40} className="object-contain" />
+              </a>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Marquee Branding ── */}
+      <div className="relative flex whitespace-nowrap group -mx-8 md:-mx-16" style={{ transform: "translateY(25%)", borderTop: "4px solid #FBFAF1", marginTop: "-1.5vw", willChange: "transform" }}>
+        <div className="flex animate-marquee group-hover:pause">
+          {[1, 2, 3, 4].map((i) => (
+            <h2
+              key={i}
+              className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
+              style={{ color: bgColor, WebkitTextStroke: `8px ${marqueeStroke}`, fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+            >
+              Sassafras
+            </h2>
+          ))}
+        </div>
+        <div className="flex absolute top-0 animate-marquee2 group-hover:pause whitespace-nowrap">
+          {[1, 2, 3, 4].map((i) => (
+            <h2
+              key={i}
+              className="text-[12vw] uppercase leading-none tracking-[0.3em] pr-[8vw] select-none"
+              style={{ color: bgColor, WebkitTextStroke: `8px ${marqueeStroke}`, fontFamily: "var(--font-alte-haas)", fontWeight: 400 }}
+            >
+              Sassafras
+            </h2>
+          ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes marquee2 {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+        .animate-marquee2 {
+          animation: marquee2 30s linear infinite;
+        }
+      `}</style>
+    </footer>
+  )
+}

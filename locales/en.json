@@ -1,0 +1,337 @@
+{
+  "meta": {
+    "siteName": "Sassafras Initiative",
+    "titleTemplate": "%s — Sassafras",
+    "description": "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form."
+  },
+
+  "nav": {
+    "currentIssue": "CURRENT ISSUE",
+    "allIssues": "ALL ISSUES",
+    "explore": "EXPLORE",
+    "about": "ABOUT",
+    "aboutWhoAreWe": "Who are we?",
+    "ourTeam": "OUR TEAM",
+    "whySassafras": "WHY SASSAFRAS",
+    "whySassafrasPageTitle": "Why Sassafras?",
+    "submissions": "SUBMISSIONS",
+    "contact": "CONTACT / SUPPORT",
+    "subtitles": {
+      "issues": {
+        "line1": "Archive",
+        "line2": "Full Collection — 2024 to Present"
+      },
+      "currentIssue": {
+        "line1": "The Tower",
+        "line2": "Issue No. 1 — JUNE 2026"
+      },
+      "submissions": {
+        "line1": "Open Call",
+        "line2": "Issue No. 1 — The Tower"
+      }
+    }
+  },
+
+  "footer": {
+    "orgName": "Sassafras E.V.",
+    "street": "Badstr. 23",
+    "city": "13357 Berlin",
+    "impressum": "Impressum",
+    "contactLabel": "Contact:",
+    "supportLabel": "Support:",
+    "donate": "Donate",
+    "volunteer": "Volunteer",
+    "designLabel": "Design & Programming:",
+    "typefaceLabel": "Typeface:",
+    "instagramAlt": "Instagram",
+    "substackAlt": "Substack",
+    "marquee": "Sassafras"
+  },
+
+  "home": {
+    "welcome": "WELCOME TO SASSAFRAS",
+    "tagline": "a platform for experimental thoughts and publication",
+    "navCurrentIssue": "CURRENT ISSUE - THE TOWER",
+    "navAllIssues": "ALL ISSUES",
+    "navExplore": "EXPLORE",
+    "navAbout": "ABOUT US",
+    "navSubmissions": "UPCOMING ISSUE/SUBMISSIONS",
+    "navContact": "CONTACT/SUPPORT",
+    "imgAltCurrentIssueLeft": "Current Issue Left",
+    "imgAltCurrentIssueRight": "Current Issue Right",
+    "imgAltAllIssuesLeft": "All Issues Left",
+    "imgAltAllIssuesRight": "All Issues Right",
+    "imgAltExplore": "Explore",
+    "imgAltAbout": "About",
+    "imgAltSubmissions": "Submissions",
+    "imgAltContactSupport": "Contact Support"
+  },
+
+  "hero": {
+    "illustrationAlt": "Sassafras botanical illustration",
+    "brandName": "SASSAFRAS",
+    "editionLabel": "EDITION",
+    "issueNumber": "NO. 01",
+    "releaseLabel": "RELEASE",
+    "releaseDate": "JUNE 2026"
+  },
+
+  "homeOverlay": {
+    "submissions": "SUBMISSIONS",
+    "currentIssue": "CURRENT ISSUE",
+    "allIssues": "ALL ISSUES",
+    "explore": "EXPLORE",
+    "about": "ABOUT",
+    "contact": "CONTACT",
+    "instagram": "INSTAGRAM"
+  },
+
+  "currentIssue": {
+    "meta": {
+      "title": "Current Issue | Sassafras"
+    },
+    "tagline": "“Challenging the Ivory Tower as an encloser of knowledge.”",
+    "description": "Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry. Flip through the digital edition below.",
+    "flipInstruction": "Click to flip pages",
+    "book": {
+      "brandLabel": "THE SASSAFRAS INITIATIVE",
+      "issueLabel": "Issue 1",
+      "issueTitle": "The Tower",
+      "issueDate": "JUNE 2026",
+      "letterFromEditorsLabel": "LETTER FROM THE EDITORS",
+      "letterOpening": "Dear reader,",
+      "letterParagraph1": "Sassafras invites submissions for its inaugural issue. Through this issue, we aim to establish our identity as an experimental take on academic publication with a focus on challenging hierarchies within and beyond academia.",
+      "letterParagraph2": "We believe that knowledge is not the preserve of any single discipline or institution. It flows freely when we allow different forms of inquiry to meet in dialogue.",
+      "themeLabel": "THEME",
+      "themeParagraph1": "Central to this is the notion of the ‘Ivory Tower’, which captures the tendency of academic institutions to enclose knowledge within exclusive spaces, reinforced by paywalls and specialised jargon.",
+      "themeParagraph2": "We seek new ways of addressing such hierarchies both inside and outside of academia, going beyond traditional academic publishing, with the firm belief that knowledge is for everyone.",
+      "themeParagraph3": "For this reason we would like to encourage contributions of any medium, so that illustration, essays, photography, video, articles, audio, etc. can be represented in dialogue with one another as critical forms of shared knowledge production.",
+      "themeContinuedLabel": "THEME — CONTINUED",
+      "themeContinuedParagraph": "As a complex historical symbol, The Tower evokes images of hubris, grandeur, hierarchy, and exclusion. Where shadows of Towers continue to draw lines across social and spatial boundaries, speaking to how cities, institutions, and governments form and inform themselves and others.",
+      "themeQuote": "“Where shadows of Towers continue to draw lines across social and spatial boundaries…”",
+      "subThemesLabel": "SUB-THEMES THAT INSPIRE US",
+      "subThemesContinuedLabel": "SUB-THEMES — CONTINUED",
+      "noteLabel": "A NOTE",
+      "noteParagraph1": "This list is indicative of the broad ideas that inspire us and is not exclusive. Any interpretations of the symbol of ‘The Tower’ are welcome.",
+      "noteParagraph2": "We recognise that the theme is inherently interdisciplinary. Submissions may draw from architecture, philosophy, political science, art history, sociology, literature, computer science, and any other field of inquiry.",
+      "noteParagraph3": "The Tower stands as both monument and metaphor — its shadow reaching into every corner of how we organise knowledge, space, and power.",
+      "callForSubmissionsLabel": "CALL FOR SUBMISSIONS",
+      "contentsPending": "Contents currently pending",
+      "contentsPendingBody": "Because this represents our inaugural issue, we do not yet have published submissions to display. We eagerly await your contributions to fill these pages.",
+      "submissionGuidelines": "SUBMISSION GUIDELINES →",
+      "colophonLabel": "COLOPHON",
+      "colophonParagraph1": "Sassafras is an interdisciplinary publication seeking to reimagine academic discourse.",
+      "colophonParagraph2": "Typeset in Cardo. Designed and published by the Sassafras Initiative, Berlin.",
+      "copyright": "© 2026 SASSAFRAS INITIATIVE"
+    },
+    "subThemes": [
+      {
+        "title": "The Panopticon",
+        "text": "Towers of surveillance in our daily lives — examining how structures of observation shape behaviour and self-regulation."
+      },
+      {
+        "title": "The Tower of Babel",
+        "text": "The human desire towards reaching the ‘divine’ — ambition, communication, and the fragmentation of shared understanding."
+      },
+      {
+        "title": "Height as Progress",
+        "text": "The Berlin TV tower and ‘height’ as a historical expression of progress, ideology, and national aspiration."
+      },
+      {
+        "title": "Anti-intellectualism",
+        "text": "How do we address the diminishing trust in academia? What bridges might we build between scholarship and public discourse?"
+      },
+      {
+        "title": "The Enclosed Structure",
+        "text": "How the physical framework of the tower as an enclosed/defensive structure helps us frame power in the everyday."
+      },
+      {
+        "title": "Subversion",
+        "text": "How do we attempt to subvert and challenge these hierarchies of power through creative, critical practice?"
+      }
+    ]
+  },
+
+  "issues": {
+    "meta": {
+      "title": "All Issues — Sassafras"
+    },
+    "tagline": "Exploring the history and evolution of academic discourse.",
+    "description": "Our archive grows as we continue to challenge the “Ivory Tower” and reimagine scholarly engagement. Each issue represents a new chapter in interdisciplinary inquiry.",
+    "publishedVolumesLabel": "Published Volumes"
+  },
+
+  "submissions": {
+    "meta": {
+      "title": "Submissions | Sassafras"
+    },
+    "tagline": "Challenging the “Ivory Tower” as an encloser of knowledge.",
+    "description": "We seek any medium — illustration, essays, photography, video, articles — that addresses hierarchies inside and outside of academia. We believe knowledge flows freely when different forms of inquiry meet in dialogue.",
+    "subThemesLabel": "Sub-Themes & Exploration",
+    "subThemes": [
+      "The Panopticon — towers of surveillance in our daily lives.",
+      "The Tower of Babel — the human desire towards reaching the ‘divine’.",
+      "The Berlin TV tower and ‘height’ as a historical expression of progress.",
+      "Anti-intellectualism — how do we address the diminishing trust in academia?",
+      "Physical framework of the tower as an enclosed/defensive structure.",
+      "Challenging hierarchies of power in the everyday."
+    ],
+    "formatsLabel": "Accepted Formats",
+    "formats": {
+      "textLabel": "Text",
+      "textDesc": "Essays, Poetry, Articles (Markdown/Doc)",
+      "visualLabel": "Visual",
+      "visualDesc": "Illustration, Photography (300 DPI)",
+      "dynamicLabel": "Dynamic",
+      "dynamicDesc": "Audio, Video, New Media (Up to 20m)",
+      "lengthLabel": "Length",
+      "lengthDesc": "Recommended 1500–2500 words"
+    },
+    "workflowLabel": "The Workflow",
+    "workflow": [
+      {
+        "title": "The Pitch",
+        "desc": "Briefly overview your intention, research background, and medium. We review all pitches on a rolling basis."
+      },
+      {
+        "title": "The Draft",
+        "desc": "Submit a complete first version by the specified deadline. Our editorial team provides initial feedback."
+      },
+      {
+        "title": "Refinement",
+        "desc": "We work collaboratively on suggested edits and technical formatting before the final publication date."
+      }
+    ],
+    "deadlinesLabel": "Critical Deadlines",
+    "timeline": [
+      { "label": "Pitch Deadline",            "date": "April 12, 2026" },
+      { "label": "Submissions (First Drafts)", "date": "May 7, 2026"   },
+      { "label": "Suggested Edits",            "date": "June 1, 2026"  },
+      { "label": "Date of Publication",        "date": "June 21, 2026" }
+    ],
+    "submitButton": "Submit Proposal",
+    "submitSubtitle": "Secure Google Form Gateway"
+  },
+
+  "explore": {
+    "filtersButton": "Filters",
+    "randomizeButton": "Randomize",
+    "searchLabel": "Search:",
+    "categories": {
+      "year":   { "label": "Year",   "options": ["2024", "2025", "2026"] },
+      "issue":  { "label": "Issue",  "options": ["Issue 01", "Issue 02", "Issue 03"] },
+      "medium": { "label": "Medium", "options": ["Painting", "Photography", "Textile", "Digital Art", "Mixed Media", "Illustration", "Typography", "Resin Art", "Digital Illustration", "Charcoal on Paper", "Gouache", "Linocut Print"] },
+      "theme":  { "label": "Tag",    "options": ["Urban", "Nature", "Sociology", "Cosmology", "Abstract", "Surrealism", "Mythology", "History", "Fluidity", "Botanical", "Human Condition", "Hierarchy", "Cinema"] }
+    }
+  },
+
+  "exploreDetail": {
+    "backLink": "Back to Explore",
+    "artistLabel": "Artist",
+    "themeLabel": "Theme",
+    "formatLabel": "Format",
+    "exhibitionLabel": "Exhibition",
+    "exhibitionValue": "Sassafras #{issue}",
+    "refLabel": "Ref: SAS-2026-{id}",
+    "archiveLabel": "{year} — Digital Archive",
+    "inquireButton": "Inquire",
+    "shareButton": "Share Work",
+    "aboutWorkLabel": "About the Work",
+    "descriptionFallback": "This piece is part of the inaugural Sassafras digital collection, exploring themes of growth, struggle, and the organic intersections between digital and physical forms.",
+    "descriptionBody": "Sassafras seeks to bridge the gap between traditional research and experimental visual practice. In this particular work, the artist navigates the complexities of {theme}, utilizing {medium} as a vessel for radical experimentation.",
+    "descriptionCoda": "The work remains a living part of the Sassafras archive, subject to re-contextualization as new issues and themes emerge. It stands as a testament to the initiative’s commitment to open-access knowledge and fluid scholarly engagement.",
+    "relatedWorksLabel": "More from {theme}"
+  },
+
+  "article": {
+    "notFoundTitle": "Not Found",
+    "backToCurrentIssue": "ISSUE {number}: {title}",
+    "backToAllIssues": "ALL ISSUES",
+    "previousLabel": "PREVIOUS",
+    "nextLabel": "NEXT",
+    "backToIssue": "BACK TO ISSUE {number}"
+  },
+
+  "about": {
+    "description": "We are a group of students and recent graduates seeking to reimagine academic discourse and publication. We are critical of the exclusionary parameters within which ‘legitimate’ academic knowledge is produced and disseminated since they are often inaccessible to the cultures, stories, and people that are being researched. As such, Sassafras aims to bridge the gap between research, visual arts, oral histories, and labour and present academic thought outside of paywalls, expensive monographs, and gated lecture halls. We will do so by piloting a series of publications and projects that unite interdisciplinary forms of research and meaning-making, are accessible, and give room for radical experimentation of form. This means placing the essay alongside the performance, the illustration, the home video, the recipe, and the craft. By doing so, Sassafras hopes to imagine new ways of scholarly engagement that enable knowledges to speak to each other in more fluid ways.",
+    "teamHeading": "Our Team",
+    "photoPlaceholder": "Photo coming soon",
+    "bioPlaceholder": "Bio coming soon"
+  },
+
+  "whySassafras": {
+    "paragraph1": "Sassafras is the name of a plant native to North America. It produces three differently shaped leaves on a stem — a mitten shape, a goose foot, and an ordinary ovate form. It has a distinctive taste and smell (a bit like citrus) and produces deep purple berry stems late summer, and tiny yellow flowers in the spring. The origins of its name are somewhat debated, however it may be derived from Sasaunckpamuck (as it was called by the Nipmuck), while others say it has Spanish and Latin origins in the word ‘saxifrage’, which means ‘stone breaker’.",
+    "logoAlt": "Sassafras",
+    "paragraph2": "Its leaves, bark, roots, and oils were often ground up and used in cooking or as medicinal cures by indigenous peoples across North America. During the colonial period in the early 1600s, Europe became fascinated by the plant and saw it as a panacea — having the ability to ‘purify’ blood, heal syphilis, rheumatism, french pox, etc. It became the second largest extracted resource from North American colonies, second only to Tobacco.",
+    "paragraph3": "By the 1960s some studies showed that Safrole (an oil that is present in sassafras stems and roots) may be carcinogenic, and it was quickly banned from commercial use and sale. The study has since been called into question, and many still use parts of the tree in local recipes, teas, and notably gumbo, in which ground Sassafras leaves are a key thickening ingredient.",
+    "paragraph4": "What makes Sassafras both interesting and unusual is its general unknowability alongside its massive influence. Its iterations include key roles in various foods, medicines, magic cures, poison, and illegality (for the sale of its roots). This offers a character that encompasses the many aspects of movement, and what it means to exist through space and time as a constantly changing thing — that is, where your meaning becomes contingent upon your context. This is true for many things of course, but the Sassafras really embodies this state of ambiguity, and is therefore resonant in histories of social politics and migration."
+  },
+
+  "keepInTouch": {
+    "meta": {
+      "title": "Keep in Touch | Sassafras",
+      "description": "Get in touch with the Sassafras team and support our mission."
+    },
+    "tagline": "Sassafras is a space for dialogue, experimentation, and critical engagement. Reach out to collaborate, contribute, or support our mission.",
+    "inquiriesLabel": "Inquiries",
+    "emailLabel": "Email",
+    "instagramLabel": "Instagram",
+    "contributionsLabel": "Contributions",
+    "contributionsBody": "Interested in submitting work or collaborating? We welcome inquiries from researchers, artists, and experimenters.",
+    "submissionGuidelines": "Submission Guidelines",
+    "supportLabel": "Support Sassafras",
+    "supportBody": "Sassafras is an independent, volunteer-led initiative. We believe in open access and radical experimentation of form.",
+    "supportMonetary": "Support Monetarily",
+    "joinCollective": "Join the Collective",
+    "supportCta": "All contributions directly fund the production and distribution of radical academic experimentation."
+  },
+
+  "contactForm": {
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "your@email.com",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "Select a topic",
+    "subjectOptions": {
+      "submission": "Submission inquiry",
+      "collaboration": "Collaboration",
+      "press": "Press & media",
+      "general": "General question"
+    },
+    "messageLabel": "Message",
+    "messagePlaceholder": "Tell us what you are thinking about...",
+    "sending": "Sending...",
+    "sendButton": "Send message",
+    "successHeading": "Thank you for reaching out.",
+    "successBody": "We have received your message and will respond as soon as we can."
+  },
+
+  "newsletter": {
+    "emailLabel": "EMAIL ADDRESS",
+    "emailPlaceholder": "your@email.com",
+    "subscribeButton": "SUBSCRIBE",
+    "disclaimer": "No spam. Unsubscribe any time.",
+    "successHeading": "You’re on the list.",
+    "successBody": "We’ll be in touch when the next issue drops."
+  },
+
+  "bookCover": {
+    "brandLabel": "THE SASSAFRAS INITIATIVE",
+    "issueLabel": "Issue {number}",
+    "openButton": "OPEN ISSUE"
+  },
+
+  "articleBody": {
+    "playAudio": "Play audio",
+    "pauseAudio": "Pause audio",
+    "fieldRecording": "Field recording with narration",
+    "accompanyingText": "Accompanying text",
+    "playVideo": "Play video",
+    "videoEssay": "Video essay",
+    "directorsNote": "Director’s note",
+    "selectedPhotographs": "Selected photographs from the series"
+  },
+
+  "backToTop": "back to top"
+}
