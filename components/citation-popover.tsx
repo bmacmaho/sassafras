@@ -28,6 +28,13 @@ export function CitationLayer({ children }: { children: ReactNode }) {
   )
 }
 
+/** Exposes the nearest CitationLayer's escape-hatch div (or null outside one)
+ * so other reader-page overlays — not just CitationPopover — can portal
+ * content that needs to render above/beyond the page's own clipped bounds. */
+export function useCitationLayer() {
+  return useContext(CitationLayerContext)
+}
+
 interface CitationPopoverProps {
   /** Optional cited word or phrase rendered alongside the circular trigger. */
   children?: ReactNode

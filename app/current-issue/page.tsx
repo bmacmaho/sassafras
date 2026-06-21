@@ -10,7 +10,7 @@ import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-co
 import { getPageColor } from "@/lib/page-colors"
 import { contributorsData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
 import { ScrollableBio } from "@/components/scrollable-bio"
-import { CitationLayer, CitationPopover } from "@/components/citation-popover"
+import { CitationLayer, CitationPopover, useCitationLayer } from "@/components/citation-popover"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -263,6 +263,151 @@ function BellsButton() {
           style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }}
         />
       </button>
+    </>
+  )
+}
+
+// Assets for page 26's click-to-expand "Clause 22" prop (see LawElement
+// below) — kept as a flat list, separate from PAGE_LAYERS, so the preload
+// effect can warm them too even though they're not unconditionally rendered.
+const LAW_ELEMENT_CLOSED_LAYERS = [
+  "/the_tower_assets/25-26/26/law-element/closed-1.PNG",
+  "/the_tower_assets/25-26/26/law-element/closed-2.PNG",
+  "/the_tower_assets/25-26/26/law-element/closed-2.1.PNG",
+  "/the_tower_assets/25-26/26/law-element/closed-2.2.PNG",
+]
+const LAW_ELEMENT_OPEN_IMAGE = "/the_tower_assets/25-26/26/law-element/open.PNG"
+
+// Printed pages with interactive art that lives outside PAGE_LAYERS (because
+// it's conditionally swapped by state, not always-on) but still needs to be
+// covered by the rolling preload window below.
+const EXTRA_PAGE_ASSETS: Record<number, string[]> = {
+  26: [...LAW_ELEMENT_CLOSED_LAYERS, LAW_ELEMENT_OPEN_IMAGE],
+}
+
+// Click-to-expand "Clause 22" prop on page 26. Closed state is a thin banner
+// (four stacked layers, same full-spread canvas convention as buildLayeredPage's
+// own layers — its 2200x1548 native size is just a higher-DPI export of the
+// same two-page area, so stretching it to 200%/100% lines it up the same way).
+// Clicking it swaps in open.PNG, a separate cropped asset showing the full
+// clause text; clicking again closes it.
+//
+// The open card's top has to line up with the closed banner's top, but it's
+// taller than the room left below that point on the page — and the page's
+// own wrapper clips anything past its edges (that's how every other layer
+// gets cropped to its half of a full-spread image). So instead of rendering
+// the open card as a normal child, it's portaled into the same CitationLayer
+// escape hatch CitationPopover uses, positioned from the hotspot's *actual*
+// on-screen rect — which also means it tracks the FlipBook's current zoom
+// scale automatically instead of needing its own scale math.
+function LawElement({ side }: { side: "left" | "right" }) {
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const layer = useCitationLayer()
+  const [cardRect, setCardRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null)
+
+  const sx = 2200 / 840
+  const sy = 1548 / 590.8
+  const hotspot = { left: (1516 - 1100) / sx, top: 1172 / sy, width: (2124 - 1516) / sx, height: (1212 - 1172) / sy }
+  // open.PNG's own height/width ratio, preserved so pinning the card's width
+  // to the closed banner's content width (== hotspot.width) doesn't stretch it.
+  const openAspect = 903 / 976
+
+  useEffect(() => {
+    if (!open) return
+    const updateRect = () => {
+      const trigger = triggerRef.current
+      if (!trigger) return
+      const rect = trigger.getBoundingClientRect()
+      // The card's width is pinned to the hotspot's, so its actual rendered
+      // size already accounts for the FlipBook's current zoom scale.
+      const width = rect.width
+      const height = width * openAspect
+      const originTop = layer?.getBoundingClientRect().top ?? 0
+      const originLeft = layer?.getBoundingClientRect().left ?? 0
+      setCardRect({ top: rect.top - originTop, left: rect.right - originLeft - width, width, height })
+    }
+    updateRect()
+    window.addEventListener("resize", updateRect)
+    return () => window.removeEventListener("resize", updateRect)
+  }, [open, layer, hotspot.width, openAspect])
+
+  const card = open && cardRect && (
+    <button
+      type="button"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation()
+        setOpen(false)
+      }}
+      aria-label="Close Clause 22"
+      className={layer ? "absolute" : "fixed"}
+      style={{
+        top: cardRect.top,
+        left: cardRect.left,
+        width: cardRect.width,
+        height: cardRect.height,
+        padding: 0,
+        border: "none",
+        background: "none",
+        cursor: "pointer",
+        zIndex: 300,
+      }}
+    >
+      <img
+        src={LAW_ELEMENT_OPEN_IMAGE}
+        alt="Clause 22 of Trinidad and Tobago's Summary Offences Act, in full"
+        draggable={false}
+        style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }}
+      />
+    </button>
+  )
+
+  return (
+    <>
+      {!open &&
+        LAW_ELEMENT_CLOSED_LAYERS.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            style={{
+              position: "absolute",
+              top: 0,
+              [side]: 0,
+              width: "200%",
+              maxWidth: "none",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 40 + i,
+              pointerEvents: "none",
+            }}
+          />
+        ))}
+      <button
+        ref={triggerRef}
+        type="button"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation()
+          setOpen((o) => !o)
+        }}
+        aria-label="Read Clause 22"
+        style={{
+          position: "absolute",
+          left: hotspot.left,
+          top: hotspot.top,
+          width: hotspot.width,
+          height: hotspot.height,
+          padding: 0,
+          border: "none",
+          background: "none",
+          cursor: open ? "default" : "pointer",
+          pointerEvents: open ? "none" : "auto",
+          zIndex: 50,
+        }}
+      />
+      {card && createPortal(card, layer ?? document.body)}
     </>
   )
 }
@@ -597,7 +742,7 @@ function buildPages(
   pages[11] = { ...pages[11], back: buildLayeredPage(23, "left") }
   pages[12] = { ...pages[12], front: buildLayeredPage(24, "right") }
   pages[12] = { ...pages[12], back: buildLayeredPage(25, "left") }
-  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right") }
+  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right", <LawElement side="right" />) }
   pages[13] = { ...pages[13], back: buildLayeredPage(27, "left") }
   pages[14] = { ...pages[14], front: buildLayeredPage(28, "right") }
   pages[14] = { ...pages[14], back: buildLayeredPage(29, "left") }
@@ -717,6 +862,7 @@ export default function CurrentIssuePage() {
     for (let sheet = lo; sheet <= hi; sheet++) {
       for (const printedPage of [sheet * 2, sheet * 2 + 1]) {
         for (const url of PAGE_LAYERS[printedPage] ?? []) wanted.add(url)
+        for (const url of EXTRA_PAGE_ASSETS[printedPage] ?? []) wanted.add(url)
       }
     }
 
