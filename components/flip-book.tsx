@@ -5,6 +5,8 @@ import React, {
   useRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
+  forwardRef,
   type ReactNode,
   type CSSProperties,
 } from "react"
@@ -22,6 +24,12 @@ interface FlipBookProps {
   /** Fires whenever the settled (non-mid-flip) sheet index changes, so callers
    * can do things like pause/play video on pages that aren't currently visible. */
   onPageChange?: (page: number) => void
+}
+
+/** Imperative handle so callers (e.g. a table-of-contents link) can jump straight
+ * to a printed page number without animating through every sheet in between. */
+export interface FlipBookHandle {
+  goToPage: (pageNumber: number) => void
 }
 
 /* ───────────────── spring physics helper ───────────────── */
@@ -85,7 +93,10 @@ function useSpring(
 }
 
 /* ──────────────────────────── component ──────────────────────────── */
-export function FlipBook({ pages, width = 420, height = 600, onPageChange }: FlipBookProps) {
+export const FlipBook = forwardRef<FlipBookHandle, FlipBookProps>(function FlipBook(
+  { pages, width = 420, height = 600, onPageChange },
+  ref
+) {
   /* ── state ─────────────────────────────────────────────────── */
   const [currentPage, setCurrentPage] = useState(-1) // -1 = cover closed
 
@@ -182,6 +193,23 @@ export function FlipBook({ pages, width = 420, height = 600, onPageChange }: Fli
     setCurrentPage(-1)
     setFlippingPage(null)
   }, [])
+
+  /* ── jump straight to a printed page number (e.g. from a table of
+   * contents), bypassing the one-sheet-at-a-time flip animation. Sheet i
+   * holds printed pages 2i (front) and 2i+1 (back), so the sheet that needs
+   * to be "settled open" to bring a given page into view is derived from
+   * whether that page number is the front or back of its sheet. */
+  const goToPage = useCallback((pageNumber: number) => {
+    const targetSheet =
+      pageNumber % 2 === 1 ? (pageNumber - 1) / 2 : pageNumber / 2 - 1
+    setFlippingPage(null)
+    setDragAngle(null)
+    setIsDragging(false)
+    setIsOpen(true)
+    setCurrentPage(Math.max(0, targetSheet))
+  }, [])
+
+  useImperativeHandle(ref, () => ({ goToPage }), [goToPage])
 
   /* ── page navigation ────────────────────────────────────────── */
   const goNextPage = useCallback(() => {
@@ -416,10 +444,24 @@ export function FlipBook({ pages, width = 420, height = 600, onPageChange }: Fli
           <div
             style={{
               ...faceStyle(true),
-              background: "linear-gradient(135deg, #1a1614 0%, #2a2420 50%, #1a1614 100%)",
+              backgroundColor: "#1a1614",
               borderRight: "1px solid rgba(255,255,255,0.06)",
+              position: "relative",
+              overflow: "hidden",
             }}
-          />
+          >
+            <img
+              src="/the_tower_assets/cover/back.JPG"
+              alt="The Tower — Issue 1, Sassafras (back cover)"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </div>
         </div>
 
         {/* ── Interior pages ──────────────────────────────────── */}
@@ -525,7 +567,7 @@ export function FlipBook({ pages, width = 420, height = 600, onPageChange }: Fli
               }}
             >
               <img
-                src="/the_tower_assets/cover/IMG_7167.PNG"
+                src="/the_tower_assets/cover/front.JPG"
                 alt="The Tower — Issue 1, Sassafras"
                 style={{
                   position: "absolute",
@@ -548,23 +590,6 @@ export function FlipBook({ pages, width = 420, height = 600, onPageChange }: Fli
                 }}
               />
 
-              {/* Click hint when closed */}
-              {!isOpen && (
-                <p
-                  style={{
-                    position: "absolute",
-                    bottom: 24,
-                    fontSize: 10,
-                    letterSpacing: "0.2em",
-                    opacity: 0.3,
-                    color: "#e8ddd0",
-                    fontFamily: "var(--font-cardo), Georgia, serif",
-                    animation: "pulse-gentle 2s ease-in-out infinite",
-                  }}
-                >
-                  CLICK TO OPEN
-                </p>
-              )}
             </div>
           </div>
 
@@ -634,4 +659,4 @@ export function FlipBook({ pages, width = 420, height = 600, onPageChange }: Fli
       </div>{/* end bookRef */}
     </div>
   )
-}
+})

@@ -62,6 +62,11 @@ const alteHaasGrotesk = localFont({
   variable: "--font-alte-haas",
 })
 
+const ebGaramond12 = localFont({
+  src: "../public/fonts/eb-garamond.12-regular.ttf",
+  variable: "--font-eb-garamond-12",
+})
+
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { PageFrame } from "@/components/page-frame"
@@ -107,7 +112,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable} ${charter.variable} ${ebGaramond.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable} ${charter.variable} ${ebGaramond.variable} ${ebGaramond12.variable}`}>
       <body className="font-sans antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
         <HeaderExtrasProvider>
         <PageFrame>

@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { artworks as initialArtworks } from "@/lib/mock-data"
-import { Artwork, ArtworkTag } from "@/lib/types"
+import { Artwork, ArtworkTag, isVideoSrc } from "@/lib/types"
 
 
 function ExploreContent() {
@@ -150,9 +150,9 @@ function ExploreContent() {
           const validWidths = [200, 300].filter(w => w <= cellWidth)
           const randomWidth = validWidths.length > 0
             ? validWidths[Math.floor(Math.random() * validWidths.length)]
-            : cellWidth
+            : Math.max(200, cellWidth)
           const naturalH = randomWidth / artwork.aspectRatio
-          const randomHeight = Math.max(100, Math.floor(naturalH / 100) * 100)
+          const randomHeight = Math.max(200, Math.floor(naturalH / 100) * 100)
 
           // Place in shortest column; break ties randomly
           const minH = Math.min(...colHeights)
@@ -276,7 +276,7 @@ function ExploreContent() {
         <div className="relative leading-none">
           <button
             onClick={() => showFilters ? closeFilters() : setShowFilters(true)}
-            className="font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-green-500"
+            className="font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-[#6F8C49]"
           >
             Filters
           </button>
@@ -330,7 +330,7 @@ function ExploreContent() {
         <button
           onClick={handleRandomize}
           disabled={isRandomizing}
-          className={`font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-left ${isRandomizing ? 'opacity-30' : 'text-red-500'}`}
+          className={`font-title text-2xl font-medium tracking-tight leading-none transition-all duration-300 text-left ${isRandomizing ? 'opacity-30' : 'text-[#FF270D]'}`}
         >
           Randomize
         </button>
@@ -352,14 +352,14 @@ function ExploreContent() {
           <div className="absolute top-6 left-4 z-[60] flex gap-2 pointer-events-auto">
             <button
               onClick={() => showFilters ? closeFilters() : setShowFilters(true)}
-              className="px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-green-500 hover:border-black/40 transition-all"
+              className="px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-[#6F8C49] hover:border-black/40 transition-all"
             >
               Filters
             </button>
             <button
               onClick={handleRandomize}
               disabled={isRandomizing}
-              className={`px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-red-500 hover:border-black/40 transition-all ${isRandomizing ? 'opacity-30' : ''}`}
+              className={`px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-[#FF270D] hover:border-black/40 transition-all ${isRandomizing ? 'opacity-30' : ''}`}
             >
               Randomize
             </button>
@@ -494,16 +494,27 @@ function ExploreContent() {
                 )
               })()}
               <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
-                <Image
-                  src={artwork.image}
-                  alt={artwork.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="transition-transform duration-1000 group-hover:scale-105"
-                  sizes="(max-width: 768px) 300px, 500px"
-                  priority={artwork.id <= 4}
-                  unoptimized
-                />
+                {isVideoSrc(artwork.image) ? (
+                  <video
+                    src={artwork.image}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                ) : (
+                  <Image
+                    src={artwork.image}
+                    alt={artwork.title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="transition-transform duration-1000 group-hover:scale-105"
+                    sizes="(max-width: 768px) 300px, 500px"
+                    priority={artwork.id <= 4}
+                    unoptimized
+                  />
+                )}
               </div>
             </Link>
           ))}

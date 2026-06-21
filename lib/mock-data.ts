@@ -253,7 +253,7 @@ export const artworks: Artwork[] = [
     slug: "but-look-your-grace-those-are-not-giants-but-windmills",
     title: "But Look, Your Grace, Those Are Not Giants But Windmills",
     author: "Javiera Bilbao",
-    image: "/explore_jellyfish_new.jpg",
+    image: "/the_tower_assets/javi/javi-video.mp4",
     medium: "Text + Illustration",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Illustration, ArtworkTag.Personal, ArtworkTag.ShortNarration, ArtworkTag.Childhood, ArtworkTag.Gender, ArtworkTag.Memory],
@@ -269,7 +269,7 @@ The tower was now the night, or maybe it was not the night itself. The night was
 But those weren't the only towers. Some of them still haunt me, filling me with fear. Inhabited by mad, greedy, and evil men who gaze upon me. The future looks uncertain there, surrounded by ghosts of anxiety, fear, and emptiness. Other towers are made up of countless offices, bureaucrats, and meaningless documents and seem impossible to conquer, made up of endless absurd regulations that kill spirits.
 
 But are they really giant towers, or are they windmills trying to scare us?`,
-    aspectRatio: 673 / 1024,
+    aspectRatio: 851 / 590.8,
     pos: { x: 50, y: 5, width: 140, height: 0 },
     float: { delay: "0s", dur: "8s" }
   },
@@ -277,8 +277,8 @@ But are they really giant towers, or are they windmills trying to scare us?`,
     id: 2,
     slug: "toward-dizzying-height",
     title: "Toward Dizzying Height",
-    author: "Anna Hijmans",
-    image: "/explore_charcoal_new.jpg",
+    author: "Anna Phaidra",
+    image: "/explore-page-images/toward-dizzying-height.png",
     medium: "Essay",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.Hierarchies, ArtworkTag.History, ArtworkTag.Religion, ArtworkTag.Order, ArtworkTag.Morality],
@@ -291,7 +291,7 @@ I recently came across the notion of 'iliggocene' - the age of 'dizziness' propo
 
 This writing frames itself around the question of height, and how height behaves as a critical tool in the ways we orient our social world. In his book Animal Fables after Darwin, Chris Danta describes how western humanist traditions have commonly envisioned their relationship to the world through vertical metaphors, as 'higher animals' whose moral and intellectual plane exists 'above' that of other creatures. Some of this is quite literal in terms of physical orientation -- animals walk on all fours and angle themselves towards the earth, whereas humans walk 'erect' and are physically oriented skywards. Plato was an early proponent of this idea, describing the posture of 'man' as indicative of 'his' rational physicality, where the brain/head (the seat of knowledge) is positioned at the 'acropolis' of the body, towering over the more lowly and 'bestial' organs and thereby less driven by bodily instinct than other creatures. We quickly see then that this disposition upwards is not just a physical distinction between 'man' and 'animal', but it is explicitly linked to moral predetermination in Western theological traditions. Ovid, in his first book 'Metamorphoses', describes 'the Creator' as having designed man to stand erect so that he may look towards the heavens and stars. Much the same is said by John Donne (1624), who describes humans as "naturally built and disposed to the contemplation of heaven". Danta highlights this further by bringing our attention to the story of the Babylonian King Nebuchadnezzar, who is punished by God for his boasting and made to live 'as an animal', walking on all fours and eating grass for seven years. It was only when he was able once more to turn his gaze upwards that his sanity was restored, and he could again revere and glorify God 'Most High'. Indeed, the consistent reference of height and posture to the divine sustains the idea that uprightness, straightness, and the vertical is itself the physical embodiment of ethical capacity. Not only is 'man' vertical, but there is the idea that man must strive for the vertical, that there is a social imperative to be the 'upright' citizen, to be 'righteous', and to embody a moral 'rectitude'.
 
-This idea is further embodied in the historical drawing of social, natural, and moral hierarchies across intellectual traditions. Among the most famous examples of this is the work by Aristotle in his History of Animals, where he presents the notion of ordering all animals according to a grand scale or 'ladder' in terms of "complexity, perfection, and value". Inorganic and 'less complex' organisms exist at the bottom of this scale, above which we find plants, then 'lower animals' such as invertebrates, until we begin to reach 'higher' animals, with humans at the top of the animal scale (after which we enter the realm of gods). What makes this scale so consequential, as Lori Marino notes, is that it not only determines the interrelations of living matter, but their worth and proximity to 'perfection'. Much like the erect posture of man, value is approximated to height or being at the 'top', which in turn measures one's capacity for 'goodness'. This is made even more acute by the fact that this system is one that rejects mobility, as Aristotle believed that every being's place on this 'Scala Naturae' (or natural scale), was materially and eternally fixed by universal forces. Perfection could therefore be framed as a single universal and upwards truth, while remaining ultimately unattainable by earthly forms.
+This idea is further embodied in the historical drawing of social, natural, and moral hierarchies across intellectual traditions. Among the most famous examples of this is the work by Aristotle in his History of Animals, where he presents the notion of ordering all animals according to a grand scale or 'ladder' in terms of "complexity, perfection, and value". Inorganic and 'less complex' organisms exist at the bottom of this scale, above which we find plants, then 'lower animals' such as invertebrates, until we begin to reach 'higher' animals, with humans at the top of the animal scale (after which we enter the realm of gods). What makes this scale so consequential, as Lori Marino notes, is that it not only determines the interrelations of living matter, but also their worth and proximity to 'perfection'. Much like the erect posture of man, value is approximated to height or being at the 'top', which in turn measures one's capacity for 'goodness'. This is made even more acute by the fact that this system is one that rejects mobility, as Aristotle believed that every being's place on this 'Scala Naturae' (or natural scale), was materially and eternally fixed by universal forces. Perfection could therefore be framed as a single universal and upwards truth, while remaining ultimately unattainable by earthly forms.
 
 This notion of the natural ordering of life has continued to emerge in various traditions and organisational methods across time. Take for example the Rhetorica Christiana written and illustrated by Didacus Valades in 1579. Prominently featured is 'The Great Chain of Being', a copperplate engraving which depicts at the very top a representation of God surrounded by a halo of light and angels, with what appears to be a young man (perhaps the figure of Jesus) on his lap. From the hand of God runs a chain, which passes then downwards over the page through layers of earthly beings. The first sees a collection of humans, then birds, then aquatic life, then mammals, then plants, minerals, and finally at the bottom of the page, we see Hell, filled with imagery of flames and torture. Once more there is a ladder of being, but this time the consequences of 'lowness' become dire. Here we find a blending of Aristotle's ordering of nature with the literal expression of perfection in the God 'on high', and lowness as being associated with true evil. Interestingly humans, like in the work of Aristotle, occupy the top of the chain just before the divine, privileged by their proximity to perfection but unable to actually attain it. Different from the Scala Naturae, however, is the presence of Hell in the image, which, given its Christian context, suggests that one's place on the scale (as human) is more mobile than previously suggested, and that perfection or punishment awaits according to the virtues of one's soul.
 
@@ -299,7 +299,7 @@ To move downwards on the ladder would therefore be disastrous. If we come back t
 
 The reason I want to emphasise this spatial and physical relation to value is because it remains closely embedded in the ways we measure and describe success, civilisation, progress, and politics still today. I would argue that, while perfection is still treated as an unattainable feature of the 'most high', it continues to haunt the social imagination. From alchemical pursuits towards the philosopher's stone and the perfect immortal body, to Herbert Spencer's idea of Universal Progress, to the techno-optimism of the industrial age and the boom of capitalist neoliberal economies, there is the idea that we, almost inevitably, must continuously progress and strive towards an ever-perfect world.
 
-It's here that I would like to speak to the image of the tower, both in its physical manifestation as well as its metaphorical implication. Towers often take a symbolic form for a city or people, such as in the case of the Berlin TV tower, which adorns much of the tourist merchandise on the Unter Den Linden. What is interesting about the TV tower in particular is that it was considered a major Soviet victory during the Cold War, not least for its height, as it remains the tallest building in Germany to this day. The Empire State Building is another example, which at the time of its making was the tallest building in the world, and quickly became an icon for the city of New York. We can also think of the Eiffel Tower, the Burj Khalifa in Dubai, etc. The height of the tower, and the city skyline marked by skyscrapers, quickly came and continue to act as emblems for the modern world.
+It's here that I would like to speak to the image of the tower, both in its physical manifestation as well as its metaphorical implication. Towers often take a symbolic form for a city or people, such as in the case of the Berlin TV tower, which adorns much of the tourist merchandise around Unter Den Linden. What is interesting about the TV tower in particular is that it was considered a major Soviet victory during the Cold War, not least for its height, as it remains the tallest building in Germany to this day. The Empire State Building is another example, which at the time of its making was the tallest building in the world, and quickly became an icon for the city of New York. We can also think of the Eiffel Tower, the Burj Khalifa in Dubai, etc. The height of the tower, and the city skyline marked by skyscrapers, quickly came and continue to act as emblems for the modern world.
 
 Now another, much older example of the social significance of the tower and its height lies in the biblical story of Babel in Genesis 11, which sees the first people of Babel begin building a city and a tower of great height. Their progress drives God to intervene and scatter the people over the earth and 'confuse their language', so as to prevent the tower from ever reaching the heavens. Now the examples of modern towers and ancient stories are worlds apart in many ways, but are linked by the notion that a society's capability for progress and potential for 'perfection' can be reflected in the height of the structures they make. In the case of Babel and its people, their shared push towards the heavens was indicative of their social cohesion and potential, so that when they crossed some forbidden threshold between humanity and the realm of perfection, the shared language and location of humanity had to be revoked. The building of the TV tower symbolizes something akin, where the ability to build at such a height becomes indicative of the social/moral/physical prowess of said society. Thomas van Leeuwen, in his book The Skyward Trend of Thought, speaks of skywards architecture and the skyscraper as the heir to Babel, a "fulfillment of the Babylonian promise; the realization of both its technical enigma and its utopian-cosmopolitan objective." There is a celebration of height in a way that is almost 'primal' as J.J. Korom puts it, where the assertion of height becomes synonymous with strength and agency.
 
@@ -331,14 +331,14 @@ The imperative to move upwards in search of progress, immortality, perfection, o
     slug: "bells-of-shandon",
     title: "Bells of Shandon",
     author: "Barra MacMahon",
-    image: "/explore_botanical_new.jpg",
+    image: "/explore-page-images/bells-of-shandon.jpg",
     medium: "Audio",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Audio, ArtworkTag.Personal, ArtworkTag.Ireland, ArtworkTag.BritishColonization, ArtworkTag.Religion, ArtworkTag.Power, ArtworkTag.History, ArtworkTag.Hegemony, ArtworkTag.Memory],
     year: "2026",
     issue: "Issue 01",
     description: "An audio work exploring bell towers as summoning devices and as sonic symbols of hegemonic power in modern Irish history.",
-    body: `My contribution to the Sassafras Issue 'The Tower' examines the role of church bells as they intertwine with Ireland's history of Catholicism, British colonial rule, and communal acts of listening. The initial inspiration for the piece is derived from the Angelus, a Catholic call to prayer which is televised daily at midday and 6pm on Ireland's RTÉ1 network. It is characterised by the sound of tolling bells (lasting 1 minute), upon which the listener is met with various (and somewhat random) scenes of calm—someone mowing the lawn for example, or a figure placing down a Christmas card, the view of ice as it melts from a branch, etc.
+    body: `The musical piece you find here examines the role of church bells as they intertwine with Ireland's history of Catholicism, British colonial rule, and communal acts of listening. The initial inspiration for the piece is derived from the Angelus, a Catholic call to prayer which is televised daily at midday and 6pm on Ireland's RTÉ1 network. It is characterised by the sound of tolling bells (lasting 1 minute), upon which the listener is met with various (and somewhat random) scenes of calm—someone mowing the lawn for example, or a figure placing down a Christmas card, the view of ice as it melts from a branch, etc.
 
 This prayer plays a distinct role in childhood memories, and closely symbolises the continued prominence of the Catholic church in Ireland. It is at once a symbol of Ireland's resistance against British Colonial powers (there being numerous links between colonial rule and the persecution of Catholic regions), while simultaneously existing as a specter of generational and institutionalised abuse.
 
@@ -367,7 +367,7 @@ This piece thereby strings together threads of sound and pieces of towers, tower
     slug: "that-house-scented-with-guava",
     title: "'That House Scented with Guava': Reflections on Fruit Culture and the Law in Tobago",
     author: "Gabrielle Francois",
-    image: "/explore_flower_new.jpg",
+    image: "/explore-page-images/that-house-scented-with-guava.mov",
     medium: "Text + Video",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.Personal, ArtworkTag.Video, ArtworkTag.Caribbean, ArtworkTag.TrinidadAndTobagoLaw, ArtworkTag.Community, ArtworkTag.Culture, ArtworkTag.Nature, ArtworkTag.Ecology],
@@ -406,7 +406,7 @@ However, Tobagonians are resourceful with liminality. Many landowners in Tobago 
     slug: "exploring-gendered-emotions-and-norms",
     title: "Exploring Gendered Emotions and Norms Through the Lens of a Tower",
     author: "Anusha Madhumitha",
-    image: "/explore_struggle_new.jpg",
+    image: "/explore-page-images/exploring-gendered-emotions.jpg",
     medium: "Essay",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.Gender, ArtworkTag.Emotions, ArtworkTag.Feminism],
@@ -448,13 +448,112 @@ Feminist scholars and writers and activists have long challenged the myths of ge
     slug: "woman-in-the-concrete-jungle",
     title: "Woman in the Concrete Jungle",
     author: "Kalifa Lovelace",
-    image: "/explore_gardens_new.jpg",
+    image: "/explore-page-images/woman-in-the-concrete-jungle.jpg",
     medium: "Poem",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Poem, ArtworkTag.Gender, ArtworkTag.Feminism, ArtworkTag.Caribbean, ArtworkTag.TrinidadAndTobago],
     year: "2026",
     issue: "Issue 01",
     description: "The tower of patriarchy looms ominously over women at each stage of life; girlhood, womanhood and motherhood. This poem explores how hypersexualisation and violence impacts women at each stage of their existence, and comments on the cyclical nature of it all. It was inspired by the inordinate number of missing women and young girls in Trinidad and Tobago and the excessive reports of violent crimes and murders against women and girls in the country over the last decade.",
+    body: `I
+
+You are a girl,
+clambering through the cascading fibres of cable-
+those electrical vines which belly and wave hello from the skies
+of this concrete jungle.
+There is a laughter bubbling through your smiles,
+like the zest and fizz of a two-dollar soft drink;
+drunk on the joys of your youth,
+seeking only your way home.
+
+Mother's voice rings through your ears and you think,
+"It is not safe".
+So you stop,
+glance around,
+and suddenly feel the weight of a peering predator's gaze,
+behind the grassweeds in the drains from across the street.
+You watch as his cat-like eyes contract,
+trying to peel back the plaid layers of your school skirt-
+searching for a womanhood that is still green and yet to blossom-
+yelling out in an aged, rasping growl
+(filled with a thirst that you've been made to expect
+in this dried out, barren wasteland they say is a paradise)
+and he says to you now, recognising your youth
+
+"Babygirl,
+you know I have a weakness for sweetness."
+
+II
+
+You are a woman,
+holding your friend like a silent prayer
+as she burrows in your arms,
+savaged and forsaken in the street
+seeking a serenity and salvation
+you both fear you may never find.
+You linger under the flickering orange glow of a streetlamp,
+that unnatural firefly daring to disturb the still oblivion of a dark night-
+casting caged shadows that blink along the contours of your bodies
+in this concrete jungle.
+
+Her cries ring through your ears
+and you think,
+"We are not safe".
+
+So you stop,
+stare at the countless female faces,
+the unwelcomed defacement of the lamppost
+planted in the street for all to see-
+faces flashing in and out of orange hues,
+lighting up for microseconds
+before they slip and slide back into the black ocean of the skies
+
+over
+and over
+and over
+
+until they fade with the minute memories of those demanding their justice
+their names swirling in the flurried currents of the night
+seeking only their way home
+
+"Have you seen…her?"
+
+III
+
+You are a mother,
+with smiles dulled by the ghosts of girlhood,
+and you find yourself shrunken
+under the mountains of names that pile up in the pickets
+parading through the droughted streets
+of this concrete jungle.
+
+Their names ring through your ears
+and you think,
+"Still not safe".
+
+So you stop,
+eyes resting on your son
+as he charms a doe-eyed girl twirling her hair in blissful ignorance
+offering herself to his jaws
+hoping he won't bite
+and you watch still as his eyes contract
+cat-like
+along the contours of her body
+while the trees in the square just outside the Hall of Justice
+cast cages along both their shadows on the floor
+and you find yourself hoping she makes it home
+
+safe
+
+feel your heart stop
+scared and skittish as prey as you pray
+and hope
+that you raised him
+different,
+and you can't help but wonder
+whether you've given birth
+to another beast
+in this concrete jungle.`,
     aspectRatio: 1024 / 916,
     pos: { x: 75, y: 70, width: 180, height: 0 },
     float: { delay: "0.3s", dur: "12s" }
@@ -464,7 +563,7 @@ Feminist scholars and writers and activists have long challenged the myths of ge
     slug: "gazes-on-me",
     title: "Gazes On Me",
     author: "Anjana Ramesh",
-    image: "/explore_resin_new.jpg",
+    image: "/explore-page-images/gazes-on-me.jpg",
     medium: "Essay",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.Personal, ArtworkTag.SouthAsia, ArtworkTag.India, ArtworkTag.Surveillance, ArtworkTag.Community, ArtworkTag.Gender, ArtworkTag.Culture],
@@ -481,7 +580,7 @@ So, is it possible to escape the watchful eyes of the uncles and aunties? Sadly,
 
 I have tried to go a bit further, or a lot further by moving away with the hope that the gaze does not follow. But what I failed to fathom was that every culture has its own iteration of the nosy neighbour that I am impervious to. The trope is not limited to South Asian culture; for us, it just serves a larger social function of community cohesion. In some ways, the community aspect of it is heartening compared to the nosiness that I have faced elsewhere away from home. The gazes away from home are often alienating. While the gaze that I try to evade at home is primarily sustained by the power of patriarchy, I am confronted with my otherness through the gazes away from home. This does not mean I have transcended patriarchal control by moving away, but the lens shifts. The watchtower here forces me to check myself to "belong". I correct myself not to be loud, not to be disruptive, to sort the trash perfectly so that I fit into the bill of the "good immigrant". But I still don't belong and never will. The same way I don't belong back home. At least away from home, my misdoings don't get back to my parents.
 
-While I am concerned about the larger systems of surveillance brought forth by the technocratic overloads, I worry more about the policing and surveillance that has been normalised and that I embody myself. Even if I were ever to escape these gazes, will I ever escape my own?`,
+While I am concerned about the larger systems of surveillance brought forth by the technocratic overlords, I worry more about the policing and surveillance that has been normalised and that I embody myself. Even if I were ever to escape these gazes, will I ever escape my own?`,
     aspectRatio: 1024 / 890,
     pos: { x: 35, y: 78, width: 160, height: 0 },
     float: { delay: "2.1s", dur: "6s" }
@@ -489,33 +588,61 @@ While I am concerned about the larger systems of surveillance brought forth by t
   {
     id: 8,
     slug: "commodification-of-intelligence",
-    title: "Commodification of Intelligence (provisional title)",
+    title: "Commodification of Intelligence",
     author: "Malin Menzel",
-    image: "/explore_landscape_new.jpg",
+    image: "/explore-page-images/commodification-of-intelligence.jpg",
     medium: "Essay",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.AI, ArtworkTag.Technology, ArtworkTag.Futurism, ArtworkTag.Hierarchies, ArtworkTag.Class, ArtworkTag.Power, ArtworkTag.Commodification],
     year: "2026",
     issue: "Issue 01",
-    body: `How social media, AI, and the growing tech elite — the tower of tech bros — shape our relation to knowledge and critical thinking.
+    body: `How social media, AI, and the tech elite shape our relation to knowledge and critical thinking.
 
-We all know the idea of the "ivory tower", where the academic, intellectual elite is sitting high up in the tower, theorizing over society, thinking themselves superior, while being detached from not only the majority of people but also from "real life." Leaving aside the extent to which this is accurate, what if a new tower is being constructed? One in which the tech elite sits high up in the chain of decision-making and governance, while the rest of us sit at the bottom, looking up, without any power to move up the tower nor to crumble it? A tower where the people who have knowledge, critical thinking skills, and, most importantly, the ability to engage with the world through theorizing about it, sit at the top while the rest are glued to their phones, disengaged. A tower in which your position is determined based on whether you have the privilege of being able to avoid social media and, even more importantly, to avoid using AI.
+The idea of the "ivory tower" describes a situation in which the academic, intellectual elite sit high up in the tower, theorizing over society, thinking themselves superior, while being detached from not only the majority of people but also from "real life." But what if a new tower is being constructed? One in which the tech elite sits high up in the chain of decision-making and governance, while the rest of us sit at the bottom, looking up, without any power to move up the tower nor to crumble it? A tower where the people who have knowledge, critical thinking skills, and, most importantly, the ability to engage with the world through theorizing about it, sit at the top while the rest are glued to their phones, disengaged. A tower in which your position is determined based on whether you have the privilege of being able to avoid social media and, even more importantly, to avoid using AI.
 
 Polluted environments and the new underclass
 
-In a time of information overload, a post-truth society, social media, increasingly addictive algorithms, and AI, critical thinking skills, as well as the time and capability to engage with social sciences, humanities, and philosophy are likely to become a privilege of the few. In fact, these developments are likely to create a new underclass. In her video essay "the chronically online will be the new underclass," DJ and Youtuber @yagirldjmagic puts forward a theory likening the internet, specifically social media, to a physical place, which has become polluted and unbearable for most. Taking this idea further, she distinguishes six "pollutants", which, just as pollutants in the physical world, create a toxic environment with far-reaching social problems. These pollutants include echo chamber, anxiety, over consumption, cultural extraction, addiction, and rage bait, which not only poison the space, but also exploit something from our daily lives. For example, anxiety exploits our mental health and sense of self, while addiction exploits our time and attention. Content creators are then incentivized to use these pollutants in order to stay relevant in the algorithm and keep users on the platform, as attention is the currency. Consumers often struggle to log off due to these pollutants and several real life circumstances that further keep people on their phones. In fact, I would argue that in today's hyper-capitalistic society, many people are constantly in survival mode, working full-time during unprecedented levels of wealth inequality, a cost of living crisis, the dissolution of the community, and ongoing climate catastrophe, so when they finally come home they are simply exhausted. In this sense, social media becomes a coping mechanism in order to escape reality, relax from work and stimulate themselves without having to physically do anything. Then the above-mentioned pollutants keep them on the platform and engaged, which is very much done intentionally by platform owners, supported by creators to keep people online as long as possible. This competition for our time goes so far that they now compete for our time by even trying to make people sleep less, so they can spend more time on the platform.
-
-Moreover, consumers are being presented with an illusion of being connected to others on the platforms, while at the same time options for real life connections and community are becoming increasingly sparse or unaffordable. DJ Magic argues that real life community spaces are dwindling, people are becoming detached and lonelier, cities are becoming less livable, and many pastime activities are increasingly costly. While her perspective is definitely very focused on the US context, where this is more visible, it seems to be increasing, and traces of this are also found in Europe. These developments are affecting marginalized communities with fewer resources and often living in neighborhoods that offer even fewer spaces and opportunities, making them more vulnerable to the pollutants of the internet. This exacerbates already existing social inequalities and makes privilege the determining factor of who gets to log off.
+In a time of information overload, a post-truth society, social media, increasingly addictive algorithms, and artificial intelligence (AI), critical thinking skills, as well as the time and capability to engage with social sciences, humanities, and philosophy are likely to become a privilege of the few. In fact, these developments are likely to create a new underclass. In her video essay "the chronically online will be the new underclass," DJ and Youtuber @yagirldjmagic puts forward a theory likening the internet, specifically social media, to a physical place, which has become unbearable for most. She distinguishes six "pollutants", which, just as pollutants in the physical world, create a toxic environment with far-reaching social problems. These pollutants include echo chamber, anxiety, over-consumption, cultural extraction, addiction, and rage bait, which not only poison the space, but also exploit something from our daily lives. For example, anxiety exploits our mental health and sense of self, while addiction exploits our time and attention. These pollutants, as well as external conditions shaping our lives, keep people on their phones. In fact, I would argue that in today's hyper-capitalistic society, many people are constantly in survival mode, working full-time during unprecedented levels of wealth inequality, a cost of living crisis, the dissolution of the community, and ongoing climate catastrophe. Thereby, social media becomes a coping mechanism in order to escape reality, relax from work and stimulate oneself without having to physically do anything. Then the above-mentioned pollutants, actively used by creators, keep people on the platform and engaged, which is very much done intentionally by platform owners, as attention is the currency. It is important to note that marginalized communities are often hit harder by certain conditions, such as the cost of living crisis, while at the same time lacking access to alternative spaces to form real life connections or enjoy leisure time, making them more vulnerable to the pollutants of the internet. Thus, already existing social inequalities are exacerbated, and privilege becomes the determining factor of who gets to log off.
 
 AI and its impact on critical thinking
 
-While social media is harmful and has far-reaching social consequences, AI is further intensifying this. AI is increasingly replacing content creators, making content creation easier, faster and cheaper for platforms, intensifying the aforementioned pollutants and making it easier to keep people on the platform.
+While social media is harmful and has far-reaching social consequences, AI is further intensifying this. For one, AI is increasingly making content creation easier, faster and cheaper for platforms, intensifying the aforementioned pollutants and making it easier to keep people glued to their phones. Furthermore, the increasing use of social media and particularly AI are diminishing critical thinking skills and contributing to the post-truth society, in which there is no consensus anymore on what is a fact, while opinions matter more and people are drawn to the truth that they find the most compelling or the most entertaining. AI's best skill is making something sound as if it is the truth, which is literally what LLMs (Large Language Models) are doing.
 
-Apart from social media and AI harming people's mental health and lives, being stuck online also means that people do not have time or energy left to form communities, to organize, and to create political pressure. This is also being intensified by cost of living crises, people losing jobs due to being replaced with AI, all further pushing people into survival mode, seeking dissociation in the online world instead. When people are distracted, exhausted, and lacking alternatives, it makes them more vulnerable to propaganda and stifles resistance, thus not offering any opposition to this downward spiral.
+While DJ Magic argues that privilege determines who gets to log off social media and avoid AI, I would add that an engagement with social sciences, philosophy and critical reflection on the world and society will increasingly become a privilege as well. One can certainly argue that deep engagement with these disciplines through studying or working in academia has always been a privilege to a certain extent. However, this will be intensified, and I am not just referring to people doing PhDs or working in academia, but people with unrelated jobs who critically engage with their realities.
 
-Furthermore, social media, AI and the combination of both are diminishing critical thinking skills and pushing us further into a post-truth society. There is no consensus anymore on what is a fact, while opinions matter more and people are drawn to the truth that they find the most compelling or the most entertaining. AI's best skill is making something sound as if it is the truth— that is literally what LLMs are doing. So, this combined with a lack of critical thinking skills will further diminish the importance of truth.
+Recent studies already show very clearly that AI is negatively affecting brain activity, basically making people "dumber." Most notably, a study from MIT looked at the levels of brain activity when writing an essay using ChatGPT, Google as a search engine, or nothing at all. The results clearly showed that ChatGPT users had the lowest brain engagement and "consistently underperformed at neural, linguistic, and behavioural levels." When ChatGPT was used over several months, users got lazier with each essay. In short, using AI, such as ChatGPT, erodes our critical thinking skills. With AI use being omnipresent, the choice of whether to use it or not is not always voluntary. Many people increasingly have to use it in the workplace in order to stay competitive— as stated by the CEO of Nvidia, "you're not going to lose your job to an AI, but you're going to lose your job to someone who uses AI." This again underlines the argument that who can log off and avoid AI and who gets stuck in a polluted environment looking up to the tower is increasingly determined by privilege.
 
-To further add to the theory presented by DJ Magic, I argue that an engagement with social sciences, philosophy and critical reflection on the world and the societies we live in will increasingly become a privilege as well. One can certainly argue that deep engagement with these disciplines through studying or working in academia has always been a privilege to a certain extent.`,
+In this process, AI is being portrayed as an inevitable future, in which it will take over everything, including the economy, stopping people from imagining alternatives. Propagating this vision of the future as inevitable does not only push people into using AI more, intensifying its above-mentioned negative effects, but it is also necessary to get people to accept AI and ignore the moral and ethical questions around it. Moreover, this framing is also necessary in order to make investors believe they are investing in the future, which makes it possible to get massive amounts of money behind it. This then becomes a self-fulfilling prophecy, as any idea with billions of dollars invested in it is likely to become the future.
+
+The tech elite in their towers
+
+These developments are not accidental byproducts of technical advancements; instead, the people controlling these technologies are aware of this and encourage it. Many tech CEOs do not use their own technologies at home and don't let their kids use them. Steve Jobs famously did not allow his children to use iPads, highlighting that they are very much aware of the dangerous effects of these technologies. This is mirrored by a recent lawsuit in the U.S., in which a court found that Meta intentionally builds algorithms on their platforms in a way that is addictive and thus is responsible for negatively affecting teens mental health.
+
+Furthermore, they know that thinking critically, studying philosophy, and engaging with questions about life are crucial. As recounted by Brené Brown, many tech CEOs, when asked what people should tell their children to study, say that they should study mathematics, physics, or engineering. However, when they are then asked to what they attribute their wealth and their success when thinking deeply about this, they attribute it to their studying of stoicism and philosophy. This clearly shows that they are aware of both the negative effects of their technologies and the value of critical thinking skills. Their privileges allow them to log off and not use social media and AI, avoiding its negative consequences. Unlike the new "underclass" described earlier, they can avoid the negative consequences of these technologies as well as the polluted environments they cause, staying high up in their towers.
+
+Commodifying intelligence
+
+All of this is taking place in a post-truth social context, in which information is abundant, but so is misinformation, while the ability to determine what is fact and universal agreement on the truth are lacking. When there is a constant information overload in combination with reduced critical thinking abilities, intelligence is becoming increasingly scarce and reserved for the privileged.
+
+These conditions are not simply the unfortunate side effects of technical advancements. The tech elite is already planning on exploiting access to intelligence, making one wonder to what extent these developments are intentional. Last year, the CEO of OpenAI, Sam Altman, stated at a public event:
+
+"We see a future where intelligence is a utility, like electricity or water, and people buy it from us, on a meter, and they use it for whatever they wanna use it for. We expect demand to continue to go up, if we do not have enough to cover the demand, we can't sell it, the price goes very high, it kind of goes to rich people."
+
+The dystopian vision he is painting here is one where intelligence is effectively commodified, and one's access to it is based on privilege. It is important to remember that the accumulation of all this "intelligence" is the result of all of humanity's knowledge, art, and thoughts that are available on the internet and scraped in the process of training AI for free.
+
+This future is coming soon, as AI will increasingly be paywalled. The way AI is being offered currently as mostly free is not sustainable, as it is very expensive, requiring not only constant advancement and innovation, but also massive computing, which needs large, energy-intensive data centers. Furthermore, three major AI companies— OpenAI, Anthropic and Space X— just went public, which will increase pressure to turn a profit. It is likely that seeing ads when using LLMs like Claude or ChatGPT will soon be normal, and much like how "pollutants" on social media are being used to keep people online, LLMs will use similar ones to keep users engaged.
+
+The growing influence of tech elite
+
+The consequences are as dystopian as they are endless. People can be influenced increasingly easily with social media and AI as critical thinking skills continue to decrease. In addition, the power and wealth coming from these technologies, on which the tech elite is built on, allows them increasing political influence, while democracies worldwide are deteriorating. People will largely lack the insights into how political decisions are made and what is constructed as truth, destroying democratic processes, transparency and accountability. They will also lack the ability to influence their political institutions, constituting a new powerless underclass.
+
+The growing influence of billionaires, particularly the ones linked to the tech elite, are already visible. For example, the world's richest man, Elon Musk, just became even richer, becoming the world's first trillionaire thanks to his AI and space company, Space X, going public. Apart from economic influence, the ultra-wealthy are also becoming increasingly influential on the political level. This can best be observed when looking at the Trump administration. Not only did several tech billionaires and CEOs attend his inauguration, setting the tone for the rest of his presidency, but Musk was also appointed for a government job in which he dismantled U.S. agencies, DEI programmes, and much more. He not only lacked the qualifications for this job, but his appointment and actions, while affecting the American people and causing severe consequences, were also detached from any democratic processes and oversight as well as any forms of transparency and accountability.
+
+Furthermore, AI is increasingly used and integrated into governments, overtaking tasks. For example, Palantir, an AI company focused on data integration and analytics software, is employed in the U.S. defense department. Their recently published Manifesto does not only frame the advance of AI as inevitable, but it also underlines and justifies the vision for these tech elites to be embedded in the government, specifically in the defense and intelligence apparatus. The growing political influence of the tech elite and their technologies is not just bad for accountability and transparency; it is potentially very dangerous. Most people, including the government employees using the AI on a daily basis and implementing its decisions, do not understand how AI works and are not equipped to question or control it. Moreover, as AI is increasingly becoming autonomous, it begs the question of who will in the end truly be able to fully understand how it works, and what exactly its "intelligence" is based on. Lacking transparency and expertise to question AI, its decisions and consequences could be disastrous.
+
+Looking up at the tower
+
+Taking into account all of these developments, it appears as if a new tower is being constructed. One in which the tech elite is guarding human intelligence, while the majority of people are stuck in a polluted environment shaped by social media and AI, diminishing critical thinking and engagement with social and political issues. Intelligence is becoming commodified, and access to it, as well as what it means and looks like, depends on a small tech elite, while many people are actively losing their economic bargaining power due to being replaced by AI. In this dystopian future, critical thinking and engagement with social sciences, philosophy, and humanities, which are the tools necessary to question and resist these developments, are reserved for the rich and privileged who can afford it. The rest forms the new underclass looking up at the tower.`,
     aspectRatio: 1024 / 768,
     pos: { x: 65, y: 50, width: 180, height: 0 },
     float: { delay: "1.2s", dur: "9s" }

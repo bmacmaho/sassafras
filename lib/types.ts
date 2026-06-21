@@ -86,6 +86,10 @@ export enum ArtworkTag {
   Commodification = "Commodification",
 }
 
+export function isVideoSrc(src: string): boolean {
+  return /\.(mp4|mov|webm)$/i.test(src)
+}
+
 export interface Artwork {
   id: number;
   slug: string;

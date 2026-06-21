@@ -9,6 +9,15 @@ import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
+import { isVideoSrc } from "@/lib/types"
+
+function ViewedThumb({ src }: { src: string }) {
+  return isVideoSrc(src) ? (
+    <video src={src} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+  ) : (
+    <Image src={src} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+  )
+}
 
 export function SearchBox({ color, open, onToggle, darkMode }: { color: string; open: boolean; onToggle: () => void; darkMode?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -289,7 +298,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
             {viewedArtworks.map((a) => (
               <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
                 <div className="relative w-6 h-6 overflow-hidden border border-black/10">
-                  <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                  <ViewedThumb src={a.image} />
                 </div>
               </Link>
             ))}
@@ -333,7 +342,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               {viewedArtworks.map((a) => (
                 <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
                   <div className="relative w-6 h-6 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
-                    <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                    <ViewedThumb src={a.image} />
                   </div>
                 </Link>
               ))}
@@ -471,7 +480,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               {viewedArtworks.map((a) => (
                 <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
                   <div className="relative w-10 h-10 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
-                    <Image src={a.image} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+                    <ViewedThumb src={a.image} />
                   </div>
                 </Link>
               ))}
