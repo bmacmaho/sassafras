@@ -669,15 +669,40 @@ export default function CurrentIssuePage() {
     }
   }, [bookPage])
 
-  // Preload every page layer (plus the cover) up front so opening the book and
-  // flipping through it doesn't stall on image fetch/decode mid-flip.
+  // Preload every page layer (plus the cover, bells icons, audio, and video)
+  // up front so opening the book and flipping through it doesn't stall on
+  // fetch/decode mid-flip — every interior page mounts at once the instant
+  // the book opens (FlipBook only renders pages once isOpen flips true), so
+  // by then all of this needs to already be downloaded AND decoded. Calling
+  // decode() (rather than just setting src) forces the browser to do that
+  // decode work now, off-screen, instead of on the first frame it's painted.
   useEffect(() => {
-    const urls = ["/the_tower_assets/cover/front.JPG", "/the_tower_assets/cover/back.JPG", ...Object.values(PAGE_LAYERS).flat()]
-    const images = urls.map((src) => {
+    const imageUrls = [
+      ...new Set([
+        "/the_tower_assets/cover/front.JPG",
+        "/the_tower_assets/cover/back.JPG",
+        "/the_tower_assets/21-22/21/play.PNG",
+        "/the_tower_assets/21-22/21/pause.PNG",
+        ...Object.values(PAGE_LAYERS).flat(),
+      ]),
+    ]
+    const images = imageUrls.map((src) => {
       const img = new window.Image()
       img.src = src
+      img.decode?.().catch(() => {})
       return img
     })
+
+    const audio = new window.Audio()
+    audio.preload = "auto"
+    audio.src = "/the_tower_assets/21-22/bells.mp3"
+
+    const video = document.createElement("video")
+    video.preload = "auto"
+    video.muted = true
+    video.src = "/the_tower_assets/javi/javi-video.mp4"
+    video.load()
+
     return () => { images.length = 0 }
   }, [])
 
