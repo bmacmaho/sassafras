@@ -367,6 +367,18 @@ export const FlipBook = forwardRef<FlipBookHandle, FlipBookProps>(function FlipB
     return 0
   }
 
+  // Every sheet is stacked at the exact same position (just rotated), so only
+  // the sheet immediately at the spine on each side is ever actually visible
+  // — everything else is fully occluded behind it. Mounting all of them
+  // anyway (full image layers, ~30-100+ across the book) is what was driving
+  // memory usage way up, so only the sheets within reach of the current
+  // spread keep their real content; the rest fall back to a blank page face
+  // (still positioned/transformed correctly, just with nothing heavy inside)
+  // until the user flips close enough for them to matter.
+  const CONTENT_WINDOW = 2
+  const isContentMounted = (idx: number): boolean =>
+    idx >= currentPage - CONTENT_WINDOW && idx <= currentPage + CONTENT_WINDOW + 1
+
   /* ── shadows on pages ───────────────────────────────────────── */
   const pageShadow = (angle: number, side: "front" | "back"): CSSProperties => {
     const absAngle = Math.abs(angle)
@@ -493,7 +505,7 @@ export const FlipBook = forwardRef<FlipBookHandle, FlipBookProps>(function FlipB
                       ...pageShadow(angle, "front"),
                     }}
                   >
-                    {page.front}
+                    {isContentMounted(idx) ? page.front : null}
                     {/* curl overlay */}
                     <div
                       style={{
@@ -520,7 +532,7 @@ export const FlipBook = forwardRef<FlipBookHandle, FlipBookProps>(function FlipB
                       ...pageShadow(angle, "back"),
                     }}
                   >
-                    {page.back}
+                    {isContentMounted(idx) ? page.back : null}
                     <div
                       style={{
                         position: "absolute",

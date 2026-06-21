@@ -669,22 +669,15 @@ export default function CurrentIssuePage() {
     }
   }, [bookPage])
 
-  // Preload every page layer (plus the cover, bells icons, audio, and video)
-  // up front so opening the book and flipping through it doesn't stall on
-  // fetch/decode mid-flip — every interior page mounts at once the instant
-  // the book opens (FlipBook only renders pages once isOpen flips true), so
-  // by then all of this needs to already be downloaded AND decoded. Calling
-  // decode() (rather than just setting src) forces the browser to do that
-  // decode work now, off-screen, instead of on the first frame it's painted.
+  // Preload the small fixed assets once — cover, bells icons, audio, video.
+  // These aren't multiplied across 30+ sheets like the page artwork is, so
+  // it's cheap to just always have them ready.
   useEffect(() => {
     const imageUrls = [
-      ...new Set([
-        "/the_tower_assets/cover/front.JPG",
-        "/the_tower_assets/cover/back.JPG",
-        "/the_tower_assets/21-22/21/play.PNG",
-        "/the_tower_assets/21-22/21/pause.PNG",
-        ...Object.values(PAGE_LAYERS).flat(),
-      ]),
+      "/the_tower_assets/cover/front.JPG",
+      "/the_tower_assets/cover/back.JPG",
+      "/the_tower_assets/21-22/21/play.PNG",
+      "/the_tower_assets/21-22/21/pause.PNG",
     ]
     const images = imageUrls.map((src) => {
       const img = new window.Image()
@@ -705,6 +698,40 @@ export default function CurrentIssuePage() {
 
     return () => { images.length = 0 }
   }, [])
+
+  // Keep a rolling preload window of decoded page artwork centered on the
+  // current sheet, instead of the whole ~60-image book at once — FlipBook
+  // itself only *mounts* a few sheets around the current one (see its
+  // CONTENT_WINDOW), and decoding everything regardless of what's mounted is
+  // what was ballooning memory (each full-spread layer is ~10-35MB decoded).
+  // This stays a couple of sheets ahead of that mount window so flipping
+  // never stalls on a fresh decode, and prunes anything that's fallen out of
+  // range so the decoded bitmaps can actually be garbage-collected.
+  const preloadCacheRef = useRef<Map<string, HTMLImageElement>>(new Map())
+  useEffect(() => {
+    const PRELOAD_AHEAD = 3
+    const center = Math.max(bookPage, 0)
+    const lo = Math.max(0, center - PRELOAD_AHEAD)
+    const hi = center + PRELOAD_AHEAD
+    const wanted = new Set<string>()
+    for (let sheet = lo; sheet <= hi; sheet++) {
+      for (const printedPage of [sheet * 2, sheet * 2 + 1]) {
+        for (const url of PAGE_LAYERS[printedPage] ?? []) wanted.add(url)
+      }
+    }
+
+    const cache = preloadCacheRef.current
+    for (const url of wanted) {
+      if (cache.has(url)) continue
+      const img = new window.Image()
+      img.src = url
+      img.decode?.().catch(() => {})
+      cache.set(url, img)
+    }
+    for (const url of cache.keys()) {
+      if (!wanted.has(url)) cache.delete(url)
+    }
+  }, [bookPage])
 
   // Sync body background with dark mode so the full viewport (incl. main side padding) transitions in lock-step with the header
   useLayoutEffect(() => {
