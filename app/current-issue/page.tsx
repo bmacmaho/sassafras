@@ -300,11 +300,37 @@ const EXTRA_PAGE_ASSETS: Record<number, string[]> = {
 // escape hatch CitationPopover uses, positioned from the hotspot's *actual*
 // on-screen rect — which also means it tracks the FlipBook's current zoom
 // scale automatically instead of needing its own scale math.
-function LawElement({ side }: { side: "left" | "right" }) {
+function LawElement({ side, currentSheet }: { side: "left" | "right"; currentSheet: number }) {
   const [open, setOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const cardRef = useRef<HTMLButtonElement>(null)
   const layer = useCitationLayer()
   const [cardRect, setCardRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null)
+
+  // Close on navigating away — currentSheet only changes once a flip
+  // actually settles onto a different sheet (see FlipBook), whether that's
+  // from a click, a drag, the keyboard, or a table-of-contents jump.
+  useEffect(() => {
+    setOpen(false)
+  }, [currentSheet])
+
+  // Close on any click outside the hotspot/card, without also letting that
+  // click reach the FlipBook's own pointerdown handler (which would
+  // otherwise also register it as a page-turn) — same pattern CitationPopover
+  // uses, and for the same reason: capture phase runs before that handler,
+  // which is attached lower in the tree in the bubble phase.
+  useEffect(() => {
+    if (!open) return
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as Node
+      if (triggerRef.current?.contains(target)) return
+      if (cardRef.current?.contains(target)) return
+      e.stopPropagation()
+      setOpen(false)
+    }
+    document.addEventListener("pointerdown", handlePointerDown, true)
+    return () => document.removeEventListener("pointerdown", handlePointerDown, true)
+  }, [open])
 
   const sx = 2200 / 840
   const sy = 1548 / 590.8
@@ -334,6 +360,7 @@ function LawElement({ side }: { side: "left" | "right" }) {
 
   const card = open && cardRect && (
     <button
+      ref={cardRef}
       type="button"
       onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => {
@@ -418,7 +445,8 @@ function LawElement({ side }: { side: "left" | "right" }) {
 // book stays open was heavy enough to eventually stall the flip animation.
 function buildPages(
   videoRefs: { left: React.Ref<HTMLVideoElement>; right: React.Ref<HTMLVideoElement> },
-  onJumpToPage: (pageNumber: number) => void
+  onJumpToPage: (pageNumber: number) => void,
+  currentSheet: number
 ): BookPage[] {
   const pages: BookPage[] = Array.from({ length: 32 }, (_, i) => ({
     front: <p style={{ ...pageNumStyle, right: 36 }}>{i * 2}</p>,
@@ -742,7 +770,7 @@ function buildPages(
   pages[11] = { ...pages[11], back: buildLayeredPage(23, "left") }
   pages[12] = { ...pages[12], front: buildLayeredPage(24, "right") }
   pages[12] = { ...pages[12], back: buildLayeredPage(25, "left") }
-  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right", <LawElement side="right" />) }
+  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right", <LawElement side="right" currentSheet={currentSheet} />) }
   pages[13] = { ...pages[13], back: buildLayeredPage(27, "left") }
   pages[14] = { ...pages[14], front: buildLayeredPage(28, "right") }
   pages[14] = { ...pages[14], back: buildLayeredPage(29, "left") }
@@ -796,14 +824,16 @@ export default function CurrentIssuePage() {
     flipBookRef.current?.goToPage(pageNumber)
     flipBookFullscreenRef.current?.goToPage(pageNumber)
   }
-  const pages = buildPages({ left: videoLeftRef, right: videoRightRef }, jumpToPage)
+  // The video spread (pages 9 & 10) is only the visible spread when the book
+  // has settled exactly on sheet 4 — play it then, pause it everywhere else.
+  // Also threaded into buildPages so page 26's LawElement can close itself
+  // whenever the settled sheet changes, i.e. the user has navigated away.
+  const [bookPage, setBookPage] = useState(-1)
+  const pages = buildPages({ left: videoLeftRef, right: videoRightRef }, jumpToPage, bookPage)
   const contributors = sortByName(contributorsData)
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
 
-  // The video spread (pages 9 & 10) is only the visible spread when the book
-  // has settled exactly on sheet 4 — play it then, pause it everywhere else.
-  const [bookPage, setBookPage] = useState(-1)
   useEffect(() => {
     const shouldPlay = bookPage === 4
     for (const ref of [videoLeftRef, videoRightRef]) {
