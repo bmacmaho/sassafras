@@ -1,6 +1,7 @@
 "use client"
 
 import { artworks } from "@/lib/mock-data"
+import { isVideoSrc } from "@/lib/types"
 import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -46,18 +47,27 @@ export default function ExploreDetailPage() {
         <div className="flex flex-col gap-8">
           {/* ── Visual Section ── */}
           <div className="w-full relative group">
-            <div 
+            <div
               className="relative w-full bg-[#FBFAF1] md:p-12"
               style={{ aspectRatio: artwork.aspectRatio }}
             >
-              <Image
-                src={artwork.image}
-                alt={artwork.title}
-                fill
-                className="object-contain transition-transform duration-700"
-                priority
-                unoptimized
-              />
+              {isVideoSrc(artwork.image) ? (
+                <video
+                  src={artwork.image}
+                  controls
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
+              ) : (
+                <Image
+                  src={artwork.image}
+                  alt={artwork.title}
+                  fill
+                  className="object-contain transition-transform duration-700"
+                  priority
+                  unoptimized
+                />
+              )}
             </div>
           </div>
 
@@ -129,13 +139,24 @@ export default function ExploreDetailPage() {
                 {artworks.filter(a => a.issue === artwork.issue && a.id !== artwork.id).slice(0, 4).map(related => (
                     <Link key={related.id} href={`/explore/${related.slug}`} className="group space-y-3">
                         <div className="aspect-[4/5] relative overflow-hidden bg-[#FBFAF1] border border-black/5">
-                            <Image 
-                                src={related.image} 
-                                alt={related.title} 
-                                fill 
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                unoptimized
-                            />
+                            {isVideoSrc(related.image) ? (
+                                <video
+                                    src={related.image}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                            ) : (
+                                <Image
+                                    src={related.image}
+                                    alt={related.title}
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    unoptimized
+                                />
+                            )}
                         </div>
                         <div>
                             <p className="text-[10px] tracking-widest text-black/40 uppercase font-alte-haas">{related.author}</p>

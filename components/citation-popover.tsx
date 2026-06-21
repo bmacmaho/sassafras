@@ -29,8 +29,8 @@ export function CitationLayer({ children }: { children: ReactNode }) {
 }
 
 interface CitationPopoverProps {
-  /** The cited word or phrase, rendered as the clickable trigger. */
-  children: ReactNode
+  /** Optional cited word or phrase rendered alongside the circular trigger. */
+  children?: ReactNode
   /** Content shown inside the black popover rectangle. */
   citation: ReactNode
 }
@@ -50,8 +50,20 @@ interface CitationPopoverProps {
 export function CitationPopover({ children, citation }: CitationPopoverProps) {
   const layer = useContext(CitationLayerContext)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
   const [pos, setPos] = useState<{ top: number; left?: number; right?: number } | null>(null)
+
+  // Draw the eye to an unnoticed trigger: if it sits untouched for a couple
+  // seconds, ring it with an expanding "shockwave" pulse until it's clicked.
+  const [pulsing, setPulsing] = useState(false)
+  const hasOpenedRef = useRef(false)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!hasOpenedRef.current) setPulsing(true)
+    }, 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -105,7 +117,9 @@ export function CitationPopover({ children, citation }: CitationPopoverProps) {
     // propagation here swallows the click entirely, so it only closes the
     // popover instead of also registering as a page-turn.
     const handlePointerDown = (e: PointerEvent) => {
-      if (triggerRef.current?.contains(e.target as Node)) return
+      const target = e.target as Node
+      if (triggerRef.current?.contains(target)) return
+      if (popoverRef.current?.contains(target)) return
       e.stopPropagation()
       setOpen(false)
     }
@@ -122,6 +136,7 @@ export function CitationPopover({ children, citation }: CitationPopoverProps) {
 
   const popover = open && pos && (
     <div
+      ref={popoverRef}
       className={`${layer ? "absolute" : "fixed"} z-[300] font-sans text-xs leading-relaxed text-white shadow-xl pointer-events-auto`}
       style={{
         top: pos.top,
@@ -131,6 +146,7 @@ export function CitationPopover({ children, citation }: CitationPopoverProps) {
         transform: "translateY(-100%)",
         backgroundColor: "#000",
         padding: "12px 14px",
+        borderRadius: "3px"
       }}
     >
       {citation}
@@ -139,19 +155,34 @@ export function CitationPopover({ children, citation }: CitationPopoverProps) {
 
   return (
     <>
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation()
-          setOpen((o) => !o)
-        }}
-        onPointerDown={(e) => e.stopPropagation()}
-        className="cursor-pointer underline decoration-1 underline-offset-2 hover:opacity-70"
-        style={{ font: "inherit", color: "inherit", display: "inline", border: 0, background: "transparent", padding: 0 }}
-      >
-        {children}
-      </button>
+      <span className="relative inline-block" style={{ width: 8, height: 8, verticalAlign: "middle" }}>
+        {pulsing && (
+          <span
+            className="absolute inset-0 rounded-full animate-ping pointer-events-none"
+            style={{ backgroundColor: "#B7E4A0", opacity: 0.75 }}
+          />
+        )}
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            hasOpenedRef.current = true
+            setPulsing(false)
+            setOpen((o) => !o)
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-label="View citation"
+          className="absolute inset-0 cursor-pointer rounded-full hover:opacity-80"
+          style={{
+            border: "1px solid #1B2A4A",
+            backgroundColor: "#B7E4A0",
+            padding: 0,
+          }}
+        >
+          {children}
+        </button>
+      </span>
       {popover && createPortal(popover, layer ?? document.body)}
     </>
   )

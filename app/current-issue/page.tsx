@@ -1,20 +1,16 @@
 "use client"
 
-import { FlipBook, type BookPage } from "@/components/flip-book"
+import { FlipBook, type BookPage, type FlipBookHandle } from "@/components/flip-book"
 import Link from "next/link"
-import { ArrowRight, Maximize2, X } from "lucide-react"
-import { EB_Garamond } from "next/font/google"
-import type { CSSProperties } from "react"
+import { Maximize2, X } from "lucide-react"
+import type { CSSProperties, ReactNode } from "react"
 import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
 import { contributorsData, getRoleLines, getRoleText, sortByName } from "@/lib/people"
 import { ScrollableBio } from "@/components/scrollable-bio"
-import { CitationLayer } from "@/components/citation-popover"
-
-const ebGaramond = EB_Garamond({ subsets: ["latin"], style: ["italic"], weight: ["400", "700"] })
-const ebGaramondRoman = EB_Garamond({ subsets: ["latin"], style: ["normal"], weight: ["400", "700"] })
+import { CitationLayer, CitationPopover } from "@/components/citation-popover"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -32,536 +28,658 @@ const pageNumStyle: CSSProperties = {
   letterSpacing: "0.15em",
   color: "#b5a994",
   margin: 0,
+  fontFamily: "var(--font-eb-garamond-12), 'EB Garamond', serif",
+}
+
+// Each page's layered artwork, sourced from public/the_tower_assets/<left>-<right>/<page>/.
+// Files are named by stacking order (1 = background, 2 on top of it, etc.) — files
+// sharing a leading number (e.g. 2.1, 2.2) sit on the same layer. Pages without an
+// entry here (no assets prepared yet) just render blank with their page number.
+const TOC_SPREAD_LAYERS = [
+  "/the_tower_assets/3-4/1.PNG",
+  "/the_tower_assets/3-4/1.1.PNG",
+  "/the_tower_assets/3-4/IMG_7582.PNG",
+  "/the_tower_assets/3-4/IMG_7583.PNG",
+  "/the_tower_assets/3-4/IMG_7584.PNG",
+  "/the_tower_assets/3-4/IMG_7585.PNG",
+  "/the_tower_assets/3-4/IMG_7586.PNG",
+  "/the_tower_assets/3-4/IMG_7587.PNG",
+  "/the_tower_assets/3-4/IMG_7588.PNG",
+  "/the_tower_assets/3-4/IMG_7589.PNG",
+  "/the_tower_assets/3-4/IMG_7590.PNG",
+  "/the_tower_assets/3-4/IMG_7578.PNG",
+  "/the_tower_assets/3-4/IMG_7581.PNG",
+  "/the_tower_assets/3-4/titles.PNG",
+]
+
+// Printed page each contents entry on page 5 links to, top to bottom — the
+// numerals are real text (see TOC_ENTRIES below) rather than the page-numbers.PNG
+// layer, so each one can jump the book straight to that page.
+const TOC_ENTRIES: { page: number; top: number }[] = [
+  { page: 3, top: 91.5 },
+  { page: 7, top: 131.5 },
+  { page: 11, top: 172.5 },
+  { page: 21, top: 212.5 },
+  { page: 23, top: 253.5 },
+  { page: 29, top: 293.5 },
+  { page: 37, top: 333.5 },
+  { page: 43, top: 374.5 },
+  { page: 49, top: 415.5 },
+  { page: 62, top: 455.5 },
+]
+
+const PAGE_LAYERS: Record<number, string[]> = {
+  1: ["/the_tower_assets/1-2/1/1.PNG"],
+  2: ["/the_tower_assets/1-2/2/1.PNG", "/the_tower_assets/1-2/2/2.PNG"],
+  3: ["/the_tower_assets/5-6/5/1.PNG", "/the_tower_assets/5-6/5/2.PNG", "/the_tower_assets/5-6/5/2.1.PNG"],
+  4: ["/the_tower_assets/5-6/6/1.PNG", "/the_tower_assets/5-6/6/2.PNG", "/the_tower_assets/5-6/6/2.1.PNG", "/the_tower_assets/5-6/6/2.2.PNG"],
+  5: TOC_SPREAD_LAYERS,
+  6: TOC_SPREAD_LAYERS,
+  7: ["/the_tower_assets/7-8/7/1.PNG", "/the_tower_assets/7-8/7/2.PNG", "/the_tower_assets/7-8/7/2.1.PNG", "/the_tower_assets/7-8/7/2.2.PNG"],
+  8: ["/the_tower_assets/7-8/8/1.PNG", "/the_tower_assets/7-8/8/2.PNG", "/the_tower_assets/7-8/8/2.1.PNG"],
+  11: ["/the_tower_assets/11-12/11/1.PNG", "/the_tower_assets/11-12/11/2.PNG"],
+  12: [
+    "/the_tower_assets/11-12/12/1.PNG",
+    "/the_tower_assets/11-12/12/2-INVERT.PNG",
+    "/the_tower_assets/11-12/12/2.1.PNG",
+    "/the_tower_assets/11-12/12/2.2.PNG",
+    "/the_tower_assets/11-12/12/2.3.PNG",
+    "/the_tower_assets/11-12/12/2.4.PNG",
+    "/the_tower_assets/11-12/12/3.PNG",
+  ],
+  13: [
+    "/the_tower_assets/13-14/13/1.PNG",
+    "/the_tower_assets/13-14/13/2.PNG",
+    "/the_tower_assets/13-14/13/2.1.PNG",
+    "/the_tower_assets/13-14/13/2.2.PNG",
+  ],
+  14: [
+    "/the_tower_assets/13-14/14/1.PNG",
+    "/the_tower_assets/13-14/14/2.PNG",
+    "/the_tower_assets/13-14/14/2.1.PNG",
+    "/the_tower_assets/13-14/14/2.2.PNG",
+    "/the_tower_assets/13-14/14/2.3.PNG",
+    "/the_tower_assets/13-14/14/2.4.PNG",
+  ],
+  21: [
+    "/the_tower_assets/21-22/21/1.PNG",
+    "/the_tower_assets/21-22/21/2.PNG",
+    "/the_tower_assets/21-22/21/3.PNG",
+    "/the_tower_assets/21-22/21/Copy of IMG_7445.PNG",
+    "/the_tower_assets/21-22/21/IMG_7443.PNG",
+    "/the_tower_assets/21-22/21/IMG_7444.PNG",
+    "/the_tower_assets/21-22/21/IMG_7449.PNG",
+  ],
+  22: [
+    "/the_tower_assets/21-22/22/1.PNG",
+    "/the_tower_assets/21-22/22/IMG_7442.PNG",
+    "/the_tower_assets/21-22/22/IMG_7445.PNG",
+    "/the_tower_assets/21-22/22/IMG_7446.PNG",
+  ],
+  25: [
+    "/the_tower_assets/25-26/25/1.PNG",
+    "/the_tower_assets/25-26/25/IMG_7468.PNG",
+    "/the_tower_assets/25-26/25/IMG_7469.PNG",
+    "/the_tower_assets/25-26/25/IMG_7470.PNG",
+    "/the_tower_assets/25-26/25/IMG_7471.PNG",
+  ],
+  26: [
+    "/the_tower_assets/25-26/26/1.PNG",
+    "/the_tower_assets/25-26/26/IMG_7472.PNG",
+    "/the_tower_assets/25-26/26/IMG_7473.PNG",
+    "/the_tower_assets/25-26/26/IMG_7474.PNG",
+    "/the_tower_assets/25-26/26/IMG_7475.PNG",
+    "/the_tower_assets/25-26/26/IMG_7476.PNG",
+    "/the_tower_assets/25-26/26/IMG_7477.PNG",
+    "/the_tower_assets/25-26/26/IMG_7478.PNG",
+    "/the_tower_assets/25-26/26/IMG_7479.PNG",
+  ],
+  // Pages without their own per-page layers yet just use the pair's full
+  // spread image, cropped to the relevant half (same left/right convention).
+  15: ["/the_tower_assets/15-16/spread.JPG"],
+  16: ["/the_tower_assets/15-16/spread.JPG"],
+  17: ["/the_tower_assets/17-18/spread.JPG"],
+  18: ["/the_tower_assets/17-18/spread.JPG"],
+  19: ["/the_tower_assets/19-20/spread.JPG"],
+  20: ["/the_tower_assets/19-20/spread.JPG"],
+  23: ["/the_tower_assets/23-24/spread.JPG"],
+  24: ["/the_tower_assets/23-24/spread.JPG"],
+  27: ["/the_tower_assets/27-28/spread.JPG"],
+  28: ["/the_tower_assets/27-28/spread.JPG"],
+  29: ["/the_tower_assets/29-30/spread.JPG"],
+  30: ["/the_tower_assets/29-30/spread.JPG"],
+  31: ["/the_tower_assets/31-32/spread.JPG"],
+  32: ["/the_tower_assets/31-32/spread.JPG"],
+  33: ["/the_tower_assets/33-34/spread.JPG"],
+  34: ["/the_tower_assets/33-34/spread.JPG"],
+  35: ["/the_tower_assets/35-36/spread.JPG"],
+  36: ["/the_tower_assets/35-36/spread.JPG"],
+  37: ["/the_tower_assets/37-38/spread.JPG"],
+  38: ["/the_tower_assets/37-38/spread.JPG"],
+  39: ["/the_tower_assets/39-40/spread.JPG"],
+  40: ["/the_tower_assets/39-40/spread.JPG"],
+  41: ["/the_tower_assets/41-42/spread.JPG"],
+  42: ["/the_tower_assets/41-42/spread.JPG"],
+  43: ["/the_tower_assets/43-44/spread.JPG"],
+  44: ["/the_tower_assets/43-44/spread.JPG"],
+  45: ["/the_tower_assets/45-46/spread.JPG"],
+  46: ["/the_tower_assets/45-46/spread.JPG"],
+  47: ["/the_tower_assets/47-48/spread.JPG"],
+  48: ["/the_tower_assets/47-48/spread.JPG"],
+  49: ["/the_tower_assets/49-54/49-50.JPG"],
+  50: ["/the_tower_assets/49-54/49-50.JPG"],
+  51: ["/the_tower_assets/49-54/51-52.JPG"],
+  52: ["/the_tower_assets/49-54/51-52.JPG"],
+  53: ["/the_tower_assets/49-54/53-54.JPG"],
+  54: ["/the_tower_assets/49-54/53-54.JPG"],
+  55: ["/the_tower_assets/55-62/55-56.JPG"],
+  56: ["/the_tower_assets/55-62/55-56.JPG"],
+  57: ["/the_tower_assets/55-62/57-58.JPG"],
+  58: ["/the_tower_assets/55-62/57-58.JPG"],
+  59: ["/the_tower_assets/55-62/59-60.JPG"],
+  60: ["/the_tower_assets/55-62/59-60.JPG"],
+  61: ["/the_tower_assets/55-62/61-62.JPG"],
+  62: ["/the_tower_assets/55-62/61-62.JPG"],
+}
+
+// Renders a page's layer stack, each cropped to its half of the (double-width)
+// source image — the left half for a left-hand page, the right half for a
+// right-hand one — since every layer is exported at full two-page-spread width.
+function buildLayeredPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
+  const layers = PAGE_LAYERS[pageNum] ?? []
+  return (
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden" }} data-citation-page>
+      {layers.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          style={{
+            position: "absolute",
+            top: 0,
+            [side]: 0,
+            width: "200%",
+            maxWidth: "none",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: i,
+          }}
+        />
+      ))}
+      <p style={{ ...pageNumStyle, [side]: 36 }}>{pageNum}</p>
+      {extra}
+    </div>
+  )
+}
+
+// Play/pause toggle for page 21's bells sound effect. The button's box is the
+// icons' shared trimmed bounding box (originally drawn on the full spread
+// canvas at left:247 top:265 width:46 height:30 px) scaled down to this
+// page's rendered size, so it sits exactly where the artwork places it.
+function BellsButton() {
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const [playing, setPlaying] = useState(false)
+
+  return (
+    <>
+      <audio
+        ref={audioRef}
+        src="/the_tower_assets/21-22/bells.mp3"
+        onEnded={() => setPlaying(false)}
+      />
+      <button
+        type="button"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation()
+          const audio = audioRef.current
+          if (!audio) return
+          if (playing) {
+            audio.pause()
+            setPlaying(false)
+          } else {
+            audio.play()
+            setPlaying(true)
+          }
+        }}
+        aria-label={playing ? "Pause" : "Play"}
+        style={{
+          position: "absolute",
+          left: 115.3,
+          top: 123.6,
+          width: 21.5,
+          height: 14,
+          padding: 0,
+          border: "none",
+          background: "none",
+          cursor: "pointer",
+          zIndex: 50,
+        }}
+      >
+        <img
+          src={playing ? "/the_tower_assets/21-22/21/pause.PNG" : "/the_tower_assets/21-22/21/play.PNG"}
+          alt=""
+          draggable={false}
+          style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }}
+        />
+      </button>
+    </>
+  )
 }
 
 /* ── Build book pages ───────────────────────────────────────────── */
-// No content yet for this issue — blank sheets (just numbered, for now) so
-// the book has pages to turn, ready to be filled in once real pages are
-// ready to go in here.
-function buildPages(): BookPage[] {
-  const pages: BookPage[] = Array.from({ length: 10 }, (_, i) => ({
-    front: <p style={{ ...pageNumStyle, right: 36 }}>{i * 2 + 1}</p>,
-    back: <p style={{ ...pageNumStyle, left: 36 }}>{i * 2 + 2}</p>,
+// videoRefs lets the caller pause these two video elements while their pages
+// aren't the visible spread — decoding both continuously for as long as the
+// book stays open was heavy enough to eventually stall the flip animation.
+function buildPages(
+  videoRefs: { left: React.Ref<HTMLVideoElement>; right: React.Ref<HTMLVideoElement> },
+  onJumpToPage: (pageNumber: number) => void
+): BookPage[] {
+  const pages: BookPage[] = Array.from({ length: 32 }, (_, i) => ({
+    front: <p style={{ ...pageNumStyle, right: 36 }}>{i * 2}</p>,
+    back: <p style={{ ...pageNumStyle, left: 36 }}>{i * 2 + 1}</p>,
   }))
 
-  // Page 4 — next left-hand page after the inside cover.
-  pages[1] = {
-    ...pages[1],
-    back: (
-      <>
-        <p
-          style={{
-            position: "absolute",
-            left: 6,
-            margin: 0,
-            fontFamily: "var(--font-alte-haas), sans-serif",
-            fontWeight: 700,
-            color: "#FF730F",
-            fontSize: 30,
-            letterSpacing: "0.01em",
-          }}
-        >
-          Notes from the Editors
-        </p>
-        <p style={{ ...pageNumStyle, left: 36 }}>4</p>
-      </>
-    ),
-  }
-
-  // Page 6
+  pages[0] = { ...pages[0], back: buildLayeredPage(1, "left") }
+  pages[1] = { ...pages[1], front: buildLayeredPage(2, "right") }
+  pages[1] = { ...pages[1], back: buildLayeredPage(3, "left") }
+  pages[2] = { ...pages[2], front: buildLayeredPage(4, "right") }
   pages[2] = {
     ...pages[2],
-    back: (
-      <div style={{ position: "absolute", inset: 0, backgroundColor: "#040d1a" }}>
-        <p
-          className={ebGaramond.className}
-          style={{
-            position: "absolute",
-            top: 4,
-            left: 26,
-            right: 26,
-            margin: 0,
-            color: "#FBFAF1",
-            fontStyle: "italic",
-            fontWeight: 400,
-            fontSize: 68,
-            lineHeight: 1.15,
-          }}
-        >
-          But look, your grace, those are not giants but windmills
-        </p>
-        <img
-          src="/the_tower_assets/page_6/IMG_7054.JPG"
-          alt=""
-          style={{
-            position: "absolute",
-            top: 340,
-            left: 26,
-            width: 80,
-            height: "auto",
-            objectFit: "cover",
-          }}
-        />
-        <p style={{ ...pageNumStyle, left: 36 }}>6</p>
-        <p
-          style={{
-            position: "absolute",
-            bottom: 36,
-            right: 36,
-            margin: 0,
-            fontFamily: "var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif",
-            fontWeight: 400,
-            fontSize: 14,
-            color: "rgba(255,255,255,0.7)",
-          }}
-        >
-          Javiera Bilbao
-        </p>
-      </div>
-    ),
-  }
-
-  // Page 7
-  pages[3] = {
-    ...pages[3],
-    front: (
+    back: buildLayeredPage(5, "left", (
       <>
-        <img
-          src="/the_tower_assets/page_7/IMG_7061.JPG"
-          alt=""
-          style={{
-            position: "absolute",
-            top: 24,
-            left: 48,
-            width: 60,
-            height: "auto",
-            objectFit: "cover",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            padding: "80px 28px 0px 80px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            overflow: "hidden",
-            fontFamily: "var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif",
-            fontSize: 11,
-            lineHeight: 1.2,
-            color: "#2a2420",
-            textAlign: "justify",
-          }}
-        >
-          <p style={{ margin: 0 }}>
-            Ever since I was little, the towers I imagined looming toward me were like gigantic
-            structures made of rock or some other sturdy, solid material—ones I couldn’t climb or
-            get through. In my childish mind, a tower was the one where Rapunzel lived, or those
-            giant structures that Don Quixote mistook for windmills, or Goliath when he fought
-            David. Towers, therefore, were not only difficult or impossible to climb, but they
-            also represented the unknown, the terrifying, the gigantic, while I was the smaller
-            one.
-          </p>
-          <p style={{ margin: 0 }}>
-            As I grew up, my ideas of towers became less tangible in my mind, but more
-            metaphorical. I could no longer describe them so easily; I just knew that I still saw
-            them as gigantic, immutable, insurmountable, and terrifying. These towers were no
-            longer part of stories or fairytales, but they were towers that I encountered every
-            day.
-          </p>
-          <p style={{ margin: 0 }}>
-            The tower was now the night, or maybe it was not the night itself. The night was
-            actually a reminder that a tower was there, a tower governed by rules that applied
-            only to women and dictated how I should dress or move if I didn’t want to be attacked
-            by any of its inhabitants. I had to move carefully to avoid encountering the tower and
-            its inhabitants.
-          </p>
-          <p style={{ margin: 0 }}>
-            But those weren’t the only towers. Some of them still haunt me, filling me with fear.
-            Inhabited by mad, greedy, and evil men who gaze upon me. The future looks uncertain
-            there, surrounded by ghosts of anxiety, fear, and emptiness. Other towers are made up
-            of countless offices, bureaucrats, and meaningless documents and seem impossible to
-            conquer, made up of endless absurd regulations that kill spirits.
-          </p>
-          <p style={{ margin: 0, marginTop: 28 }}>
-            But are they really giant towers, or are they windmills trying to scare us?
-          </p>
-        </div>
-        <p style={{ ...pageNumStyle, right: 36 }}>7</p>
-      </>
-    ),
-  }
-
-  // Page 8
-  pages[3] = {
-    ...pages[3],
-    back: (
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-        <img
-          src="/the_tower_assets/javi/IMG_7194.PNG"
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-        <p style={{ ...pageNumStyle, left: 36 }}>8</p>
-      </div>
-    ),
-  }
-
-  // Page 9
-  pages[4] = {
-    ...pages[4],
-    front: (
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-        <img
-          src="/the_tower_assets/javi/IMG_7195.PNG"
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-        <p style={{ ...pageNumStyle, right: 36 }}>9</p>
-      </div>
-    ),
-  }
-
-  // Page 10
-  pages[4] = {
-    ...pages[4],
-    back: (
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden", backgroundColor: "#040d1a" }}>
-        {/* Show only the left half of the image, with 24px cropped off the top, left and bottom */}
-        <div style={{ position: "absolute", top: 24, left: 24, bottom: 24, right: 0, overflow: "hidden" }}>
-          <img
-            src="/the_tower_assets/page_10/IMG_7177.PNG"
-            alt=""
+        {TOC_ENTRIES.map(({ page, top }) => (
+          <button
+            key={page}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onJumpToPage(page)
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            aria-label={`Go to page ${page}`}
             style={{
               position: "absolute",
-              top: 0,
-              left: 0,
-              width: "200%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "left center",
-              display: "block",
+              top,
+              left: 25,
+              zIndex: 50,
+              fontSize: 10,
+              fontWeight: 700,
+              color: "#1a1a1a",
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              fontFamily: "var(--font-geist-sans), sans-serif",
             }}
-          />
-        </div>
-        <p style={{ ...pageNumStyle, left: 36, color: "#FBFAF1" }}>10</p>
+            className="hover:underline"
+          >
+            {page}
+          </button>
+        ))}
+      </>
+    )),
+  }
+  pages[3] = { ...pages[3], front: buildLayeredPage(6, "right") }
+  pages[3] = { ...pages[3], back: buildLayeredPage(7, "left") }
+  pages[4] = {
+    ...pages[4],
+    front: buildLayeredPage(8, "right", (
+      <div style={{ position: "absolute", top: 145, left: 340, zIndex: 50 }}>
+        <CitationPopover
+          citation={
+            <>
+              Miguel de Cervantes, <i>Don Quixote</i>, trans. Samuel Putman (New York: Viking Press, 1949), chap. 8.
+            </>
+          }
+        />
+      </div>
+    )),
+  }
+
+  // Page 9 — left half of a single video, spread across pages 9 & 10
+  pages[4] = {
+    ...pages[4],
+    back: (
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+        <video
+          ref={videoRefs.left}
+          src="/the_tower_assets/javi/javi-video.mp4"
+          loop
+          muted
+          playsInline
+          style={{
+            position: "absolute",
+            top: 0,
+            left: -5.5,
+            width: 851,
+            maxWidth: "none",
+            height: 590.8,
+            pointerEvents: "none",
+          }}
+        />
+        <p style={{ ...pageNumStyle, left: 36 }}>9</p>
       </div>
     ),
   }
 
-  // Page 11
+  // Page 10 — right half of the same video as page 9
   pages[5] = {
     ...pages[5],
     front: (
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-        {/* Show only the right half of the image, with 24px cropped off the top, right and bottom */}
-        <div style={{ position: "absolute", top: 24, right: 24, bottom: 24, left: 0, overflow: "hidden" }}>
-          <img
-            src="/the_tower_assets/page_11/IMG_7180.PNG"
-            alt=""
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              width: "200%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "right center",
-              display: "block",
-            }}
-          />
-        </div>
-        <p style={{ ...pageNumStyle, right: 36 }}>11</p>
+        <video
+          ref={videoRefs.right}
+          src="/the_tower_assets/javi/javi-video.mp4"
+          loop
+          muted
+          playsInline
+          style={{
+            position: "absolute",
+            top: 0,
+            right: -5.5,
+            width: 851,
+            maxWidth: "none",
+            height: 590.8,
+            pointerEvents: "none",
+          }}
+        />
+        <p style={{ ...pageNumStyle, right: 36 }}>10</p>
       </div>
     ),
   }
 
-  const essayTextStyle: CSSProperties = {
-    position: "absolute",
-    inset: 0,
-    padding: "40px 32px",
-    display: "flex",
-    flexDirection: "column",
-    gap: 0,
-    overflow: "hidden",
-    fontFamily: "var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif",
-    fontSize: 11,
-    lineHeight: 1.2,
-    color: "#2a2420",
-    textAlign: "justify",
-  }
-
-  // Page 12
-  pages[5] = {
-    ...pages[5],
-    back: (
-      <>
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            bottom: 60,
-            left: 14,
-            width: 80,
-            border: "1px solid #000",
-            boxSizing: "border-box",
-            padding: "16px 14px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-          }}
-        >
-          <p
-            className={ebGaramondRoman.className}
-            style={{ margin: 0, fontStyle: "normal", fontSize: 11, lineHeight: 1.2, color: "#2a2420", textAlign: "justify", textJustify: "inter-character" }}
-          >
-            "I have flown, To star-stained heights, On bent and battered wings (...), Sure that
-            everything of worth is in the sky and not the earth (...) Singing scraps of angel-song,
-            High is right and low is wrong, And I never taught, Myself to give, Down Down Down,
-            Where the iguanas live."
-          </p>
-          <p
-            className={ebGaramondRoman.className}
-            style={{ margin: 0, fontStyle: "normal", fontSize: 11, lineHeight: 1.2, color: "#2a2420", textAlign: "justify", textJustify: "inter-character" }}
-          >
-            - Dory Previn
-          </p>
-        </div>
-        <div style={{ ...essayTextStyle, padding: "20px 20px 40px 100px" }}>
-          <p style={{ margin: 0 }}>
-            I recently came across the notion of &apos;iliggocene&apos; - the age of &apos;dizziness&apos; proposed
-            as part of an exhibition project at Kindl Berlin. The name describes a new orientation
-            towards our time, one that is blurry, hard to grasp, full of confluence and vertigo.
-            There has been an effort to find a name of our time for a while now, with a few
-            &apos;cenes (Anthropocene, Capitalocene, Cthulucene, Noocene, etc.) having made their
-            rounds as potential representatives of a new social geology. I&apos;m caught by the idea
-            of an age of dizziness, though, not just as a name but as a state. It carries the
-            suggestion that we live in a time of disorientation; perhaps because the systems we
-            rely on are spinning ever more out of control, or because we seem to be teetering at a
-            precipice of ever-cascading ecological damage. When I think of dizziness however, I
-            mainly think of height and the disequilibrium that comes from the thought of &lsquo;how
-            far down?&rsquo;.
-          </p>
-          <p style={{ margin: 0, marginTop: 20, textAlign: "justify", textAlignLast: "justify" }}>
-            This writing frames itself around the question of height, and how height behaves as a
-            critical tool in the ways we orient our social world. In his book Animal Fables after
-            Darwin, Chris Danta describes how western humanist traditions have commonly envisioned
-            their relationship to the world through vertical metaphors, as &apos;higher animals&apos; whose
-            moral and intellectual plane exists &apos;above&apos; that of other creatures. Some of this is
-            quite literal in terms of physical orientation -- animals walk on all fours and angle
-            themselves towards the earth, whereas humans walk &apos;erect&apos; and are physically oriented
-            skywards. Plato was an early proponent of this idea, describing the posture of
-            &lsquo;man&rsquo; as indicative of &lsquo;his&rsquo; rational physicality, where the brain/head (the seat
-            of knowledge) is positioned at the &lsquo;acropolis&rsquo; of the body, towering over the more
-            lowly and &lsquo;bestial&rsquo; organs and thereby less driven by bodily instinct than other
-            creatures. We quickly see then that this disposition upwards is not just a physical
-            distinction between &apos;man&apos; and &apos;animal&apos;, but it is explicitly linked to moral
-            predetermination in Western theological traditions. Ovid, in his first book
-            &lsquo;Metamorphoses&rsquo;, describes &lsquo;the Creator&rsquo; as having designed man to stand erect so
-            that he may look towards the heavens and stars. Much the same is said by</p>
-        </div>
-        <p style={{ ...pageNumStyle, left: 36 }}>12</p>
-      </>
-    ),
-  }
-
-  // Page 13
+  pages[5] = { ...pages[5], back: buildLayeredPage(11, "left") }
+  pages[6] = { ...pages[6], front: buildLayeredPage(12, "right") }
   pages[6] = {
     ...pages[6],
-    front: (
+    back: buildLayeredPage(13, "left", (
       <>
-        <div style={{ ...essayTextStyle, padding: "20px 92px 40px 24px" }}>
-          <p style={{ margin: 0 }}>
-            John Donne (1624), who describes humans as &quot;naturally built and disposed to the contemplation of
-            heaven&quot;. Danta highlights this further by bringing our attention to the story of the
-            Babylonian King Nebuchadnezzar, who is punished by God for his boasting and made to
-            live &apos;as an animal&apos;, walking on all fours and eating grass for seven years. It was
-            only when he was able once more to turn his gaze upwards that his sanity was restored,
-            and he could again revere and glorify God &lsquo;Most High&rsquo;. Indeed, the consistent
-            reference of height and posture to the divine sustains the idea that uprightness,
-            straightness, and the vertical is itself the physical embodiment of ethical capacity.
-            Not only is &apos;man&apos; vertical, but there is the idea that man must strive for the
-            vertical, that there is a social imperative to be the &apos;upright&apos; citizen, to be
-            &apos;righteous&apos;, and to embody a moral &apos;rectitude&apos;.
-          </p>
-          <p style={{ margin: 0, marginTop: 20 }}>
-            This idea is further embodied in the historical drawing of social, natural, and moral
-            hierarchies across intellectual traditions. Among the most famous examples of this is
-            the work by Aristotle in his History of Animals, where he presents the notion of
-            ordering all animals according to a grand scale or &apos;ladder&apos; in terms of
-            &quot;complexity, perfection, and value&quot;. Inorganic and &apos;less complex&apos; organisms exist at
-            the bottom of this scale, above which we find plants, then &apos;lower animals&apos; such as
-            invertebrates, until we begin to reach &apos;higher&apos; animals, with humans at the top of
-            the animal scale (after which we enter the realm of gods). What makes this scale so
-            consequential, as Lori Marino notes, is that it not only determines the interrelations
-            of living matter, but their worth and proximity to &apos;perfection&apos;. Much like the erect
-            posture of man, value is approximated to height or being at the &lsquo;top&rsquo;, which in turn
-            measures one&apos;s capacity for &lsquo;goodness&rsquo;. This is made even more acute by the fact
-            that this system is one that rejects mobility, as Aristotle believed that every
-            being&apos;s place on this &apos;Scala Naturae&apos; (or natural scale), was materially and eternally
-            fixed by universal forces. Perfection could therefore be framed as a single universal
-            and upwards truth, while remaining ultimately unattainable by earthly forms.
-          </p>
+        <div style={{ position: "absolute", top: 15, left: 330, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <a href="https://www.kindl-berlin.de/ausstellungen/iliggocene" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                https://www.kindl-berlin.de/ausstellungen/iliggocene
+              </a>
+            }
+          />
         </div>
-        <p style={{ ...pageNumStyle, right: 36 }}>13</p>
-      </>
-    ),
-  }
-
-  // Page 14
-  pages[6] = {
-    ...pages[6],
-    back: (
-      <>
-        <div style={essayTextStyle}>
-          <p style={{ margin: 0 }}>
-            This notion of the natural ordering of life has continued to emerge in various
-            traditions and organisational methods across time. Take for example the Rhetorica
-            Christiana written and illustrated by Didacus Valades in 1579. Prominently featured is
-            &apos;The Great Chain of Being&apos;, a copperplate engraving which depicts at the very top a
-            representation of God surrounded by a halo of light and angels, with what appears to be
-            a young man (perhaps the figure of Jesus) on his lap. From the hand of God runs a
-            chain, which passes then downwards over the page through layers of earthly beings. The
-            first sees a collection of humans, then birds, then aquatic life, then mammals, then
-            plants, minerals, and finally at the bottom of the page, we see Hell, filled with
-            imagery of flames and torture. Once more there is a ladder of being, but this time the
-            consequences of &apos;lowness&apos; become dire. Here we find a blending of Aristotle&apos;s
-            ordering of nature with the literal expression of perfection in the God &apos;on high&apos;,
-            and lowness as being associated with true evil. Interestingly humans, like in the work
-            of Aristotle, occupy the top of the chain just before the divine, privileged by their
-            proximity to perfection but unable to actually attain it. Different from the Scala
-            Naturae, however, is the presence of Hell in the image, which, given its Christian
-            context, suggests that one&apos;s place on the scale (as human) is more mobile than
-            previously suggested, and that perfection or punishment awaits according to the
-            virtues of one&apos;s soul.
-          </p>
-          <p style={{ margin: 0, marginTop: 20 }}>
-            To move downwards on the ladder would therefore be disastrous. If we come back to
-            Nebuchadnezzar, for example, his transformation forces him away from perfection, at
-            which time he loses all sense of self, his body twists into something &apos;other&apos;, and
-            he loses the ability to feel, much less perceive, perfection, beauty, and divinity. We
-            can see some echo of Nebuchadnezzar in Kafka&rsquo;s Metamorphosis, whose leading
-            character transforms into a cockroach. Over the course of the story, the value of this
-            man-turned-cockroach becomes increasingly limited, as various characters, having
-            initially shown a mixture of disgust, fear, or in some cases care and concern, begin to
-            treat him with total apathy. From human he becomes vermin, and the occasion of his
-            eventual death is met with relief. Once more we see a disgust for the &lsquo;downward&rsquo;
-            and the idea of lowness as a place of lesser value.
-          </p>
+        <div style={{ position: "absolute", top: 80, left: 305, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                The term ‘’cenes’ here refers to the names we give to geological era’s. For example humans are considered to have evolved in an era lasting around 11,700 called the ‘Holocene’, before which the earth existed in a period called the Pleistocene, then Pliocene, and so on. These era’s are characterized by climate, soil makeup, atmosphere, and other geological factors that affect how ecological cycles take form on our planet. Given the mounting evidence for human-caused climate change, there have been proposals seeking to recognise that we are entering a new geological age (the Anthropocene being among the first and most influential of these proposals). Some new and interdisciplinary projects/researchers have sought to foreground the socio-political implications in the naming of geological time, challenging both Holocene and Anthropocene in favor of more culturally grounded and critical names. For further reading see: T.J. Demos, <i>Against the Anthropocene : Visual Culture and Environment Today</i> (Berlin: Sternberg Press, 2017). or Heather M Davis and Etienne Turpin, <i>Art in the Anthropocene: Encounters among Aesthetics, Politics, Environments and Epistemologies</i> (London: Open Humanities Press, 2015).
+              </>
+            }
+          />
         </div>
-        <p style={{ ...pageNumStyle, left: 36 }}>14</p>
+        <div style={{ position: "absolute", top: 315, left: 360, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Chris Danta, <i>Animal Fables after Darwin</i> (Cambridge University Press, 2018), 4-7.
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 435, left: 265, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Sander L Gilman, “How Posture Makes Us Human,” <i>Nautil.us</i> (Nautilus, April 27, 2018),{" "}
+                <a href="https://nautil.us/how-posture-makes-us-human-237068" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                  https://nautil.us/how-posture-makes-us-human-237068
+                </a>
+                .
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 512, left: 250, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                <i>Metamorphoses</i>, trans. Mary M. Innes (London: Penguin, 2003), 31.
+              </>
+            }
+          />
+        </div>
       </>
-    ),
+    )),
   }
-
-  // Page 15
   pages[7] = {
     ...pages[7],
-    front: (
+    front: buildLayeredPage(14, "right", (
       <>
-        <div style={essayTextStyle}>
-          <p style={{ margin: 0 }}>
-            The reason I want to emphasise this spatial and physical relation to value is because
-            it remains closely embedded in the ways we measure and describe success, civilisation,
-            progress, and politics still today. I would argue that, while perfection is still
-            treated as an unattainable feature of the &lsquo;most high&rsquo;, it continues to haunt the
-            social imagination. From alchemical pursuits towards the philosopher&apos;s stone and the
-            perfect immortal body, to Herbert Spencer&rsquo;s idea of Universal Progress, to the
-            techno-optimism of the industrial age and the boom of capitalist neoliberal economies,
-            there is the idea that we, almost inevitably, must continuously progress and strive
-            towards an ever-perfect world.
-          </p>
-          <p style={{ margin: 0, marginTop: 20 }}>
-            It&apos;s here that I would like to speak to the image of the tower, both in its physical
-            manifestation as well as its metaphorical implication. Towers often take a symbolic
-            form for a city or people, such as in the case of the Berlin TV tower, which adorns
-            much of the tourist merchandise on the Unter Den Linden. What is interesting about the
-            TV tower in particular is that it was considered a major Soviet victory during the Cold
-            War, not least for its height, as it remains the tallest building in Germany to this
-            day. The Empire State Building is another example, which at the time of its making was
-            the tallest building in the world, and quickly became an icon for the city of New York.
-            We can also think of the Eiffel Tower, the Burj Khalifa in Dubai, etc. The height of
-            the tower, and the city skyline marked by skyscrapers, quickly came and continue to act
-            as emblems for the modern world.
-          </p>
+        <div style={{ position: "absolute", top: 30, left: 285, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                John Donne, <i>Devotions upon Emergent Occasions</i> (Ann Arbor, MI: University of Michigan Press, 1959), 17.
+              </>
+            }
+          />
         </div>
-        <p style={{ ...pageNumStyle, right: 36 }}>15</p>
+        <div style={{ position: "absolute", top: 85, left: 260, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Danta, <i>Animal Fables after Darwin</i>, 5.
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 123, left: 105, zIndex: 50 }}>
+          <CitationPopover
+            citation={<>Dan. 4:30-4, New International Version.</>}
+          />
+        </div>
+        <div style={{ position: "absolute", top: 290, left: 65, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Lori Marino, “Classification,” in <i>Encyclopedia of Human-Animal Relationships: A Global Exploration of Our Connections with Animals</i> (Westport, Conn.: Greenwood Press, 2007), 220.
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 385, left: 210, zIndex: 50 }}>
+          <CitationPopover
+            citation={<>Marino, “Classification,” 220–25.</>}
+          />
+        </div>
       </>
-    ),
+    )),
   }
 
-  // Page 16
+  // Pages 15 onward: no individual layers prepared yet, so each pair just
+  // shows its full spread image split across the two pages.
   pages[7] = {
     ...pages[7],
-    back: (
+    back: buildLayeredPage(15, "left", (
       <>
-        <div style={essayTextStyle}>
-          <p style={{ margin: 0 }}>
-            Now another, much older example of the social significance of the tower and its
-            height lies in the biblical story of Babel in Genesis 11, which sees the first people
-            of Babel begin building a city and a tower of great height. Their progress drives God
-            to intervene and scatter the people over the earth and &lsquo;confuse their language&rsquo;,
-            so as to prevent the tower from ever reaching the heavens. Now the examples of modern
-            towers and ancient stories are worlds apart in many ways, but are linked by the notion
-            that a society&apos;s capability for progress and potential for &lsquo;perfection&rsquo; can be
-            reflected in the height of the structures they make. In the case of Babel and its
-            people, their shared push towards the heavens was indicative of their social cohesion
-            and potential, so that when they crossed some forbidden threshold between humanity and
-            the realm of perfection, the shared language and location of humanity had to be
-            revoked. The building of the TV tower symbolizes something akin, where the ability to
-            build at such a height becomes indicative of the social/moral/physical prowess of said
-            society. Thomas van Leeuwen, in his book The Skyward Trend of Thought, speaks of
-            skywards architecture and the skyscraper as the heir to Babel, a &ldquo;fulfillment of
-            the Babylonian promise; the realization of both its technical enigma and its
-            utopian-cosmopolitan objective.&rdquo; There is a celebration of height in a way that is
-            almost &lsquo;primal&rsquo; as J.J. Korom puts it, where the assertion of height becomes
-            synonymous with strength and agency.
-          </p>
+        <div style={{ position: "absolute", top: 43, left: 78, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                See: Marion Leathers Kuntz and Paul Grimley Kuntz, <i>Jacob’s Ladder and the Tree of Life</i> (Peter Lang Incorporated, International Academic Publishers, 1987).
+              </>
+            }
+          />
         </div>
-        <p style={{ ...pageNumStyle, left: 36 }}>16</p>
+        <div style={{ position: "absolute", top: 197, left: 79, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                University of Virginia, “Great Chain of Being - Encyclopedia Virginia,” Encyclopedia Virginia, July 17, 2023,{" "}
+                <a href="https://encyclopediavirginia.org/great-chain-of-being/" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                  https://encyclopediavirginia.org/great-chain-of-being/
+                </a>
+                .
+              </>
+            }
+          />
+        </div>
       </>
-    ),
+    )),
   }
-
-  // Page 17
   pages[8] = {
     ...pages[8],
-    front: (
+    front: buildLayeredPage(16, "right", (
       <>
-        <div style={essayTextStyle}>
-          <p style={{ margin: 0 }}>
-            The imperative to move upwards in search of progress, immortality, perfection, or even
-            just in pursuit of the &lsquo;good&rsquo; or &lsquo;divine&rsquo;, is a dizzying thing. Indeed, in
-            many ways, height seems to become a kind of material evidence for spiritual and moral
-            significance, whether through our posture, in ladders of being, or in our towers. We
-            see in many ways how the themes of height interlace throughout Western cosmological
-            histories, into the divine right of kings, into separation of &lsquo;man&rsquo; and
-            &lsquo;animal&rsquo;, and so on. Neoliberal governance which bases itself closely on the
-            notion of eternal growth and progress can in part be understood through this obsession
-            with the &lsquo;higher&rsquo; and with perfection. It is as though we are building our own
-            metaphysical tower, ever further. I would argue that if our age is indeed one of
-            dizziness, that it comes from this continuous effort to build higher faster stronger,
-            in such a way that the stress of innovation (in AI, in agriculture, in mining, the
-            infinite stock market, capitalist growth) fails to understand that no tower builds
-            forever, and that at the heights of our fanaticism for height itself, the dizziness of
-            the space we inhabit makes us blind to what is below, what we can longer see.
-          </p>
+        <div style={{ position: "absolute", top: 200, left: 186, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                George Lakoff and Mark Johnson, <i>Metaphors We Live By</i> (Chicago, IL: University of Chicago Press, 2003), 14.
+              </>
+            }
+          />
         </div>
-        <p style={{ ...pageNumStyle, right: 36 }}>17</p>
+        <div style={{ position: "absolute", top: 327, left: 204, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                See: Berkeley Science Review and Maiko Kitaoka, “The Never-Ending Search for the Elixir of Life,” Berkeleysciencereview.com, 2021; Project Gutenberg and Herbert Spencer, “Illustrations of Universal Progress,” Gutenberg.org, 2026; Agnes Tam and Meek Lange, “Progress,” Stanford.edu, February 17, 2011.
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 548, left: 215, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Oksana Maslovskaya and Grigoriy Ignatov, “Conceptions of Height and Verticality in the History of Skyscrapers and Skylines,” ed. D. Safarik, Y. Tabunschikov, and V. Murgul, <i>E3S Web of Conferences</i>, no. 33 (2018): 01005,{" "}
+                <a href="https://doi.org/10.1051/e3sconf/20183301005" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                  https://doi.org/10.1051/e3sconf/20183301005
+                </a>
+                .
+              </>
+            }
+          />
+        </div>
       </>
-    ),
+    )),
   }
+  pages[8] = {
+    ...pages[8],
+    back: buildLayeredPage(17, "left", (
+      <>
+        <div style={{ position: "absolute", top: 107, left: 170, zIndex: 50 }}>
+          <CitationPopover citation={<>Gen. 11:1–9 (New International Version).</>} />
+        </div>
+        <div style={{ position: "absolute", top: 313, left: 163, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Thomas A. P. Van Leeuwen, <i>The Skyward Trend of Thought</i> (MIT Press, 1990).
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 355, left: 210, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Joseph J Korom, <i>American Skyscraper, 1850-1940 : A Celebration of Height</i> (Boston: Branden, 2016).
+              </>
+            }
+          />
+        </div>
+      </>
+    )),
+  }
+  pages[9] = { ...pages[9], front: buildLayeredPage(18, "right") }
+  pages[9] = { ...pages[9], back: buildLayeredPage(19, "left") }
+  pages[10] = { ...pages[10], front: buildLayeredPage(20, "right") }
+  pages[10] = { ...pages[10], back: buildLayeredPage(21, "left", <BellsButton />) }
+  pages[11] = { ...pages[11], front: buildLayeredPage(22, "right") }
+  pages[11] = { ...pages[11], back: buildLayeredPage(23, "left") }
+  pages[12] = { ...pages[12], front: buildLayeredPage(24, "right") }
+  pages[12] = { ...pages[12], back: buildLayeredPage(25, "left") }
+  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right") }
+  pages[13] = { ...pages[13], back: buildLayeredPage(27, "left") }
+  pages[14] = { ...pages[14], front: buildLayeredPage(28, "right") }
+  pages[14] = { ...pages[14], back: buildLayeredPage(29, "left") }
+  pages[15] = { ...pages[15], front: buildLayeredPage(30, "right") }
+  pages[15] = { ...pages[15], back: buildLayeredPage(31, "left") }
+  pages[16] = { ...pages[16], front: buildLayeredPage(32, "right") }
+  pages[16] = { ...pages[16], back: buildLayeredPage(33, "left") }
+  pages[17] = { ...pages[17], front: buildLayeredPage(34, "right") }
+  pages[17] = { ...pages[17], back: buildLayeredPage(35, "left") }
+  pages[18] = { ...pages[18], front: buildLayeredPage(36, "right") }
+  pages[18] = { ...pages[18], back: buildLayeredPage(37, "left") }
+  pages[19] = { ...pages[19], front: buildLayeredPage(38, "right") }
+  pages[19] = { ...pages[19], back: buildLayeredPage(39, "left") }
+  pages[20] = { ...pages[20], front: buildLayeredPage(40, "right") }
+  pages[20] = { ...pages[20], back: buildLayeredPage(41, "left") }
+  pages[21] = { ...pages[21], front: buildLayeredPage(42, "right") }
+  pages[21] = { ...pages[21], back: buildLayeredPage(43, "left") }
+  pages[22] = { ...pages[22], front: buildLayeredPage(44, "right") }
+  pages[22] = { ...pages[22], back: buildLayeredPage(45, "left") }
+  pages[23] = { ...pages[23], front: buildLayeredPage(46, "right") }
+  pages[23] = { ...pages[23], back: buildLayeredPage(47, "left") }
+  pages[24] = { ...pages[24], front: buildLayeredPage(48, "right") }
+  pages[24] = { ...pages[24], back: buildLayeredPage(49, "left") }
+  pages[25] = { ...pages[25], front: buildLayeredPage(50, "right") }
+  pages[25] = { ...pages[25], back: buildLayeredPage(51, "left") }
+  pages[26] = { ...pages[26], front: buildLayeredPage(52, "right") }
+  pages[26] = { ...pages[26], back: buildLayeredPage(53, "left") }
+  pages[27] = { ...pages[27], front: buildLayeredPage(54, "right") }
+  pages[27] = { ...pages[27], back: buildLayeredPage(55, "left") }
+  pages[28] = { ...pages[28], front: buildLayeredPage(56, "right") }
+  pages[28] = { ...pages[28], back: buildLayeredPage(57, "left") }
+  pages[29] = { ...pages[29], front: buildLayeredPage(58, "right") }
+  pages[29] = { ...pages[29], back: buildLayeredPage(59, "left") }
+  pages[30] = { ...pages[30], front: buildLayeredPage(60, "right") }
+  pages[30] = { ...pages[30], back: buildLayeredPage(61, "left") }
+  pages[31] = { ...pages[31], front: buildLayeredPage(62, "right") }
 
   return pages
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
-  const pages = buildPages()
+  const videoLeftRef = useRef<HTMLVideoElement>(null)
+  const videoRightRef = useRef<HTMLVideoElement>(null)
+  const flipBookRef = useRef<FlipBookHandle>(null)
+  const flipBookFullscreenRef = useRef<FlipBookHandle>(null)
+  // Both refs are kept in sync so a table-of-contents link jumps the visible
+  // book regardless of whether the fullscreen overlay is open — the other
+  // instance just no-ops since it isn't mounted/visible.
+  const jumpToPage = (pageNumber: number) => {
+    flipBookRef.current?.goToPage(pageNumber)
+    flipBookFullscreenRef.current?.goToPage(pageNumber)
+  }
+  const pages = buildPages({ left: videoLeftRef, right: videoRightRef }, jumpToPage)
   const contributors = sortByName(contributorsData)
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
+
+  // The video spread (pages 9 & 10) is only the visible spread when the book
+  // has settled exactly on sheet 4 — play it then, pause it everywhere else.
+  const [bookPage, setBookPage] = useState(-1)
+  useEffect(() => {
+    const shouldPlay = bookPage === 4
+    for (const ref of [videoLeftRef, videoRightRef]) {
+      const video = ref.current
+      if (!video) continue
+      if (shouldPlay) video.play().catch(() => {})
+      else video.pause()
+    }
+  }, [bookPage])
+
+  // Preload every page layer (plus the cover) up front so opening the book and
+  // flipping through it doesn't stall on image fetch/decode mid-flip.
+  useEffect(() => {
+    const urls = ["/the_tower_assets/cover/front.JPG", "/the_tower_assets/cover/back.JPG", ...Object.values(PAGE_LAYERS).flat()]
+    const images = urls.map((src) => {
+      const img = new window.Image()
+      img.src = src
+      return img
+    })
+    return () => { images.length = 0 }
+  }, [])
 
   // Sync body background with dark mode so the full viewport (incl. main side padding) transitions in lock-step with the header
   useLayoutEffect(() => {
@@ -629,7 +747,7 @@ export default function CurrentIssuePage() {
 
             {/* The Book */}
             <ClientOnly>
-              <FlipBook pages={pages} width={420} height={600} />
+              <FlipBook ref={flipBookRef} pages={pages} width={420} height={590.8} onPageChange={setBookPage} />
             </ClientOnly>
 
           </div>
@@ -661,7 +779,7 @@ export default function CurrentIssuePage() {
           </button>
           <CitationLayer>
             <ClientOnly>
-              <FlipBook pages={pages} width={420} height={600} />
+              <FlipBook ref={flipBookFullscreenRef} pages={pages} width={420} height={590.8} onPageChange={setBookPage} />
             </ClientOnly>
           </CitationLayer>
         </div>,
