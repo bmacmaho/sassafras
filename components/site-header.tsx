@@ -1,0 +1,587 @@
+"use client"
+
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname, useRouter } from "next/navigation"
+import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
+import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
+import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
+import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
+import { isVideoSrc } from "@/lib/types"
+
+function ViewedThumb({ src }: { src: string }) {
+  return isVideoSrc(src) ? (
+    <video src={src} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+  ) : (
+    <Image src={src} alt="Last viewed" fill style={{ objectFit: "cover" }} unoptimized />
+  )
+}
+
+export function SearchBox({ color, open, onToggle, darkMode }: { color: string; open: boolean; onToggle: () => void; darkMode?: boolean }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
+
+  const toggle = () => {
+    if (!open) setTimeout(() => inputRef.current?.focus(), 50)
+    onToggle()
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const q = inputRef.current?.value.trim()
+    if (q) router.push(`/explore?q=${encodeURIComponent(q)}`)
+  }
+
+  const borderColor = darkMode ? "white" : "black"
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center transition-all duration-300 rounded-md"
+      style={{ border: open ? `2px solid ${borderColor}` : "2px solid transparent" }}
+    >
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{ width: open ? "120px" : "0", opacity: open ? 1 : 0 }}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          className="font-alte-haas text-sm tracking-[0.1em] bg-transparent outline-none px-3 w-full"
+          style={{ color: darkMode ? "white" : "black" }}
+        />
+      </div>
+      <button onClick={toggle} className="relative flex items-center justify-center bg-transparent border-none cursor-pointer p-0">
+        <Image src="/search-icon/search-closed.png" alt="Search" width={48} height={48} className={`object-contain transition-opacity ${open ? "duration-700" : "duration-0"}`} style={{ opacity: open ? 0 : 1, filter: darkMode ? "invert(1)" : "none" }} />
+        <Image src="/search-icon/search-open.png" alt="Search" width={48} height={48} className="object-contain absolute transition-opacity duration-300" style={{ opacity: open ? 1 : 0, filter: darkMode ? "invert(1)" : "none" }} />
+      </button>
+    </form>
+  )
+}
+
+function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; label: string; pathname: string; submenu?: { href: string; label: string }[]; darkMode?: boolean }) {
+  const [hovered, setHovered] = useState(false)
+  const [rect, setRect] = useState<DOMRect | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const linkColor = PAGE_COLORS[href] ?? DEFAULT_COLOR
+  const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
+  const color = hovered || isActive ? linkColor : darkMode ? "white" : "black"
+
+  const cancelLeave = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current)
+  }
+
+  const scheduleLeave = () => {
+    leaveTimer.current = setTimeout(() => setHovered(false), 120)
+  }
+
+  const handleMouseEnter = () => {
+    cancelLeave()
+    if (containerRef.current) setRect(containerRef.current.getBoundingClientRect())
+    setHovered(true)
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative flex flex-col items-center"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={scheduleLeave}
+    >
+      <Link
+        href={href}
+        className="relative font-alte-haas text-base tracking-[0.05em] transition-colors text-center"
+        style={{ color }}
+      >
+        {label}
+        <span
+          className="block h-[1px] transition-all duration-300 ease-out origin-center"
+          style={{ backgroundColor: linkColor, transform: hovered || isActive ? "scaleX(1)" : "scaleX(0)" }}
+        />
+      </Link>
+      {submenu && rect && createPortal(
+        <div
+          className={`flex flex-col items-start gap-2 transition-all duration-200 z-[10000] ${hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}
+          style={{ position: "fixed", top: rect.bottom + 12, left: rect.left }}
+          onMouseEnter={cancelLeave}
+          onMouseLeave={scheduleLeave}
+        >
+          {submenu.map(item => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="font-alte-haas text-sm tracking-[0.05em] whitespace-nowrap transition-opacity hover:opacity-60 text-left"
+              style={{ color: darkMode ? "#111" : "#FBFAF1", WebkitTextStroke: darkMode ? "0.5px white" : "0.5px black" }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>,
+        document.body
+      )}
+    </div>
+  )
+}
+
+const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
+  "/issues":                  { line1: "Archive",        line2: "Full Collection — 2024 to Present" },
+  "/current-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
+  "/submissions":             { line1: "Open Call",      line2: "Issue No. 1 — The Tower" },
+}
+
+const NAV_LINKS = [
+  { href: "/", label: "HOME" },
+  { href: "/current-issue", label: "CURRENT ISSUE" },
+  ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
+  { href: "/explore", label: "EXPLORE" },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }] },
+  ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
+  { href: "/keep-in-touch", label: FEATURE_FLAGS.supportUs ? "CONTACT / SUPPORT" : "CONTACT", pageTitle: "Contact" },
+]
+
+const HEADER_MAX = 220
+const HEADER_MIN = 64
+const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
+const SNAP_THRESHOLD = 60
+
+export function SiteHeader() {
+  const pathname = usePathname()
+  const isExplorePage = pathname === "/explore"
+  const isCurrentIssuePage = pathname === "/current-issue"
+  const hasChevron = isExplorePage
+const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
+  const [headerTransition, setHeaderTransition] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const accumRef = useRef(0)
+  const phaseLockedRef = useRef(true)
+  const pathnameRef = useRef(pathname)
+  const scrolled = headerHeight <= HEADER_MIN
+  const [viewedArtworks, setViewedArtworks] = useState<{ image: string; slug: string }[]>([])
+
+  useEffect(() => {
+    if (pathname.startsWith("/explore")) {
+      const stored = sessionStorage.getItem("viewedArtworks")
+      setViewedArtworks(stored ? JSON.parse(stored) : [])
+    } else {
+      setViewedArtworks([])
+    }
+  }, [pathname])
+  const router = useRouter()
+  const menuOpenRef = useRef(menuOpen)
+  useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpenRef.current) return
+    const timer = setTimeout(() => setMenuOpen(false), 3000)
+    return () => clearTimeout(timer)
+  }, [pathname])
+
+  // Reset header to expanded state on each page navigation
+  useEffect(() => {
+    if (window.scrollY > 0) {
+      accumRef.current = COLLAPSE_RANGE
+      phaseLockedRef.current = false
+      setHeaderHeight(HEADER_MIN)
+    } else {
+      accumRef.current = 0
+      phaseLockedRef.current = true
+      setHeaderHeight(HEADER_MAX)
+    }
+    setHeaderTransition(false)
+  }, [pathname])
+
+  useEffect(() => { pathnameRef.current = pathname }, [pathname])
+
+  // Wheel interceptor: desktop only, locks content scroll while header collapses
+  useEffect(() => {
+    if (!window.matchMedia('(min-width: 1024px)').matches) return
+
+    const onWheel = (e: WheelEvent) => {
+      if (pathnameRef.current === "/explore") return
+      if (!phaseLockedRef.current) return
+      e.preventDefault()
+      setHeaderTransition(false)
+      accumRef.current = Math.max(0, Math.min(COLLAPSE_RANGE, accumRef.current + e.deltaY))
+      if (e.deltaY > 0 && accumRef.current >= SNAP_THRESHOLD) {
+        accumRef.current = COLLAPSE_RANGE
+        setHeaderHeight(HEADER_MIN)
+        phaseLockedRef.current = false
+      } else {
+        setHeaderHeight(HEADER_MAX - accumRef.current)
+      }
+    }
+
+    const onScroll = () => {
+      if (pathnameRef.current === "/explore") return
+      if (window.scrollY === 0 && !phaseLockedRef.current) {
+        phaseLockedRef.current = true
+        accumRef.current = 0
+        setHeaderTransition(true)
+        setHeaderHeight(HEADER_MAX)
+      }
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
+
+  const handleChevronToggle = () => {
+    setHeaderTransition(false)
+    if (scrolled) {
+      accumRef.current = 0
+      phaseLockedRef.current = true
+      setHeaderHeight(HEADER_MAX)
+    } else {
+      accumRef.current = COLLAPSE_RANGE
+      phaseLockedRef.current = false
+      setHeaderHeight(HEADER_MIN)
+    }
+  }
+
+  const { extras, rightExtras } = useHeaderExtras()
+  const { setHeaderScrolled, setHeaderHeight: setContextHeaderHeight, darkMode, setDarkMode } = useHeaderScrolled()
+  useEffect(() => { setHeaderScrolled(scrolled) }, [scrolled, setHeaderScrolled])
+  useEffect(() => {
+    setContextHeaderHeight(headerHeight)
+    document.documentElement.style.setProperty('--header-bottom', `${13 + headerHeight}px`)
+  }, [headerHeight, setContextHeaderHeight])
+  useEffect(() => { setDarkMode(pathname === "/current-issue") }, [pathname, setDarkMode])
+
+  const currentColor = getPageColor(pathname)
+  const accentColor = currentColor
+  const allLinks = NAV_LINKS.flatMap(link => [link, ...(link.submenu ?? [])])
+  const pageLink = [...allLinks].sort((a, b) => b.href.length - a.href.length).find(link => pathname.startsWith(link.href))
+  const pageLabel = pageLink?.pageTitle ?? pageLink?.label ?? ""
+  const pageHref = pageLink?.href ?? "/"
+  const subtitleKey = Object.keys(PAGE_SUBTITLES).find(k => pathname.startsWith(k))
+
+  if (pathname === "/") return null
+
+  return (
+    <>
+      {/* Mobile overlay — appears below header */}
+      <div
+          className={`lg:hidden fixed left-0 right-0 bottom-0 z-[149] backdrop-blur-xl flex flex-col justify-start items-center pt-16 pb-20 px-6 gap-6 overflow-y-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            menuOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-4"
+          } ${darkMode ? "bg-black/95" : "bg-[#fcfaf2]/95"}`}
+          style={{ top: "76px" }}
+        >
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className={`font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors text-center ${darkMode ? "text-white" : "text-[#222]"}`}
+            >
+              {link.label}
+            </Link>
+          ))}
+      </div>
+
+        {/* Mobile slim bar */}
+        <header className="lg:hidden sticky top-[10px] z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px", transition: "background-color 500ms ease" }}>
+          <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-start">
+              <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
+            </Link>
+            {viewedArtworks.map((a) => (
+              <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                <div className="relative w-6 h-6 overflow-hidden border border-black/10">
+                  <ViewedThumb src={a.image} />
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="absolute right-11 top-3 flex items-center gap-3 overflow-visible" style={{ zIndex: 200 }}>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
+            <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col items-center group cursor-pointer relative bg-transparent border-none p-0 flex-shrink-0">
+              <div className="relative leading-none flex flex-col items-end gap-0.5 select-none" style={{ color: darkMode ? "#39FF14" : "rgb(43, 52, 133)", opacity: darkMode ? 0.5 : 1 }}>
+                <div className="flex gap-1.5 text-xl leading-none font-alte-haas">
+                  <span>M</span><span>E</span>
+                </div>
+                <div
+                  className="flex gap-1.5 text-xl leading-none transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-top-right font-alte-haas"
+                  style={{ transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)" }}
+                >
+                  <span>N</span><span>U</span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </header>
+
+        {/* Desktop header */}
+        <header
+          className="hidden lg:flex sticky top-[13px] z-50 relative"
+          style={{
+            backgroundColor: darkMode ? "#000" : "#fbfaf1",
+            height: `${headerHeight}px`,
+            transition: `background-color 500ms ease${headerTransition ? ", height 0.4s ease" : ""}`,
+          }}
+        >
+          {/* Minimised row — fades in when scrolled */}
+          <div
+            className="absolute inset-0 flex flex-row items-center pl-24 pr-[7.5rem] gap-6 transition-opacity duration-300"
+            style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? "auto" : "none" }}
+          >
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
+              </Link>
+              {viewedArtworks.map((a) => (
+                <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                  <div className="relative w-6 h-6 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
+                    <ViewedThumb src={a.image} />
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="flex-1 overflow-hidden h-full flex items-center relative">
+              <Link
+                href={pageHref}
+                className="absolute font-alte-haas text-sm tracking-[0.2em] whitespace-nowrap transition-opacity duration-300 hover:opacity-60"
+                style={{ opacity: menuOpen ? 0 : 1, color: darkMode ? "white" : undefined }}
+              >{pageLabel}</Link>
+              <div
+                className="flex items-center justify-between w-full transition-transform duration-500 ease-in-out"
+                style={{ transform: menuOpen ? "translateX(0)" : "translateX(110%)" }}
+              >
+                {NAV_LINKS.map((link) => (
+                  <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} darkMode={darkMode} />
+                ))}
+              </div>
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
+          </div>
+
+          {/* Maximised nav — fades out when scrolled */}
+          <nav
+            className="flex absolute inset-x-0 flex-row items-center transition-all duration-300 ease-in-out"
+            style={{
+              transform: menuOpen ? "translateX(0)" : "translateX(110%)",
+              opacity: scrolled ? 0 : 1,
+              pointerEvents: !scrolled && menuOpen ? "auto" : "none",
+              paddingLeft: "6rem",
+              paddingRight: "6rem",
+              top: "1rem",
+            }}
+          >
+            <div className="flex items-center justify-between flex-1 pr-8">
+              {NAV_LINKS.map((link) => (
+                <NavLink key={link.href} href={link.href} label={link.label} pathname={pathname} submenu={link.submenu} darkMode={darkMode} />
+              ))}
+            </div>
+            <SearchBox color={currentColor} open={searchOpen} onToggle={() => setSearchOpen(p => !p)} darkMode={darkMode} />
+          </nav>
+
+          {/* Menu button — always present, cross-fades between states */}
+          <div
+            className="absolute right-16 z-[70] flex items-center transition-all duration-300 ease-out"
+            style={{ top: scrolled ? "0px" : "2.5rem", height: scrolled ? "64px" : "auto" }}
+          >
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="relative cursor-pointer bg-transparent border-none p-0 flex items-center justify-center z-[80]"
+              style={{ color: darkMode ? "#39FF14" : "rgb(43, 52, 133)", opacity: darkMode ? 0.5 : 1, width: "56px", height: scrolled ? "56px" : "100px" }}
+            >
+              {/* Hamburger/Cross — fades in when minimised */}
+              <div
+                className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
+                style={{
+                  opacity: scrolled ? 1 : 0,
+                  transform: scrolled ? "scale(1) rotate(0deg)" : "scale(0.5) rotate(90deg)",
+                  pointerEvents: scrolled ? "auto" : "none",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {menuOpen ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/>
+                  </svg>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+                  </svg>
+                )}
+              </div>
+
+              {/* ME NU vertical text — fades in when maximised */}
+              <div
+                className="absolute transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center"
+                style={{
+                  opacity: scrolled ? 0 : 1,
+                  transform: scrolled ? "scale(0.5) rotate(-90deg)" : "scale(1) rotate(0deg)",
+                  pointerEvents: scrolled ? "none" : "auto",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <span
+                  className="font-alte-haas text-xl tracking-[0.3em] select-none"
+                  style={{ writingMode: "vertical-rl" as const, transform: "rotate(180deg)", display: "inline-block" }}
+                >
+                  ME
+                  <span
+                    className="font-alte-haas"
+                    style={{
+                      display: "inline-block",
+                      transformOrigin: "top right",
+                      transform: menuOpen ? "rotate(-90deg)" : "rotate(0deg)",
+                      transition: "transform 0.4s ease",
+                    }}
+                  >
+                    NU
+                  </span>
+                </span>
+              </div>
+            </button>
+          </div>
+
+          {/* Bottom-right extras (e.g. search on explore page) — explicit
+              z-index so it isn't covered by the Logo + page title block below,
+              which sits later in the DOM and overlaps it in the maximised
+              header, silently eating clicks on its remove ("×") buttons. */}
+          {rightExtras && (
+            <div
+              className="absolute bottom-8 right-[4.5rem] transition-opacity duration-300"
+              style={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto", zIndex: 10 }}
+            >
+              {rightExtras}
+            </div>
+          )}
+
+          {/* Logo + page title — fades out when scrolled */}
+          <div
+            className="absolute left-24 right-24 flex flex-col items-start gap-4 transition-opacity duration-300"
+            style={{ top: "3.5rem", opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+          >
+            <div className="flex items-start gap-2">
+              <Link href="/" className="flex items-start">
+                <Image
+                  src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"}
+                  alt="Sassafras"
+                  width={80}
+                  height={80}
+                  className="object-contain"
+                />
+              </Link>
+              {viewedArtworks.map((a) => (
+                <Link key={a.slug} href={`/explore/${a.slug}`} className="flex-shrink-0">
+                  <div className="relative w-10 h-10 overflow-hidden border border-black/10 hover:border-black/40 transition-colors">
+                    <ViewedThumb src={a.image} />
+                  </div>
+                </Link>
+              ))}
+              {pathname === "/about/why-sassafras" && (
+                <div className="flex gap-5">
+                  {[
+                    "/why-sassafras-squares/IMG_6372.JPG",
+                    "/why-sassafras-squares/IMG_6552.JPG",
+                    "/why-sassafras-squares/IMG_6553.JPG",
+                    "/why-sassafras-squares/IMG_6554.JPG",
+                    "/why-sassafras-squares/IMG_6555.JPG",
+                    "/why-sassafras-squares/IMG_6556.JPG",
+                  ].map((src) => (
+                    <div key={src} className="relative flex-shrink-0 overflow-hidden" style={{ width: 80, height: 80 }}>
+                      <Image src={src} alt="" fill className="object-cover" unoptimized />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="flex items-end justify-between gap-8 w-full">
+              <div className="flex items-end gap-8">
+                <Link
+                  href={pageHref}
+                  className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
+                  style={pathname === "/about/why-sassafras"
+                    ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
+                    : { color: darkMode ? "white" : "#1a1a1a" }}
+                >
+                  {pageLabel}
+                </Link>
+                {extras ? (
+                  <div className="flex flex-col justify-end pb-1 gap-1 h-12">{extras}</div>
+                ) : subtitleKey && PAGE_SUBTITLES[subtitleKey] ? (
+                  <div className="flex flex-col justify-end pb-1 gap-1">
+                    <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white" : "text-black/40"}`}>
+                      {PAGE_SUBTITLES[subtitleKey].line1}
+                    </span>
+                    <span className={`font-title text-base font-medium tracking-tight leading-none ${darkMode ? "text-white/70" : "text-black/20"}`}>
+                      {PAGE_SUBTITLES[subtitleKey].line2}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+              {hasThemeToggle && (
+                <button
+                  onClick={() => setDarkMode(!darkMode)}
+                  className="flex flex-shrink-0 items-center gap-2 pb-1 font-alte-haas text-[10px] tracking-[0.2em] cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-70"
+                >
+                  <Sun size={12} style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.55)" }} />
+                  <div
+                    className="relative rounded-full transition-colors duration-300 flex-shrink-0"
+                    style={{
+                      width: 30,
+                      height: 16,
+                      backgroundColor: darkMode ? accentColor : "transparent",
+                      border: `1.5px solid ${darkMode ? accentColor : "rgba(0,0,0,0.3)"}`,
+                    }}
+                  >
+                    <div
+                      className="absolute rounded-full transition-all duration-300"
+                      style={{
+                        top: 2,
+                        width: 10,
+                        height: 10,
+                        backgroundColor: darkMode ? "#000" : "rgba(0,0,0,0.4)",
+                        transform: darkMode ? "translateX(15px)" : "translateX(2px)",
+                      }}
+                    />
+                  </div>
+                  <Moon size={12} style={{ color: darkMode ? "white" : "rgba(0,0,0,0.35)" }} />
+                </button>
+              )}
+            </div>
+          </div>
+          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname.startsWith("/explore/")))) && (
+            <div
+              className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
+              style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
+            />
+          )}
+          {/* Chevron straddles the header's bottom seam — rendered inside the
+              header (rather than as a sticky sibling) so it stacks in front of
+              the header's own background but still behind the Filters dropdown
+              (extras), which lives in this same stacking context at z-[100]. */}
+          {hasChevron && (
+            <div
+              className="hidden lg:block absolute bottom-0 left-0 right-0 pointer-events-none overflow-visible"
+              style={{ height: 0, zIndex: 40 }}
+            >
+              <button
+                onClick={handleChevronToggle}
+                aria-label={scrolled ? "Expand header" : "Collapse header"}
+                className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto px-1.5 py-0.5 border-2 transition-colors ${darkMode ? "bg-black" : "border-black/20 hover:border-black/50 text-black/30 hover:text-black/60 bg-[#fbfaf1]"}`}
+                style={darkMode ? { borderColor: accentColor, color: accentColor } : undefined}
+              >
+                {scrolled ? <ChevronDown size={14} strokeWidth={2} /> : <ChevronUp size={14} strokeWidth={2} />}
+              </button>
+            </div>
+          )}
+        </header>
+    </>
+  )
+}

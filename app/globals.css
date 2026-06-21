@@ -1,0 +1,395 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('/fonts/alte_haas_grotesk/AlteHaasGroteskBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-alte-haas {
+  font-family: var(--font-alte-haas), 'Alte Haas Grotesk', sans-serif !important;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+
+:root {
+  /* set to actual px value by ScrollAnimator on mount */
+  --scrollbar-width: 0px;
+
+  /* ── Live-site palette (Soft Contemporary Art Space Vibe) ── */
+  --background: #fcfaf2;
+  /* Cream/Off-white */
+  --foreground: #222222;
+  /* Soft black */
+  --text-body: #444444;
+  /* Softer grey for body text */
+  --card: #fcfaf2;
+  --card-foreground: #222222;
+  --popover: oklch(0.98 0.01 90);
+  --popover-foreground: oklch(0.15 0.01 330);
+  --primary: oklch(0.15 0.01 330);
+  --primary-foreground: oklch(0.98 0.01 90);
+  --secondary: oklch(0.92 0.01 90);
+  --secondary-foreground: oklch(0.25 0.01 330);
+  --muted: oklch(0.92 0.01 90);
+  --muted-foreground: oklch(0.45 0.01 75);
+  --accent: oklch(0.72 0.16 55);
+  --accent-foreground: oklch(0.98 0.01 90);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0.01 90);
+  --border: oklch(0.85 0.01 90);
+  --input: oklch(0.85 0.01 90);
+  --ring: oklch(0.72 0.16 55);
+  --radius: 0.25rem;
+  --frame-color: #6a8cff;
+  /* Vibe blue border */
+  --frame-color-article: #8d9c6b;
+  /* Olive green border */
+}
+
+@theme inline {
+  --font-sans: var(--font-charter), Charter, Georgia, serif;
+  --font-serif: var(--font-charter), Charter, Georgia, serif;
+  --font-title: var(--font-alte-haas), sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-text-body: var(--text-body);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html,
+  body {
+    background-color: var(--background);
+    color: var(--text-body);
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    /* Prevent scroll position corrections due to font swaps, image loads, or transform changes */
+    overflow-anchor: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title);
+  }
+
+  a,
+  button {
+    background-color: transparent;
+  }
+
+  /* Leaf 4 — default cursor */
+  html, body, * {
+    cursor: url('/cursors/leaf-4-with-border.png') 0 0, auto !important;
+  }
+
+  /* Leaf 2 — text / input context */
+  p, h1, h2, h3, h4, h5, h6, li, blockquote, label, td, th, input, textarea {
+    cursor: url('/cursors/leaf-2-with-border.png') 0 0, text !important;
+  }
+
+  /* Leaf 3 — clickable elements */
+  a, button, [role="button"], select, .cursor-pointer {
+    cursor: url('/cursors/leaf-3-with-border.png') 0 0, pointer !important;
+  }
+
+  /* Leaf 1 — home page (dark bg); clickable elements still use Leaf 3 */
+  .home-page, .home-page p, .home-page h1, .home-page h2, .home-page h3,
+  .home-page h4, .home-page h5, .home-page h6, .home-page li,
+  .home-page blockquote, .home-page label, .home-page td, .home-page th,
+  .home-page input, .home-page textarea, .home-page span, .home-page div,
+  .home-page section, .home-page img {
+    cursor: url('/cursors/leaf-1-with-border.png') 0 0, auto !important;
+  }
+  .home-page a, .home-page button, .home-page [role="button"],
+  .home-page select, .home-page .cursor-pointer {
+    cursor: url('/cursors/leaf-3-with-border.png') 0 0, pointer !important;
+  }
+}
+
+
+/* Animations... */
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slow-spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes nav-line-flow {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  50% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-nav-line-flow {
+  animation: nav-line-flow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes float-gentle {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes float-gentle-delayed {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes walk-bounce {
+
+  0%,
+  100% {
+    transform: translateY(-3.75rem) rotate(90deg);
+  }
+
+  50% {
+    transform: translateY(3.75rem) rotate(90deg);
+  }
+}
+
+.animate-walk-bounce {
+  animation: walk-bounce 5s linear infinite;
+}
+
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes float-arrow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translateY(16px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dot-fade {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes line-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-circle {
+  animation: slow-spin 30s linear infinite;
+}
+
+.hero-circle-inner {
+  animation: slow-spin-reverse 20s linear infinite;
+}
+
+.tracking-hero {
+  letter-spacing: 0.22em;
+}
+
+.tracking-label {
+  letter-spacing: 0.18em;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease both;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease both;
+}
+
+.animate-fade-up-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.animate-fade-up-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.animate-fade-up-delay-3 {
+  animation-delay: 0.35s;
+}
+
+.animate-fade-in-delay-1 {
+  animation-delay: 0.3s;
+}
+
+.animate-fade-in-delay-2 {
+  animation-delay: 0.6s;
+}
+
+.animate-fade-in-delay-3 {
+  animation-delay: 0.9s;
+}
+
+.divider-animated {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.72 0.16 55 / 0.5), transparent);
+  transform-origin: center;
+  animation: line-grow 2s ease both;
+  animation-delay: 0.8s;
+}
+
+.dot-animated {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: oklch(0.72 0.16 55 / 0.4);
+  animation: dot-fade 3s ease-in-out infinite;
+}
+
+@keyframes pulse-gentle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.book-page-face {
+  background-image:
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 28px,
+      rgba(0, 0, 0, 0.01) 28px,
+      rgba(0, 0, 0, 0.01) 29px);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee2 {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0%); }
+}
+
+/* Homepage banner — faster */
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Footer marquee uses the same class but overrides speed via its own style jsx (30s) */
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
+}
