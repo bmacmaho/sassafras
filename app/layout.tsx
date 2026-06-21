@@ -1,6 +1,12 @@
 import type { Metadata } from "next"
 
 import localFont from "next/font/local"
+import { EB_Garamond } from "next/font/google"
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  variable: "--font-eb-garamond",
+})
 
 const geistSans = localFont({
   src: "../public/fonts/geist-font-1.8.0/fonts/Geist/variable/Geist[wght].ttf",
@@ -101,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable} ${charter.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${alteHaasGrotesk.variable} ${charter.variable} ${ebGaramond.variable}`}>
       <body className="font-sans antialiased text-[#222] transition-colors duration-1000 overflow-x-hidden">
         <HeaderExtrasProvider>
         <PageFrame>

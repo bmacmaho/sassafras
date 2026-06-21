@@ -19,6 +19,9 @@ interface FlipBookProps {
   pages: BookPage[]
   width?: number
   height?: number
+  /** Fires whenever the settled (non-mid-flip) sheet index changes, so callers
+   * can do things like pause/play video on pages that aren't currently visible. */
+  onPageChange?: (page: number) => void
 }
 
 /* ───────────────── spring physics helper ───────────────── */
@@ -30,6 +33,13 @@ function useSpring(
   const ref = useRef({ value: target, velocity: 0 })
   const [value, setValue] = useState(target)
   const raf = useRef<number>(0)
+  // Bumped by set() to force the tick loop below to restart even when the
+  // numeric target hasn't changed — e.g. "idle" and "flipping backward" are
+  // both target 0, so without this the effect (keyed on `target`) never
+  // re-fires, and once the loop has converged and stopped ticking, nothing
+  // is left to drive the value toward 0 for the new backward flip. It would
+  // sit frozen forever, permanently blocking all further navigation.
+  const [generation, setGeneration] = useState(0)
 
   useEffect(() => {
     ref.current.value = value
@@ -57,7 +67,7 @@ function useSpring(
       running = false
       cancelAnimationFrame(raf.current)
     }
-  }, [target, stiffness, damping])
+  }, [target, stiffness, damping, generation])
 
   // Snaps the spring straight to a value, bypassing the physics — used to
   // re-prime the shared flip angle right before a new flip starts, since
@@ -68,15 +78,20 @@ function useSpring(
     ref.current.value = v
     ref.current.velocity = 0
     setValue(v)
+    setGeneration((g) => g + 1)
   }, [])
 
   return [value, set] as const
 }
 
 /* ──────────────────────────── component ──────────────────────────── */
-export function FlipBook({ pages, width = 420, height = 600 }: FlipBookProps) {
+export function FlipBook({ pages, width = 420, height = 600, onPageChange }: FlipBookProps) {
   /* ── state ─────────────────────────────────────────────────── */
   const [currentPage, setCurrentPage] = useState(-1) // -1 = cover closed
+
+  useEffect(() => {
+    onPageChange?.(currentPage)
+  }, [currentPage, onPageChange])
   const [isOpen, setIsOpen] = useState(false)
   const [dragAngle, setDragAngle] = useState<number | null>(null)
   const [isDragging, setIsDragging] = useState(false)

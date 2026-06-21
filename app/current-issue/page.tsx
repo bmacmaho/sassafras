@@ -28,6 +28,7 @@ const pageNumStyle: CSSProperties = {
   letterSpacing: "0.15em",
   color: "#b5a994",
   margin: 0,
+  fontFamily: "var(--font-eb-garamond), 'EB Garamond', serif",
 }
 
 // Each page's layered artwork, sourced from public/the_tower_assets/<left>-<right>/<page>/.
@@ -98,7 +99,10 @@ function buildLayeredPage(pageNum: number, side: "left" | "right") {
 }
 
 /* ── Build book pages ───────────────────────────────────────────── */
-function buildPages(): BookPage[] {
+// videoRefs lets the caller pause these two video elements while their pages
+// aren't the visible spread — decoding both continuously for as long as the
+// book stays open was heavy enough to eventually stall the flip animation.
+function buildPages(videoRefs: { left: React.Ref<HTMLVideoElement>; right: React.Ref<HTMLVideoElement> }): BookPage[] {
   const pages: BookPage[] = Array.from({ length: 10 }, (_, i) => ({
     front: <p style={{ ...pageNumStyle, right: 36 }}>{i * 2}</p>,
     back: <p style={{ ...pageNumStyle, left: 36 }}>{i * 2 + 1}</p>,
@@ -117,8 +121,8 @@ function buildPages(): BookPage[] {
     back: (
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
         <video
+          ref={videoRefs.left}
           src="/the_tower_assets/javi/javi-video.mp4"
-          autoPlay
           loop
           muted
           playsInline
@@ -129,6 +133,7 @@ function buildPages(): BookPage[] {
             width: 840,
             maxWidth: "none",
             height: 583,
+            pointerEvents: "none",
           }}
         />
         <p style={{ ...pageNumStyle, left: 36 }}>9</p>
@@ -142,8 +147,8 @@ function buildPages(): BookPage[] {
     front: (
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
         <video
+          ref={videoRefs.right}
           src="/the_tower_assets/javi/javi-video.mp4"
-          autoPlay
           loop
           muted
           playsInline
@@ -154,6 +159,7 @@ function buildPages(): BookPage[] {
             width: 840,
             maxWidth: "none",
             height: 583,
+            pointerEvents: "none",
           }}
         />
         <p style={{ ...pageNumStyle, right: 36 }}>10</p>
@@ -171,10 +177,37 @@ function buildPages(): BookPage[] {
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
-  const pages = buildPages()
+  const videoLeftRef = useRef<HTMLVideoElement>(null)
+  const videoRightRef = useRef<HTMLVideoElement>(null)
+  const pages = buildPages({ left: videoLeftRef, right: videoRightRef })
   const contributors = sortByName(contributorsData)
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
+
+  // The video spread (pages 9 & 10) is only the visible spread when the book
+  // has settled exactly on sheet 4 — play it then, pause it everywhere else.
+  const [bookPage, setBookPage] = useState(-1)
+  useEffect(() => {
+    const shouldPlay = bookPage === 4
+    for (const ref of [videoLeftRef, videoRightRef]) {
+      const video = ref.current
+      if (!video) continue
+      if (shouldPlay) video.play().catch(() => {})
+      else video.pause()
+    }
+  }, [bookPage])
+
+  // Preload every page layer (plus the cover) up front so opening the book and
+  // flipping through it doesn't stall on image fetch/decode mid-flip.
+  useEffect(() => {
+    const urls = ["/the_tower_assets/cover/IMG_7167.PNG", ...Object.values(PAGE_LAYERS).flat()]
+    const images = urls.map((src) => {
+      const img = new window.Image()
+      img.src = src
+      return img
+    })
+    return () => { images.length = 0 }
+  }, [])
 
   // Sync body background with dark mode so the full viewport (incl. main side padding) transitions in lock-step with the header
   useLayoutEffect(() => {
@@ -242,7 +275,7 @@ export default function CurrentIssuePage() {
 
             {/* The Book */}
             <ClientOnly>
-              <FlipBook pages={pages} width={420} height={600} />
+              <FlipBook pages={pages} width={420} height={600} onPageChange={setBookPage} />
             </ClientOnly>
 
           </div>
@@ -274,7 +307,7 @@ export default function CurrentIssuePage() {
           </button>
           <CitationLayer>
             <ClientOnly>
-              <FlipBook pages={pages} width={420} height={600} />
+              <FlipBook pages={pages} width={420} height={600} onPageChange={setBookPage} />
             </ClientOnly>
           </CitationLayer>
         </div>,
