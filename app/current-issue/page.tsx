@@ -114,6 +114,7 @@ const PAGE_LAYERS: Record<number, string[]> = {
     "/the_tower_assets/21-22/22/1.PNG",
     "/the_tower_assets/21-22/22/IMG_7442.PNG",
     "/the_tower_assets/21-22/22/IMG_7445.PNG",
+    "/the_tower_assets/21-22/22/IMG_7444.PNG",
     "/the_tower_assets/21-22/22/IMG_7446.PNG",
   ],
   25: [
