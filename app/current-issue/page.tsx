@@ -31,27 +31,6 @@ const pageNumStyle: CSSProperties = {
   fontFamily: "var(--font-eb-garamond-12), 'EB Garamond', serif",
 }
 
-// Each page's layered artwork, sourced from public/the_tower_assets/<left>-<right>/<page>/.
-// Files are named by stacking order (1 = background, 2 on top of it, etc.) — files
-// sharing a leading number (e.g. 2.1, 2.2) sit on the same layer. Pages without an
-// entry here (no assets prepared yet) just render blank with their page number.
-const TOC_SPREAD_LAYERS = [
-  "/the_tower_assets/3-4/1.PNG",
-  "/the_tower_assets/3-4/1.1.PNG",
-  "/the_tower_assets/3-4/IMG_7582.PNG",
-  "/the_tower_assets/3-4/IMG_7583.PNG",
-  "/the_tower_assets/3-4/IMG_7584.PNG",
-  "/the_tower_assets/3-4/IMG_7585.PNG",
-  "/the_tower_assets/3-4/IMG_7586.PNG",
-  "/the_tower_assets/3-4/IMG_7587.PNG",
-  "/the_tower_assets/3-4/IMG_7588.PNG",
-  "/the_tower_assets/3-4/IMG_7589.PNG",
-  "/the_tower_assets/3-4/IMG_7590.PNG",
-  "/the_tower_assets/3-4/IMG_7578.PNG",
-  "/the_tower_assets/3-4/IMG_7581.PNG",
-  "/the_tower_assets/3-4/titles.PNG",
-]
-
 // Printed page each contents entry on page 5 links to, top to bottom — the
 // numerals are real text (see TOC_ENTRIES below) rather than the page-numbers.PNG
 // layer, so each one can jump the book straight to that page.
@@ -68,145 +47,37 @@ const TOC_ENTRIES: { page: number; top: number }[] = [
   { page: 62, top: 455.5 },
 ]
 
-const PAGE_LAYERS: Record<number, string[]> = {
-  1: ["/the_tower_assets/1-2/1/1.PNG"],
-  2: ["/the_tower_assets/1-2/2/1.PNG", "/the_tower_assets/1-2/2/2.PNG"],
-  3: ["/the_tower_assets/5-6/5/1.PNG", "/the_tower_assets/5-6/5/2.PNG", "/the_tower_assets/5-6/5/2.1.PNG"],
-  4: ["/the_tower_assets/5-6/6/1.PNG", "/the_tower_assets/5-6/6/2.PNG", "/the_tower_assets/5-6/6/2.1.PNG", "/the_tower_assets/5-6/6/2.2.PNG"],
-  5: TOC_SPREAD_LAYERS,
-  6: TOC_SPREAD_LAYERS,
-  7: ["/the_tower_assets/7-8/7/1.PNG", "/the_tower_assets/7-8/7/2.PNG", "/the_tower_assets/7-8/7/2.1.PNG", "/the_tower_assets/7-8/7/2.2.PNG"],
-  8: ["/the_tower_assets/7-8/8/1.PNG", "/the_tower_assets/7-8/8/2.PNG", "/the_tower_assets/7-8/8/2.1.PNG"],
-  11: ["/the_tower_assets/11-12/11/1.PNG", "/the_tower_assets/11-12/11/2.PNG"],
-  12: [
-    "/the_tower_assets/11-12/12/1.PNG",
-    "/the_tower_assets/11-12/12/2-INVERT.PNG",
-    "/the_tower_assets/11-12/12/2.1.PNG",
-    "/the_tower_assets/11-12/12/2.2.PNG",
-    "/the_tower_assets/11-12/12/2.3.PNG",
-    "/the_tower_assets/11-12/12/2.4.PNG",
-    "/the_tower_assets/11-12/12/3.PNG",
-  ],
-  13: [
-    "/the_tower_assets/13-14/13/1.PNG",
-    "/the_tower_assets/13-14/13/2.PNG",
-    "/the_tower_assets/13-14/13/2.1.PNG",
-    "/the_tower_assets/13-14/13/2.2.PNG",
-  ],
-  14: [
-    "/the_tower_assets/13-14/14/1.PNG",
-    "/the_tower_assets/13-14/14/2.PNG",
-    "/the_tower_assets/13-14/14/2.1.PNG",
-    "/the_tower_assets/13-14/14/2.2.PNG",
-    "/the_tower_assets/13-14/14/2.3.PNG",
-    "/the_tower_assets/13-14/14/2.4.PNG",
-  ],
-  21: [
-    "/the_tower_assets/21-22/21/1.PNG",
-    "/the_tower_assets/21-22/21/2.PNG",
-    "/the_tower_assets/21-22/21/3.PNG",
-    "/the_tower_assets/21-22/21/Copy of IMG_7445.PNG",
-    "/the_tower_assets/21-22/21/IMG_7443.PNG",
-    "/the_tower_assets/21-22/21/IMG_7444.PNG",
-    "/the_tower_assets/21-22/21/IMG_7449.PNG",
-  ],
-  22: [
-    "/the_tower_assets/21-22/22/1.PNG",
-    "/the_tower_assets/21-22/22/IMG_7442.PNG",
-    "/the_tower_assets/21-22/22/IMG_7445.PNG",
-    "/the_tower_assets/21-22/22/IMG_7444.PNG",
-    "/the_tower_assets/21-22/22/IMG_7446.PNG",
-  ],
-  25: [
-    "/the_tower_assets/25-26/25/1.PNG",
-    "/the_tower_assets/25-26/25/IMG_7468.PNG",
-    "/the_tower_assets/25-26/25/IMG_7469.PNG",
-    "/the_tower_assets/25-26/25/IMG_7470.PNG",
-    "/the_tower_assets/25-26/25/IMG_7471.PNG",
-  ],
-  26: [
-    "/the_tower_assets/25-26/26/1.PNG",
-    "/the_tower_assets/25-26/26/IMG_7472.PNG",
-    "/the_tower_assets/25-26/26/IMG_7473.PNG",
-    "/the_tower_assets/25-26/26/IMG_7474.PNG",
-    "/the_tower_assets/25-26/26/IMG_7475.PNG",
-    "/the_tower_assets/25-26/26/IMG_7476.PNG",
-    "/the_tower_assets/25-26/26/IMG_7477.PNG",
-    "/the_tower_assets/25-26/26/IMG_7478.PNG",
-    "/the_tower_assets/25-26/26/IMG_7479.PNG",
-  ],
-  // Pages without their own per-page layers yet just use the pair's full
-  // spread image, cropped to the relevant half (same left/right convention).
-  15: ["/the_tower_assets/15-16/spread.JPG"],
-  16: ["/the_tower_assets/15-16/spread.JPG"],
-  17: ["/the_tower_assets/17-18/spread.JPG"],
-  18: ["/the_tower_assets/17-18/spread.JPG"],
-  19: ["/the_tower_assets/19-20/spread.JPG"],
-  20: ["/the_tower_assets/19-20/spread.JPG"],
-  23: ["/the_tower_assets/23-24/spread.JPG"],
-  24: ["/the_tower_assets/23-24/spread.JPG"],
-  27: ["/the_tower_assets/27-28/spread.JPG"],
-  28: ["/the_tower_assets/27-28/spread.JPG"],
-  29: ["/the_tower_assets/29-30/spread.JPG"],
-  30: ["/the_tower_assets/29-30/spread.JPG"],
-  31: ["/the_tower_assets/31-32/spread.JPG"],
-  32: ["/the_tower_assets/31-32/spread.JPG"],
-  33: ["/the_tower_assets/33-34/spread.JPG"],
-  34: ["/the_tower_assets/33-34/spread.JPG"],
-  35: ["/the_tower_assets/35-36/spread.JPG"],
-  36: ["/the_tower_assets/35-36/spread.JPG"],
-  37: ["/the_tower_assets/37-38/spread.JPG"],
-  38: ["/the_tower_assets/37-38/spread.JPG"],
-  39: ["/the_tower_assets/39-40/spread.JPG"],
-  40: ["/the_tower_assets/39-40/spread.JPG"],
-  41: ["/the_tower_assets/41-42/spread.JPG"],
-  42: ["/the_tower_assets/41-42/spread.JPG"],
-  43: ["/the_tower_assets/43-44/spread.JPG"],
-  44: ["/the_tower_assets/43-44/spread.JPG"],
-  45: ["/the_tower_assets/45-46/spread.JPG"],
-  46: ["/the_tower_assets/45-46/spread.JPG"],
-  47: ["/the_tower_assets/47-48/spread.JPG"],
-  48: ["/the_tower_assets/47-48/spread.JPG"],
-  49: ["/the_tower_assets/49-54/49-50.JPG"],
-  50: ["/the_tower_assets/49-54/49-50.JPG"],
-  51: ["/the_tower_assets/49-54/51-52.JPG"],
-  52: ["/the_tower_assets/49-54/51-52.JPG"],
-  53: ["/the_tower_assets/49-54/53-54.JPG"],
-  54: ["/the_tower_assets/49-54/53-54.JPG"],
-  55: ["/the_tower_assets/55-62/55-56.JPG"],
-  56: ["/the_tower_assets/55-62/55-56.JPG"],
-  57: ["/the_tower_assets/55-62/57-58.JPG"],
-  58: ["/the_tower_assets/55-62/57-58.JPG"],
-  59: ["/the_tower_assets/55-62/59-60.JPG"],
-  60: ["/the_tower_assets/55-62/59-60.JPG"],
-  61: ["/the_tower_assets/55-62/61-62.JPG"],
-  62: ["/the_tower_assets/55-62/61-62.JPG"],
-}
+// Each page's full-spread artwork, sourced from public/the_tower_assets/pages/<page>.jpg.
+// Pages without an entry here (no assets prepared yet, or video pages 9-10)
+// just render blank with their page number. Multiple image layers are only
+// used for genuinely interactive elements — the bells button on page 21 and
+// the Clause 22 expand/collapse card on page 26 — see BellsButton and
+// LawElement below.
+const PAGE_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, ...Array.from({ length: 52 }, (_, i) => i + 11)]
+const PAGE_IMAGES: Record<number, string> = Object.fromEntries(
+  PAGE_NUMBERS.map((n) => [n, `/the_tower_assets/pages/${n}.jpg`])
+)
 
-// Renders a page's layer stack, each cropped to its half of the (double-width)
-// source image — the left half for a left-hand page, the right half for a
-// right-hand one — since every layer is exported at full two-page-spread width.
-function buildLayeredPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
-  const layers = PAGE_LAYERS[pageNum] ?? []
+// Renders a page's artwork — each source image is already cropped to this
+// single page (split from its spread during the asset migration), so it
+// just fills the page box directly, no further cropping needed.
+function buildPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
+  const src = PAGE_IMAGES[pageNum]
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }} data-citation-page>
-      {layers.map((src, i) => (
+      {src && (
         <img
-          key={src}
           src={src}
           alt=""
           style={{
             position: "absolute",
-            top: 0,
-            [side]: 0,
-            width: "200%",
-            maxWidth: "none",
+            inset: 0,
+            width: "100%",
             height: "100%",
             objectFit: "cover",
-            zIndex: i,
           }}
         />
-      ))}
+      )}
       <p style={{ ...pageNumStyle, [side]: 36 }}>{pageNum}</p>
       {extra}
     </div>
@@ -225,7 +96,7 @@ function BellsButton() {
     <>
       <audio
         ref={audioRef}
-        src="/the_tower_assets/21-22/bells.mp3"
+        src="/the_tower_assets/pages/21-bells.mp3"
         onEnded={() => setPlaying(false)}
       />
       <button
@@ -258,7 +129,7 @@ function BellsButton() {
         }}
       >
         <img
-          src={playing ? "/the_tower_assets/21-22/21/pause.PNG" : "/the_tower_assets/21-22/21/play.PNG"}
+          src={playing ? "/the_tower_assets/pages/21-pause.png" : "/the_tower_assets/pages/21-play.png"}
           alt=""
           draggable={false}
           style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }}
@@ -269,17 +140,17 @@ function BellsButton() {
 }
 
 // Assets for page 26's click-to-expand "Clause 22" prop (see LawElement
-// below) — kept as a flat list, separate from PAGE_LAYERS, so the preload
+// below) — kept as a flat list, separate from PAGE_IMAGES, so the preload
 // effect can warm them too even though they're not unconditionally rendered.
 const LAW_ELEMENT_CLOSED_LAYERS = [
-  "/the_tower_assets/25-26/26/law-element/closed-1.PNG",
-  "/the_tower_assets/25-26/26/law-element/closed-2.PNG",
-  "/the_tower_assets/25-26/26/law-element/closed-2.1.PNG",
-  "/the_tower_assets/25-26/26/law-element/closed-2.2.PNG",
+  "/the_tower_assets/pages/26-law-closed-1.png",
+  "/the_tower_assets/pages/26-law-closed-2.png",
+  "/the_tower_assets/pages/26-law-closed-2.1.png",
+  "/the_tower_assets/pages/26-law-closed-2.2.png",
 ]
-const LAW_ELEMENT_OPEN_IMAGE = "/the_tower_assets/25-26/26/law-element/open.PNG"
+const LAW_ELEMENT_OPEN_IMAGE = "/the_tower_assets/pages/26-law-open.png"
 
-// Printed pages with interactive art that lives outside PAGE_LAYERS (because
+// Printed pages with interactive art that lives outside PAGE_IMAGES (because
 // it's conditionally swapped by state, not always-on) but still needs to be
 // covered by the rolling preload window below.
 const EXTRA_PAGE_ASSETS: Record<number, string[]> = {
@@ -287,8 +158,8 @@ const EXTRA_PAGE_ASSETS: Record<number, string[]> = {
 }
 
 // Click-to-expand "Clause 22" prop on page 26. Closed state is a thin banner
-// (four stacked layers, same full-spread canvas convention as buildLayeredPage's
-// own layers — its 2200x1548 native size is just a higher-DPI export of the
+// (four stacked layers, same full-spread canvas convention as buildPage's
+// own background image — its 2200x1548 native size is just a higher-DPI export of the
 // same two-page area, so stretching it to 200%/100% lines it up the same way).
 // Clicking it swaps in open.PNG, a separate cropped asset showing the full
 // clause text; clicking again closes it.
@@ -441,11 +312,15 @@ function LawElement({ side, currentSheet }: { side: "left" | "right"; currentShe
 }
 
 /* ── Build book pages ───────────────────────────────────────────── */
-// videoRefs lets the caller pause these two video elements while their pages
-// aren't the visible spread — decoding both continuously for as long as the
+// videoRefs lets the caller pause these video elements while their pages
+// aren't the visible spread — decoding them continuously for as long as the
 // book stays open was heavy enough to eventually stall the flip animation.
 function buildPages(
-  videoRefs: { left: React.Ref<HTMLVideoElement>; right: React.Ref<HTMLVideoElement> },
+  videoRefs: {
+    left: React.Ref<HTMLVideoElement>
+    right: React.Ref<HTMLVideoElement>
+    page24: React.Ref<HTMLVideoElement>
+  },
   onJumpToPage: (pageNumber: number) => void,
   currentSheet: number
 ): BookPage[] {
@@ -454,13 +329,13 @@ function buildPages(
     back: <p style={{ ...pageNumStyle, left: 36 }}>{i * 2 + 1}</p>,
   }))
 
-  pages[0] = { ...pages[0], back: buildLayeredPage(1, "left") }
-  pages[1] = { ...pages[1], front: buildLayeredPage(2, "right") }
-  pages[1] = { ...pages[1], back: buildLayeredPage(3, "left") }
-  pages[2] = { ...pages[2], front: buildLayeredPage(4, "right") }
+  pages[0] = { ...pages[0], back: buildPage(1, "left") }
+  pages[1] = { ...pages[1], front: buildPage(2, "right") }
+  pages[1] = { ...pages[1], back: buildPage(3, "left") }
+  pages[2] = { ...pages[2], front: buildPage(4, "right") }
   pages[2] = {
     ...pages[2],
-    back: buildLayeredPage(5, "left", (
+    back: buildPage(5, "left", (
       <>
         {TOC_ENTRIES.map(({ page, top }) => (
           <button
@@ -494,11 +369,11 @@ function buildPages(
       </>
     )),
   }
-  pages[3] = { ...pages[3], front: buildLayeredPage(6, "right") }
-  pages[3] = { ...pages[3], back: buildLayeredPage(7, "left") }
+  pages[3] = { ...pages[3], front: buildPage(6, "right") }
+  pages[3] = { ...pages[3], back: buildPage(7, "left") }
   pages[4] = {
     ...pages[4],
-    front: buildLayeredPage(8, "right", (
+    front: buildPage(8, "right", (
       <div style={{ position: "absolute", top: 145, left: 340, zIndex: 50 }}>
         <CitationPopover
           citation={
@@ -563,11 +438,11 @@ function buildPages(
     ),
   }
 
-  pages[5] = { ...pages[5], back: buildLayeredPage(11, "left") }
-  pages[6] = { ...pages[6], front: buildLayeredPage(12, "right") }
+  pages[5] = { ...pages[5], back: buildPage(11, "left") }
+  pages[6] = { ...pages[6], front: buildPage(12, "right") }
   pages[6] = {
     ...pages[6],
-    back: buildLayeredPage(13, "left", (
+    back: buildPage(13, "left", (
       <>
         <div style={{ position: "absolute", top: 15, left: 330, zIndex: 50 }}>
           <CitationPopover
@@ -623,7 +498,7 @@ function buildPages(
   }
   pages[7] = {
     ...pages[7],
-    front: buildLayeredPage(14, "right", (
+    front: buildPage(14, "right", (
       <>
         <div style={{ position: "absolute", top: 30, left: 285, zIndex: 50 }}>
           <CitationPopover
@@ -670,7 +545,7 @@ function buildPages(
   // shows its full spread image split across the two pages.
   pages[7] = {
     ...pages[7],
-    back: buildLayeredPage(15, "left", (
+    back: buildPage(15, "left", (
       <>
         <div style={{ position: "absolute", top: 43, left: 78, zIndex: 50 }}>
           <CitationPopover
@@ -699,7 +574,7 @@ function buildPages(
   }
   pages[8] = {
     ...pages[8],
-    front: buildLayeredPage(16, "right", (
+    front: buildPage(16, "right", (
       <>
         <div style={{ position: "absolute", top: 200, left: 186, zIndex: 50 }}>
           <CitationPopover
@@ -737,7 +612,7 @@ function buildPages(
   }
   pages[8] = {
     ...pages[8],
-    back: buildLayeredPage(17, "left", (
+    back: buildPage(17, "left", (
       <>
         <div style={{ position: "absolute", top: 107, left: 170, zIndex: 50 }}>
           <CitationPopover citation={<>Gen. 11:1–9 (New International Version).</>} />
@@ -763,51 +638,72 @@ function buildPages(
       </>
     )),
   }
-  pages[9] = { ...pages[9], front: buildLayeredPage(18, "right") }
-  pages[9] = { ...pages[9], back: buildLayeredPage(19, "left") }
-  pages[10] = { ...pages[10], front: buildLayeredPage(20, "right") }
-  pages[10] = { ...pages[10], back: buildLayeredPage(21, "left", <BellsButton />) }
-  pages[11] = { ...pages[11], front: buildLayeredPage(22, "right") }
-  pages[11] = { ...pages[11], back: buildLayeredPage(23, "left") }
-  pages[12] = { ...pages[12], front: buildLayeredPage(24, "right") }
-  pages[12] = { ...pages[12], back: buildLayeredPage(25, "left") }
-  pages[13] = { ...pages[13], front: buildLayeredPage(26, "right", <LawElement side="right" currentSheet={currentSheet} />) }
-  pages[13] = { ...pages[13], back: buildLayeredPage(27, "left") }
-  pages[14] = { ...pages[14], front: buildLayeredPage(28, "right") }
-  pages[14] = { ...pages[14], back: buildLayeredPage(29, "left") }
-  pages[15] = { ...pages[15], front: buildLayeredPage(30, "right") }
-  pages[15] = { ...pages[15], back: buildLayeredPage(31, "left") }
-  pages[16] = { ...pages[16], front: buildLayeredPage(32, "right") }
-  pages[16] = { ...pages[16], back: buildLayeredPage(33, "left") }
-  pages[17] = { ...pages[17], front: buildLayeredPage(34, "right") }
-  pages[17] = { ...pages[17], back: buildLayeredPage(35, "left") }
-  pages[18] = { ...pages[18], front: buildLayeredPage(36, "right") }
-  pages[18] = { ...pages[18], back: buildLayeredPage(37, "left") }
-  pages[19] = { ...pages[19], front: buildLayeredPage(38, "right") }
-  pages[19] = { ...pages[19], back: buildLayeredPage(39, "left") }
-  pages[20] = { ...pages[20], front: buildLayeredPage(40, "right") }
-  pages[20] = { ...pages[20], back: buildLayeredPage(41, "left") }
-  pages[21] = { ...pages[21], front: buildLayeredPage(42, "right") }
-  pages[21] = { ...pages[21], back: buildLayeredPage(43, "left") }
-  pages[22] = { ...pages[22], front: buildLayeredPage(44, "right") }
-  pages[22] = { ...pages[22], back: buildLayeredPage(45, "left") }
-  pages[23] = { ...pages[23], front: buildLayeredPage(46, "right") }
-  pages[23] = { ...pages[23], back: buildLayeredPage(47, "left") }
-  pages[24] = { ...pages[24], front: buildLayeredPage(48, "right") }
-  pages[24] = { ...pages[24], back: buildLayeredPage(49, "left") }
-  pages[25] = { ...pages[25], front: buildLayeredPage(50, "right") }
-  pages[25] = { ...pages[25], back: buildLayeredPage(51, "left") }
-  pages[26] = { ...pages[26], front: buildLayeredPage(52, "right") }
-  pages[26] = { ...pages[26], back: buildLayeredPage(53, "left") }
-  pages[27] = { ...pages[27], front: buildLayeredPage(54, "right") }
-  pages[27] = { ...pages[27], back: buildLayeredPage(55, "left") }
-  pages[28] = { ...pages[28], front: buildLayeredPage(56, "right") }
-  pages[28] = { ...pages[28], back: buildLayeredPage(57, "left") }
-  pages[29] = { ...pages[29], front: buildLayeredPage(58, "right") }
-  pages[29] = { ...pages[29], back: buildLayeredPage(59, "left") }
-  pages[30] = { ...pages[30], front: buildLayeredPage(60, "right") }
-  pages[30] = { ...pages[30], back: buildLayeredPage(61, "left") }
-  pages[31] = { ...pages[31], front: buildLayeredPage(62, "right") }
+  pages[9] = { ...pages[9], front: buildPage(18, "right") }
+  pages[9] = { ...pages[9], back: buildPage(19, "left") }
+  pages[10] = { ...pages[10], front: buildPage(20, "right") }
+  pages[10] = { ...pages[10], back: buildPage(21, "left", <BellsButton />) }
+  pages[11] = { ...pages[11], front: buildPage(22, "right") }
+  pages[11] = { ...pages[11], back: buildPage(23, "left") }
+  pages[12] = {
+    ...pages[12],
+    front: buildPage(24, "right", (
+      <video
+        ref={videoRefs.page24}
+        src="/IMG_4255.MOV"
+        loop
+        muted
+        playsInline
+        style={{
+          position: "absolute",
+          top: "49.2%",
+          left: "49.8%",
+          transform: "translate(-50%, -50%)",
+          width: "28.8%",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+          zIndex: 50,
+          pointerEvents: "none",
+        }}
+      />
+    )),
+  }
+  pages[12] = { ...pages[12], back: buildPage(25, "left") }
+  pages[13] = { ...pages[13], front: buildPage(26, "right", <LawElement side="right" currentSheet={currentSheet} />) }
+  pages[13] = { ...pages[13], back: buildPage(27, "left") }
+  pages[14] = { ...pages[14], front: buildPage(28, "right") }
+  pages[14] = { ...pages[14], back: buildPage(29, "left") }
+  pages[15] = { ...pages[15], front: buildPage(30, "right") }
+  pages[15] = { ...pages[15], back: buildPage(31, "left") }
+  pages[16] = { ...pages[16], front: buildPage(32, "right") }
+  pages[16] = { ...pages[16], back: buildPage(33, "left") }
+  pages[17] = { ...pages[17], front: buildPage(34, "right") }
+  pages[17] = { ...pages[17], back: buildPage(35, "left") }
+  pages[18] = { ...pages[18], front: buildPage(36, "right") }
+  pages[18] = { ...pages[18], back: buildPage(37, "left") }
+  pages[19] = { ...pages[19], front: buildPage(38, "right") }
+  pages[19] = { ...pages[19], back: buildPage(39, "left") }
+  pages[20] = { ...pages[20], front: buildPage(40, "right") }
+  pages[20] = { ...pages[20], back: buildPage(41, "left") }
+  pages[21] = { ...pages[21], front: buildPage(42, "right") }
+  pages[21] = { ...pages[21], back: buildPage(43, "left") }
+  pages[22] = { ...pages[22], front: buildPage(44, "right") }
+  pages[22] = { ...pages[22], back: buildPage(45, "left") }
+  pages[23] = { ...pages[23], front: buildPage(46, "right") }
+  pages[23] = { ...pages[23], back: buildPage(47, "left") }
+  pages[24] = { ...pages[24], front: buildPage(48, "right") }
+  pages[24] = { ...pages[24], back: buildPage(49, "left") }
+  pages[25] = { ...pages[25], front: buildPage(50, "right") }
+  pages[25] = { ...pages[25], back: buildPage(51, "left") }
+  pages[26] = { ...pages[26], front: buildPage(52, "right") }
+  pages[26] = { ...pages[26], back: buildPage(53, "left") }
+  pages[27] = { ...pages[27], front: buildPage(54, "right") }
+  pages[27] = { ...pages[27], back: buildPage(55, "left") }
+  pages[28] = { ...pages[28], front: buildPage(56, "right") }
+  pages[28] = { ...pages[28], back: buildPage(57, "left") }
+  pages[29] = { ...pages[29], front: buildPage(58, "right") }
+  pages[29] = { ...pages[29], back: buildPage(59, "left") }
+  pages[30] = { ...pages[30], front: buildPage(60, "right") }
+  pages[30] = { ...pages[30], back: buildPage(61, "left") }
+  pages[31] = { ...pages[31], front: buildPage(62, "right") }
 
   return pages
 }
@@ -816,6 +712,7 @@ function buildPages(
 export default function CurrentIssuePage() {
   const videoLeftRef = useRef<HTMLVideoElement>(null)
   const videoRightRef = useRef<HTMLVideoElement>(null)
+  const videoPage24Ref = useRef<HTMLVideoElement>(null)
   const flipBookRef = useRef<FlipBookHandle>(null)
   const flipBookFullscreenRef = useRef<FlipBookHandle>(null)
   // Both refs are kept in sync so a table-of-contents link jumps the visible
@@ -830,7 +727,11 @@ export default function CurrentIssuePage() {
   // Also threaded into buildPages so page 26's LawElement can close itself
   // whenever the settled sheet changes, i.e. the user has navigated away.
   const [bookPage, setBookPage] = useState(-1)
-  const pages = buildPages({ left: videoLeftRef, right: videoRightRef }, jumpToPage, bookPage)
+  const pages = buildPages(
+    { left: videoLeftRef, right: videoRightRef, page24: videoPage24Ref },
+    jumpToPage,
+    bookPage
+  )
   const contributors = sortByName(contributorsData)
   const { darkMode } = useHeaderScrolled()
   const dm = darkMode
@@ -845,6 +746,18 @@ export default function CurrentIssuePage() {
     }
   }, [bookPage])
 
+  // Page 24 is the front face of sheet 12, which is the visible right-hand
+  // page when the settled sheet is 11 (a sheet's front shows as the right
+  // page of the spread for currentPage + 1, not currentPage — see FlipBook's
+  // getSheetAngle/getSheetZIndex) — only play the video while it's actually
+  // on screen, same reasoning as the page 9/10 video above.
+  useEffect(() => {
+    const video = videoPage24Ref.current
+    if (!video) return
+    if (bookPage === 11) video.play().catch(() => {})
+    else video.pause()
+  }, [bookPage])
+
   // Preload the small fixed assets once — cover, bells icons, audio, video.
   // These aren't multiplied across 30+ sheets like the page artwork is, so
   // it's cheap to just always have them ready.
@@ -852,8 +765,8 @@ export default function CurrentIssuePage() {
     const imageUrls = [
       "/the_tower_assets/cover/front.JPG",
       "/the_tower_assets/cover/back.JPG",
-      "/the_tower_assets/21-22/21/play.PNG",
-      "/the_tower_assets/21-22/21/pause.PNG",
+      "/the_tower_assets/pages/21-play.png",
+      "/the_tower_assets/pages/21-pause.png",
     ]
     const images = imageUrls.map((src) => {
       const img = new window.Image()
@@ -864,13 +777,19 @@ export default function CurrentIssuePage() {
 
     const audio = new window.Audio()
     audio.preload = "auto"
-    audio.src = "/the_tower_assets/21-22/bells.mp3"
+    audio.src = "/the_tower_assets/pages/21-bells.mp3"
 
     const video = document.createElement("video")
     video.preload = "auto"
     video.muted = true
     video.src = "/the_tower_assets/javi/javi-video.mp4"
     video.load()
+
+    const video2 = document.createElement("video")
+    video2.preload = "auto"
+    video2.muted = true
+    video2.src = "/IMG_4255.MOV"
+    video2.load()
 
     return () => { images.length = 0 }
   }, [])
@@ -892,7 +811,8 @@ export default function CurrentIssuePage() {
     const wanted = new Set<string>()
     for (let sheet = lo; sheet <= hi; sheet++) {
       for (const printedPage of [sheet * 2, sheet * 2 + 1]) {
-        for (const url of PAGE_LAYERS[printedPage] ?? []) wanted.add(url)
+        const pageImage = PAGE_IMAGES[printedPage]
+        if (pageImage) wanted.add(pageImage)
         for (const url of EXTRA_PAGE_ASSETS[printedPage] ?? []) wanted.add(url)
       }
     }
