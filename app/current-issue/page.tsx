@@ -4,7 +4,7 @@ import { FlipBook, type BookPage, type FlipBookHandle } from "@/components/flip-
 import Link from "next/link"
 import { Maximize2, X } from "lucide-react"
 import type { CSSProperties, ReactNode } from "react"
-import { useState, useEffect, useLayoutEffect, useRef } from "react"
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react"
 import { createPortal } from "react-dom"
 import { useHeaderScrolled, BottomLeftSlot } from "@/components/header-extras-context"
 import { getPageColor } from "@/lib/page-colors"
@@ -69,6 +69,7 @@ function buildPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
         <img
           src={src}
           alt=""
+          loading="lazy"
           style={{
             position: "absolute",
             inset: 0,
@@ -708,6 +709,109 @@ function buildPages(
   return pages
 }
 
+const PAGE_W = 420
+const PAGE_H = 590.8
+
+// Mobile reading mode: instead of the 3D flip interaction (whose drag
+// gestures fight with vertical touch-scrolling), every page is stacked in
+// normal document flow and the user scrolls through them in order. Each
+// page's content is the exact same node buildPages() produced for the
+// desktop book — including BellsButton, LawElement, citation popovers, etc.
+// — so all interactive coordinates (which are hardcoded in PAGE_W x PAGE_H
+// logical pixels) stay valid: render the content at that fixed logical size,
+// then scale the whole thing up to fill the viewport width, the same trick
+// FlipBook itself uses for its own responsive scaling.
+function MobileScrollReader({
+  pages,
+  registerPageRef,
+  onClose,
+}: {
+  pages: BookPage[]
+  registerPageRef: (pageNumber: number, el: HTMLDivElement | null) => void
+  onClose: () => void
+}) {
+  const [scale, setScale] = useState(1)
+  useEffect(() => {
+    const update = () => setScale(window.innerWidth / PAGE_W)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
+
+  const frameStyle: CSSProperties = {
+    width: PAGE_W * scale,
+    height: PAGE_H * scale,
+    position: "relative",
+    overflow: "hidden",
+    margin: "0 auto",
+  }
+  const innerStyle: CSSProperties = {
+    width: PAGE_W,
+    height: PAGE_H,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    transform: `scale(${scale})`,
+    transformOrigin: "top left",
+  }
+  const coverImageStyle: CSSProperties = {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    backgroundColor: "#1a1614",
+    display: "block",
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black overflow-y-auto" style={{ zIndex: 99999 }}>
+      <button
+        onClick={onClose}
+        className="fixed top-4 right-4 p-2 text-white/60 hover:text-white transition-colors"
+        style={{ zIndex: 100000 }}
+        title="Close (Esc)"
+        aria-label="Close reader"
+      >
+        <X size={24} />
+      </button>
+
+      <CitationLayer>
+        <div style={frameStyle}>
+          <div style={innerStyle}>
+            <img src="/the_tower_assets/cover/front.JPG" alt="The Tower — Issue 1, Sassafras" style={coverImageStyle} />
+          </div>
+        </div>
+
+        {pages.flatMap((sheet, i) => {
+          const frontNum = i * 2
+          const backNum = i * 2 + 1
+          const slots: ReactNode[] = []
+          if (frontNum >= 1 && frontNum <= 62) {
+            slots.push(
+              <div key={frontNum} ref={(el) => registerPageRef(frontNum, el)} style={frameStyle}>
+                <div style={innerStyle}>{sheet.front}</div>
+              </div>
+            )
+          }
+          if (backNum >= 1 && backNum <= 62) {
+            slots.push(
+              <div key={backNum} ref={(el) => registerPageRef(backNum, el)} style={frameStyle}>
+                <div style={innerStyle}>{sheet.back}</div>
+              </div>
+            )
+          }
+          return slots
+        })}
+
+        <div style={frameStyle}>
+          <div style={innerStyle}>
+            <img src="/the_tower_assets/cover/back.JPG" alt="The Tower — Issue 1, Sassafras (back cover)" style={coverImageStyle} />
+          </div>
+        </div>
+      </CitationLayer>
+    </div>
+  )
+}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function CurrentIssuePage() {
   const videoLeftRef = useRef<HTMLVideoElement>(null)
@@ -715,10 +819,35 @@ export default function CurrentIssuePage() {
   const videoPage24Ref = useRef<HTMLVideoElement>(null)
   const flipBookRef = useRef<FlipBookHandle>(null)
   const flipBookFullscreenRef = useRef<FlipBookHandle>(null)
-  // Both refs are kept in sync so a table-of-contents link jumps the visible
-  // book regardless of whether the fullscreen overlay is open — the other
-  // instance just no-ops since it isn't mounted/visible.
+
+  // Below the md breakpoint, the 3D flip interaction is replaced entirely by
+  // MobileScrollReader — drag-to-flip and vertical touch-scroll fight each
+  // other, so mobile gets a plain scrolling stack of pages instead.
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
+  const [mobileReaderOpen, setMobileReaderOpen] = useState(false)
+
+  const pageScrollRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+  const registerPageRef = useCallback((pageNumber: number, el: HTMLDivElement | null) => {
+    if (el) pageScrollRefs.current.set(pageNumber, el)
+    else pageScrollRefs.current.delete(pageNumber)
+  }, [])
+
+  // Both FlipBook refs are kept in sync so a table-of-contents link jumps the
+  // visible book regardless of whether the fullscreen overlay is open — the
+  // other instance just no-ops since it isn't mounted/visible. In the mobile
+  // reader there's no FlipBook at all, so the same link instead scrolls the
+  // target page's frame into view.
   const jumpToPage = (pageNumber: number) => {
+    if (mobileReaderOpen) {
+      pageScrollRefs.current.get(pageNumber)?.scrollIntoView({ behavior: "smooth", block: "start" })
+      return
+    }
     flipBookRef.current?.goToPage(pageNumber)
     flipBookFullscreenRef.current?.goToPage(pageNumber)
   }
@@ -757,6 +886,29 @@ export default function CurrentIssuePage() {
     if (bookPage === 11) video.play().catch(() => {})
     else video.pause()
   }, [bookPage])
+
+  // The mobile reader has no settled-sheet concept to key play/pause off of
+  // (FlipBook isn't mounted at all), so the embedded videos there play/pause
+  // based on actual scroll visibility instead.
+  useEffect(() => {
+    if (!mobileReaderOpen) return
+    const videos = [videoLeftRef.current, videoRightRef.current, videoPage24Ref.current].filter(
+      (v): v is HTMLVideoElement => v !== null
+    )
+    if (videos.length === 0) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const video = entry.target as HTMLVideoElement
+          if (entry.isIntersecting) video.play().catch(() => {})
+          else video.pause()
+        }
+      },
+      { threshold: 0.5 }
+    )
+    for (const video of videos) observer.observe(video)
+    return () => observer.disconnect()
+  }, [mobileReaderOpen])
 
   // Preload the small fixed assets once — cover, bells icons, audio, video.
   // These aren't multiplied across 30+ sheets like the page artwork is, so
@@ -852,12 +1004,17 @@ export default function CurrentIssuePage() {
   const [fullscreen, setFullscreen] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = fullscreen ? "hidden" : ""
+    document.body.style.overflow = fullscreen || mobileReaderOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
-  }, [fullscreen])
+  }, [fullscreen, mobileReaderOpen])
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setFullscreen(false) }
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setFullscreen(false)
+        setMobileReaderOpen(false)
+      }
+    }
     window.addEventListener("keydown", handler)
     return () => window.removeEventListener("keydown", handler)
   }, [])
@@ -896,7 +1053,23 @@ export default function CurrentIssuePage() {
 
             {/* The Book */}
             <ClientOnly>
-              <FlipBook ref={flipBookRef} pages={pages} width={420} height={590.8} onPageChange={setBookPage} />
+              {isMobile ? (
+                <button
+                  type="button"
+                  onClick={() => setMobileReaderOpen(true)}
+                  aria-label="Open The Tower"
+                  className="relative block border-none bg-transparent p-0 cursor-pointer overflow-hidden shadow-2xl"
+                  style={{ width: "70vw", maxWidth: 320, aspectRatio: `${PAGE_W} / ${PAGE_H}`, borderRadius: "2px 6px 6px 2px" }}
+                >
+                  <img
+                    src="/the_tower_assets/cover/front.JPG"
+                    alt="The Tower — Issue 1, Sassafras"
+                    style={{ width: "100%", height: "100%", objectFit: "contain", backgroundColor: "#1a1614", display: "block" }}
+                  />
+                </button>
+              ) : (
+                <FlipBook ref={flipBookRef} pages={pages} width={420} height={590.8} onPageChange={setBookPage} />
+              )}
             </ClientOnly>
 
           </div>
@@ -904,15 +1077,21 @@ export default function CurrentIssuePage() {
       </div>
 
       {/* ── Fullscreen expand button — fixed, same z as page frame ── */}
-      {mounted && !fullscreen && createPortal(
+      {mounted && !fullscreen && !mobileReaderOpen && createPortal(
         <button
-          onClick={() => setFullscreen(true)}
+          onClick={() => (isMobile ? setMobileReaderOpen(true) : setFullscreen(true))}
           className="fixed bottom-5 right-5 p-2 transition-opacity hover:opacity-70"
           style={{ zIndex: 9999, color: getPageColor("/current-issue") }}
           title="Fullscreen"
         >
           <Maximize2 size={24} />
         </button>,
+        document.body
+      )}
+
+      {/* ── Mobile reader — fullscreen scroll-through-pages overlay ── */}
+      {mounted && mobileReaderOpen && createPortal(
+        <MobileScrollReader pages={pages} registerPageRef={registerPageRef} onClose={() => setMobileReaderOpen(false)} />,
         document.body
       )}
 
@@ -949,7 +1128,7 @@ export default function CurrentIssuePage() {
         >
           Contributors
         </h2>
-        <div className={`w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+        <div className={`w-full md:w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
           {contributors.map((person, i) => (
             <div key={person.id} className={i > 0 && openContribId !== contributors[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
@@ -965,39 +1144,61 @@ export default function CurrentIssuePage() {
                 className="grid transition-[grid-template-rows] duration-400 ease-in-out"
                 style={{ gridTemplateRows: openContribId === person.id ? "1fr" : "0fr" }}
               >
-                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
-                      {person.photo ? (
-                        <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
-                      )}
+                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: isMobile ? "100%" : "200%" }}>
+                  {isMobile ? (
+                    // Mobile accordion: photo slides open beneath the tapped
+                    // row, full width, with the bio stacked below it.
+                    <div className={`flex flex-col border-t-2 border-r-2 border-b-2 ${dm ? "border-white" : "border-black"}`}>
+                      <div className={`w-full aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
+                        {person.photo ? (
+                          <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        )}
+                      </div>
+                      <div className={`p-4 border-t-2 ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                        {person.pronouns && (
+                          <p className="font-alte-haas text-sm tracking-wide mb-2" style={{ color: "#5D9800" }}>{person.pronouns}</p>
+                        )}
+                        <p className={`font-alte-haas text-lg leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
+                          {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                        </p>
+                      </div>
                     </div>
-                    <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
-                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
-                        <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
-                          <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
-                          {person.pronouns && (
-                            <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
-                          )}
+                  ) : (
+                    <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
+                      <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
+                        {person.photo ? (
+                          <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        )}
+                      </div>
+                      <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                        <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
+                          <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
+                            <p ref={openContribId === person.id ? contribNameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
+                            {person.pronouns && (
+                              <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
+                            )}
+                          </div>
+                          <ScrollableBio dark={dm}>
+                            <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
+                              {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                            </p>
+                          </ScrollableBio>
                         </div>
-                        <ScrollableBio dark={dm}>
-                          <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
-                            {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
-                          </p>
-                        </ScrollableBio>
-                      </div>
-                      <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
-                        <span
-                          className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
-                          style={{ color: "#5D9800", writingMode: "vertical-rl" }}
-                        >
-                          {getRoleText(person.role)}
-                        </span>
+                        <div className={`w-8 flex-shrink-0 border-l-2 flex items-start justify-center pt-3 ${dm ? "border-white" : "border-black"}`}>
+                          <span
+                            className="font-alte-haas text-base tracking-[0.08em] whitespace-nowrap select-none"
+                            style={{ color: "#5D9800", writingMode: "vertical-rl" }}
+                          >
+                            {getRoleText(person.role)}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
