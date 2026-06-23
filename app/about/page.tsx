@@ -73,6 +73,17 @@ export default function AboutPage() {
   const nameRef = useRef<HTMLParagraphElement>(null)
   const nameTypingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  // Below the md breakpoint, the team list goes full width and its accordion
+  // panel becomes a vertical stack (photo, then bio) instead of the
+  // photo-left/bio-right split — see the Team Panel render below.
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
+
   const handleSelect = (id: number) => setOpenId(prev => prev === id ? null : id)
 
   // Preload every team photo up front so opening a row for the first time
@@ -153,17 +164,24 @@ export default function AboutPage() {
         >
           Our Team
         </h2>
-        <div className="relative">
-          <div className="absolute top-3 right-0 cursor-pointer" style={{ left: "calc(50% + 1rem)" }} onClick={() => setLightboxOpen(true)}>
-            <img src="/people-photos/IMG_3716.jpg" alt="" className="w-full h-full object-cover" />
+        {isMobile && (
+          <div className="mb-4 cursor-pointer" onClick={() => setLightboxOpen(true)}>
+            <img src="/people-photos/IMG_3716.jpg" alt="" className="w-full h-auto object-cover" />
           </div>
+        )}
+        <div className="relative">
+          {!isMobile && (
+            <div className="absolute top-3 right-0 cursor-pointer" style={{ left: "calc(50% + 1rem)" }} onClick={() => setLightboxOpen(true)}>
+              <img src="/people-photos/IMG_3716.jpg" alt="" className="w-full h-full object-cover" />
+            </div>
+          )}
           {lightboxOpen && createPortal(
             <div className="fixed inset-0 z-[10001] bg-black/90 flex items-center justify-center" onClick={() => setLightboxOpen(false)}>
               <img src="/people-photos/IMG_3716.jpg" alt="" className="max-w-full max-h-full object-contain" onClick={e => e.stopPropagation()} />
             </div>,
             document.body
           )}
-        <div className={`relative z-10 w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+        <div className={`relative z-10 w-full md:w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
           {peopleData.map((person, i) => (
             <div key={person.id} className={i > 0 && openId !== peopleData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
@@ -175,41 +193,63 @@ export default function AboutPage() {
                   {getRoleLines(person.role).map((line, j) => <span key={j} className="block">{line}</span>)}
                 </span>
               </button>
-              {/* Accordion panel: 2× list width — photo left half, bio right half */}
+              {/* Accordion panel: on desktop, 2× list width — photo left half,
+                  bio right half. On mobile, full width and stacked — photo
+                  slides open beneath the row, bio below the photo. */}
               <div
                 className="grid transition-[grid-template-rows] duration-400 ease-in-out"
                 style={{ gridTemplateRows: openId === person.id ? "1fr" : "0fr" }}
               >
-                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: "200%" }}>
-                  <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
-                    {/* Photo — left quarter of full width (= full list width) */}
-                    <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
-                      {person.photo ? (
-                        <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
-                      )}
-                    </div>
-                    {/* Bio — remaining space to the right of the photo */}
-                    <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
-                      {/* Main content */}
-                      <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
-                        <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
-                          <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
-                          {person.pronouns && (
-                            <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
-                          )}
-                        </div>
-                        <ScrollableBio dark={dm}>
-                          <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
-                            {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
-                          </p>
-                        </ScrollableBio>
+                <div className={`overflow-hidden ${dm ? "bg-black" : ""}`} style={{ width: isMobile ? "100%" : "200%" }}>
+                  {isMobile ? (
+                    <div className={`flex flex-col border-t-2 border-r-2 border-b-2 ${dm ? "border-white" : "border-black"}`}>
+                      <div className={`w-full aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
+                        {person.photo ? (
+                          <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        )}
                       </div>
-                      {/* Role strip — rotated 90° on the right */}
-                      <RoleStrip role={person.role} dark={dm} />
+                      <div className={`p-4 border-t-2 ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                        {person.pronouns && (
+                          <p className="font-alte-haas text-sm tracking-wide mb-2" style={{ color: "#5D9800" }}>{person.pronouns}</p>
+                        )}
+                        <p className={`font-alte-haas text-lg leading-relaxed whitespace-pre-line text-justify ${dm ? "text-white/80" : "text-[#444]"}`}>
+                          {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className={`border-t-2 border-r-2 border-b-2 flex ${dm ? "border-white" : "border-black"}`} style={{ height: "420px" }}>
+                      {/* Photo — left quarter of full width (= full list width) */}
+                      <div className={`flex-shrink-0 aspect-square flex items-center justify-center ${dm ? "bg-white/10" : "bg-[#D5D4CD]/40"}`}>
+                        {person.photo ? (
+                          <img src={person.photo} alt={person.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className={`text-xs font-mono uppercase tracking-widest ${dm ? "text-white/20" : "text-black/20"}`}>Photo coming soon</span>
+                        )}
+                      </div>
+                      {/* Bio — remaining space to the right of the photo */}
+                      <div className={`flex-1 border-l-2 flex overflow-hidden ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                        {/* Main content */}
+                        <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
+                          <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
+                            <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
+                            {person.pronouns && (
+                              <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
+                            )}
+                          </div>
+                          <ScrollableBio dark={dm}>
+                            <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line text-justify ${dm ? "text-white/80" : "text-[#444]"}`}>
+                              {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
+                            </p>
+                          </ScrollableBio>
+                        </div>
+                        {/* Role strip — rotated 90° on the right */}
+                        <RoleStrip role={person.role} dark={dm} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
