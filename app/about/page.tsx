@@ -185,12 +185,14 @@ export default function AboutPage() {
           {peopleData.map((person, i) => (
             <div key={person.id} className={i > 0 && openId !== peopleData[i - 1].id ? `border-t-2 ${dm ? "border-white" : "border-black"}` : ""}>
               <button
-                className={`w-full relative flex items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
+                className={`w-full relative flex flex-col md:flex-row md:items-center pl-4 pr-2 py-2 text-left transition-colors duration-200 ${openId === person.id ? (dm ? "bg-white/10" : "bg-[#f0efe7]") : (dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]")}`}
                 onClick={() => handleSelect(person.id)}
               >
                 <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>{person.name}</span>
-                <span className="font-alte-haas text-xs tracking-[0.08em] text-right absolute right-2 top-1/2 -translate-y-1/2" style={{ color: "#5D9800" }}>
-                  {getRoleLines(person.role).map((line, j) => <span key={j} className="block">{line}</span>)}
+                <span className="font-alte-haas text-xs tracking-[0.08em] mt-1 md:mt-0 flex flex-wrap md:block md:text-right md:absolute md:right-2 md:top-1/2 md:-translate-y-1/2" style={{ color: "#5D9800" }}>
+                  {getRoleLines(person.role).map((line, j, arr) => (
+                    <span key={j} className={`md:block ${j < arr.length - 1 ? "mr-1" : ""}`}>{line}{j < arr.length - 1 ? "," : ""}</span>
+                  ))}
                 </span>
               </button>
               {/* Accordion panel: on desktop, 2× list width — photo left half,
