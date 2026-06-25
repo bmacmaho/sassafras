@@ -42,7 +42,7 @@ export default function HomePage() {
           <div className="absolute top-0 bottom-0 right-0 w-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to left, #FF730F, transparent)' }} />
         <div className="relative w-full h-full max-w-[1920px] mx-auto pt-[1px]">
           {/* Title + Leaves */}
-          <div className="absolute top-6 left-3 md:left-6 z-20 flex flex-col gap-1">
+          <div className="absolute top-6 left-3 md:left-6 z-20 hidden md:flex flex-col gap-1">
             <WelcomeTypewriter />
           </div>
 
@@ -52,12 +52,17 @@ export default function HomePage() {
 
 {/* Images Grid / Two Column Layout */}
           <div className="relative z-10 w-full h-full">            {/* --- LEFT COLUMN --- */}
+          {/* On mobile the tiles drop into a single, centered, evenly-spaced
+              column (this wrapper disappears via display:contents at md+,
+              leaving each tile positioned by its own absolute coordinates
+              as before). */}
+          <div className="flex flex-col items-center justify-evenly h-full md:contents">
 
             {/* 1. CURRENT ISSUE */}
-            <div className="absolute left-[4%] md:left-[12%] top-[22%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
+            <div className="md:absolute md:left-[12%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
               <div data-scroll-item style={{ opacity: 0 }}>
-                <Link href="/current-issue" className="group flex flex-col items-start gap-2 transition-all duration-300">
-                  <div className="w-[70vw] md:w-[350px] aspect-[1.4/1] bg-white shadow-2xl overflow-hidden p-1 relative">
+                <Link href="/current-issue" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                  <div className="h-[15vh] md:h-auto md:w-[350px] aspect-[1.4/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full flex overflow-hidden">
                       <img src="/the_tower_assets/cover/front.JPG" alt="Current Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <img src="/the_tower_assets/cover/back.JPG" alt="Current Issue Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -74,10 +79,10 @@ export default function HomePage() {
             </div>
 
             {/* 3. EXPLORE */}
-            <div className="absolute left-[16%] md:left-[26%] top-[58%] md:top-[60%]" data-scroll-step="2" data-scroll-col="left">
+            <div className="md:absolute md:left-[26%] md:top-[60%]" data-scroll-step="2" data-scroll-col="left">
               <div data-scroll-item style={{ opacity: 0 }}>
-                <Link href="/explore" className="group flex flex-col items-start gap-2 transition-all duration-300">
-                  <div className="w-[50vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
+                <Link href="/explore" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                  <div className="h-[15vh] md:h-auto md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/home-page-squares/ExploreSquare.png" alt="Explore" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
@@ -95,10 +100,10 @@ export default function HomePage() {
             {/* --- RIGHT COLUMN --- */}
 
             {/* 4. ABOUT US */}
-            <div className="absolute right-[16%] md:right-[21%] top-[10%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
+            <div className="md:absolute md:right-[21%] md:top-[12%]" data-scroll-step="3" data-scroll-col="right">
               <div data-scroll-item className="relative" style={{ opacity: 0 }}>
-                <Link href="/about" className="group flex flex-col items-start gap-2 transition-all duration-300">
-                  <div className="w-[40vw] md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
+                <Link href="/about" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                  <div className="h-[15vh] md:h-auto md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/home-page-squares/AboutSquare.JPG" alt="About" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
@@ -114,17 +119,17 @@ export default function HomePage() {
                   src="/Walking-people.PNG"
                   alt=""
                   aria-hidden="true"
-                  className="absolute h-20 md:h-24 w-auto pointer-events-none select-none animate-walk-bounce"
+                  className="hidden md:absolute md:block h-20 md:h-24 w-auto pointer-events-none select-none md:animate-walk-bounce"
                   style={{ left: "calc(100% - 1.75rem)", bottom: "5.25rem", transformOrigin: "center center", filter: "invert(1)" }}
                 />
               </div>
             </div>
 
             {/* 6. CONTACT/SUPPORT */}
-            <div className="absolute right-[4%] md:right-[10%] top-[60%] md:top-[64%]" data-scroll-step="4" data-scroll-col="right">
+            <div className="md:absolute md:right-[10%] md:top-[64%]" data-scroll-step="4" data-scroll-col="right">
               <div data-scroll-item style={{ opacity: 0 }}>
-                <Link href="/keep-in-touch" className="group flex flex-col items-start gap-2 transition-all duration-300">
-                  <div className="w-[50vw] md:w-[280px] aspect-[1.6/1] bg-white shadow-2xl overflow-hidden p-1 relative">
+                <Link href="/keep-in-touch" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                  <div className="h-[15vh] md:h-auto md:w-[280px] aspect-[1.6/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full overflow-hidden">
                       <img src="/home-page-squares/ContactSupportSquare.JPG" alt="Contact Support" className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-500" />
                     </div>
@@ -138,6 +143,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+          </div>
           </div>
         </div>
         </section>

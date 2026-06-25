@@ -51,10 +51,12 @@ export function LeafSnake() {
       // is imperceptible, unlike the earlier 1:1 scroll-cancellation case
       // that caused jitter. Timed to land right after the snake finishes
       // (4vh) and finish before the title starts fading in (4.7vh), so the
-      // leaves are already in place by the time it appears.
+      // leaves are already in place by the time it appears. That heading is
+      // hidden on mobile, so there's nothing to clear there — topEnd matches
+      // topStart, making the interpolation a no-op.
       if (stickyRef.current) {
         const topStart = 24
-        const topEnd = vw >= 768 ? 96 : 80
+        const topEnd = vw >= 768 ? 96 : 24
         const transitionStart = 4 * vh
         const transitionEnd = 4.6 * vh
         const t = Math.max(0, Math.min(1, (scrollY - transitionStart) / (transitionEnd - transitionStart)))

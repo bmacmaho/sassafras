@@ -12,12 +12,25 @@ const STEP_BEZIERS = [
   { step: 4, sx:  920, sy:  700, cx1: -300, cy1:  800, cx2:  150, cy2: -400 },
 ]
 
-function cardAnchor(step: number, w: number, h: number, isMd: boolean, vw: number) {
+function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: number) {
+  if (!isMd) {
+    // Mobile: the tiles are a single centered column, evenly spaced via
+    // justify-evenly (see app/page.tsx) — all four share the same image
+    // height (h-[15vh]) and are horizontally centered, so every anchor
+    // sits on the container's vertical centerline; only y differs by step.
+    const imageH = vh * 0.15
+    const labelH = 8 + 14 // gap-2 (8px) + leaf icon/label row (~14px)
+    const tileH = imageH + labelH
+    const n = 4
+    const gap = (h - n * tileH) / (n + 1)
+    const topY = step * gap + (step - 1) * tileH
+    return { x: w / 2, y: topY + imageH / 2 }
+  }
   switch (step) {
-    case 1: { const cw = isMd ? 350 : vw * 0.70; const ch = cw / 1.8;  return { x: (isMd ? 0.12 : 0.04) * w + cw / 2, y: (isMd ? 0.25 : 0.22) * h + ch / 2 } }
-    case 2: { const cw = isMd ? 220 : vw * 0.50;                        return { x: (isMd ? 0.26 : 0.16) * w + cw / 2, y: (isMd ? 0.60 : 0.58) * h + cw / 2 } }
-    case 3: { const cw = isMd ? 220 : vw * 0.40; const tlx = w * (1 - (isMd ? 0.21 : 0.16)) - cw; return { x: tlx + cw / 2, y: (isMd ? 0.12 : 0.10) * h + cw / 2 } }
-    case 4: { const cw = isMd ? 280 : vw * 0.50; const ch = cw / 1.6; const tlx = w * (1 - (isMd ? 0.10 : 0.04)) - cw; return { x: tlx + cw / 2, y: (isMd ? 0.64 : 0.60) * h + ch / 2 } }
+    case 1: { const cw = 350; const ch = cw / 1.8; return { x: 0.12 * w + cw / 2, y: 0.25 * h + ch / 2 } }
+    case 2: { const cw = 220; return { x: 0.26 * w + cw / 2, y: 0.60 * h + cw / 2 } }
+    case 3: { const cw = 220; const tlx = w * (1 - 0.21) - cw; return { x: tlx + cw / 2, y: 0.12 * h + cw / 2 } }
+    case 4: { const cw = 280; const ch = cw / 1.6; const tlx = w * (1 - 0.10) - cw; return { x: tlx + cw / 2, y: 0.64 * h + ch / 2 } }
     default: return { x: 0, y: 0 }
   }
 }
@@ -112,7 +125,7 @@ export function PathTrails() {
       pathRefs.current.forEach((el, i) => {
         if (!el) return
         const { step, sx, sy, cx1, cy1, cx2, cy2 } = STEP_BEZIERS[i]
-        const { x: ex, y: ey } = cardAnchor(step, w, h, isMd, vw)
+        const { x: ex, y: ey } = cardAnchor(step, w, h, isMd, vh)
 
         const P0x = ex + sx,  P0y = ey + sy
         const P1x = ex + cx1, P1y = ey + cy1

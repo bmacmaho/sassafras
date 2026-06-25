@@ -1,11 +1,18 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import Link from "next/link"
+import { WelcomeTypewriter } from "@/components/home/welcome-typewriter"
 
 const TITLE_TEXT = "WELCOME TO SASSAFRAS"
 
 export const SUBTITLE_TEXT = "a platform for experimental thought and publication"
+// On mobile the subtitle wraps around the video instead of riding the curved
+// path — "a platform for experimental" sits above it, the rest runs
+// vertically down its right edge — so it's split here instead of
+// duplicating the copy.
+const SUBTITLE_FIRST = "a platform for experimental"
+const SUBTITLE_REST = SUBTITLE_TEXT.slice(SUBTITLE_FIRST.length).trim()
 
 export function ScrollDrivenVideo() {
   const titlePathRef = useRef<SVGTextPathElement>(null)
@@ -15,6 +22,71 @@ export function ScrollDrivenVideo() {
   const videoRef = useRef<HTMLDivElement>(null)
   const verticalTextRef = useRef<HTMLDivElement>(null)
   const scrollTextRef = useRef<HTMLParagraphElement>(null)
+  const videoWrapperRef = useRef<HTMLDivElement>(null)
+  const platformForRef = useRef<HTMLParagraphElement>(null)
+  const subtitleRestRef = useRef<HTMLSpanElement>(null)
+
+  // Mobile-only: size "a platform for experimental" so its rendered width
+  // exactly matches the video's — measured directly (rather than recomputed
+  // from the same vw/max-width rules as the video box) so it stays correct
+  // regardless of which of those rules is actually winning at the current
+  // viewport size. The vertical run down the video's side gets the same
+  // font size. Measuring always uses the full string (swapped in and back
+  // out), even mid-typing, so the size stays correct on resize at any point
+  // during or after the typewriter effect below. Runs as a layout effect, so
+  // the correct (large) font size is already committed before the browser's
+  // first paint — otherwise this briefly renders at its tiny inherited
+  // default size and visibly jumps once the real size is applied.
+  useLayoutEffect(() => {
+    const textEl = platformForRef.current
+    const wrapperEl = videoWrapperRef.current
+    const restEl = subtitleRestRef.current
+    if (!textEl || !wrapperEl || !restEl) return
+
+    const REFERENCE_SIZE = 100
+    const fit = () => {
+      const targetWidth = wrapperEl.getBoundingClientRect().width
+      if (targetWidth <= 0) return
+      const currentText = textEl.textContent
+      textEl.style.fontSize = `${REFERENCE_SIZE}px`
+      textEl.textContent = SUBTITLE_FIRST
+      const measuredWidth = textEl.getBoundingClientRect().width
+      textEl.textContent = currentText
+      if (measuredWidth > 0) {
+        const fontSize = `${(targetWidth / measuredWidth) * REFERENCE_SIZE}px`
+        textEl.style.fontSize = fontSize
+        restEl.style.fontSize = fontSize
+      }
+    }
+
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(wrapperEl)
+
+    // Typewriter: types "a platform for experimental" first, then once
+    // that's fully revealed, continues into "thought and publication".
+    let phase: "first" | "rest" = "first"
+    let i = 0
+    const interval = setInterval(() => {
+      if (phase === "first") {
+        textEl.textContent = SUBTITLE_FIRST.slice(0, i)
+        i++
+        if (i > SUBTITLE_FIRST.length) {
+          phase = "rest"
+          i = 0
+        }
+      } else {
+        restEl.textContent = SUBTITLE_REST.slice(0, i)
+        i++
+        if (i > SUBTITLE_REST.length) clearInterval(interval)
+      }
+    }, 40)
+
+    return () => {
+      observer.disconnect()
+      clearInterval(interval)
+    }
+  }, [])
 
   useEffect(() => {
     const update = () => {
@@ -76,6 +148,15 @@ export function ScrollDrivenVideo() {
       if (scrollTextRef.current) {
         scrollTextRef.current.style.transform = `translateX(${ease * vw * 1.5}px)`
       }
+
+      // Mobile subtitle: first half slides left off-screen, the rest
+      // (already vertical) slides up off-screen.
+      if (platformForRef.current) {
+        platformForRef.current.style.transform = `translateX(${-ease * vw * 1.5}px)`
+      }
+      if (subtitleRestRef.current) {
+        subtitleRestRef.current.style.transform = `translateY(${-ease * vh * 1.5}px)`
+      }
     }
 
     let rafId = requestAnimationFrame(function loop() {
@@ -90,7 +171,11 @@ export function ScrollDrivenVideo() {
     <section className="relative bg-[#aac3ef] h-[500vh]">
       <div className="sticky top-0 h-screen overflow-hidden z-10 w-full flex flex-col items-start justify-center pl-[20vw]">
         <div className="flex flex-col items-start gap-0" style={{ transform: "translateY(40px)" }}>
-          <div style={{ position: "relative", height: 0 }}>
+          {/* Mobile: plain typewriter title instead of the curved, scroll-driven path */}
+          <div className="block md:hidden">
+            <WelcomeTypewriter twoLine />
+          </div>
+          <div className="hidden md:block" style={{ position: "relative", height: 0 }}>
             <svg
               width="3000"
               height="500"
@@ -113,7 +198,7 @@ export function ScrollDrivenVideo() {
               </text>
             </svg>
           </div>
-          <div style={{ position: "relative", height: 50, marginBottom: 12 }}>
+          <div className="hidden md:block" style={{ position: "relative", height: 50, marginBottom: 12 }}>
             <svg
               width="6000"
               height="400"
@@ -137,8 +222,32 @@ export function ScrollDrivenVideo() {
               </text>
             </svg>
           </div>
-          <div className="flex items-end gap-4">
-            <div className="relative w-[68vw] md:w-[32vw] max-w-[365px] aspect-[3/4]">
+          <div className="flex flex-col items-start md:flex-row md:items-end md:gap-4">
+            {/* Mobile: first half of the subtitle, sitting above the video — the
+                rest continues down its right edge (see inside the video box). */}
+            <p
+              ref={platformForRef}
+              className="block md:hidden font-alte-haas whitespace-nowrap mb-1"
+              style={{
+                letterSpacing: "0.1em",
+                color: "rgba(255,255,255,0.15)",
+                WebkitTextStroke: "0.5px rgba(255,255,255,0.7)",
+              }}
+            />
+            <div ref={videoWrapperRef} className="relative w-[68vw] md:w-[32vw] max-w-[365px] aspect-[3/4] mb-3 md:mb-0">
+              {/* Mobile: rest of the subtitle, running down the video's right edge */}
+              <span
+                ref={subtitleRestRef}
+                className="absolute block md:hidden whitespace-nowrap font-alte-haas"
+                style={{
+                  left: "calc(100% + 2px)",
+                  top: 0,
+                  writingMode: "vertical-rl",
+                  letterSpacing: "0.06em",
+                  color: "rgba(255,255,255,0.15)",
+                  WebkitTextStroke: "0.5px rgba(255,255,255,0.7)",
+                }}
+              />
               {/* Vertical text — animates straight up independently */}
               <div
                 ref={verticalTextRef}

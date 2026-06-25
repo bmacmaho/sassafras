@@ -724,26 +724,34 @@ const PAGE_H = 590.8
 function MobileScrollReader({
   pages,
   registerPageRef,
+  landscape,
   onClose,
 }: {
   pages: BookPage[]
   registerPageRef: (pageNumber: number, el: HTMLDivElement | null) => void
+  landscape: boolean
   onClose: () => void
 }) {
-  const [scale, setScale] = useState(1)
+  const [viewportWidth, setViewportWidth] = useState(0)
   useEffect(() => {
-    const update = () => setScale(window.innerWidth / PAGE_W)
+    const update = () => setViewportWidth(window.innerWidth)
     update()
     window.addEventListener("resize", update)
     return () => window.removeEventListener("resize", update)
   }, [])
+
+  // Portrait: one page fills the screen width. Landscape: two sit side by
+  // side instead — the original print-spread pairing (1-2, 3-4, ... 61-62),
+  // since that's exactly how each page image was split from its spread — so
+  // each page is scaled to half width there.
+  const scale = landscape ? viewportWidth / (PAGE_W * 2) : viewportWidth / PAGE_W
 
   const frameStyle: CSSProperties = {
     width: PAGE_W * scale,
     height: PAGE_H * scale,
     position: "relative",
     overflow: "hidden",
-    margin: "0 auto",
+    flexShrink: 0,
   }
   const innerStyle: CSSProperties = {
     width: PAGE_W,
@@ -762,6 +770,17 @@ function MobileScrollReader({
     display: "block",
   }
 
+  const slots: { pageNumber: number; node: ReactNode }[] = []
+  pages.forEach((sheet, i) => {
+    const frontNum = i * 2
+    const backNum = i * 2 + 1
+    if (frontNum >= 1 && frontNum <= 62) slots.push({ pageNumber: frontNum, node: sheet.front })
+    if (backNum >= 1 && backNum <= 62) slots.push({ pageNumber: backNum, node: sheet.back })
+  })
+  const rows = landscape
+    ? Array.from({ length: Math.ceil(slots.length / 2) }, (_, i) => slots.slice(i * 2, i * 2 + 2))
+    : slots.map((slot) => [slot])
+
   return (
     <div className="fixed inset-0 bg-black overflow-y-auto" style={{ zIndex: 99999 }}>
       <button
@@ -775,36 +794,29 @@ function MobileScrollReader({
       </button>
 
       <CitationLayer>
-        <div style={frameStyle}>
-          <div style={innerStyle}>
-            <img src="/the_tower_assets/cover/front.JPG" alt="The Tower — Issue 1, Sassafras" style={coverImageStyle} />
+        <div className="flex justify-center">
+          <div style={frameStyle}>
+            <div style={innerStyle}>
+              <img src="/the_tower_assets/cover/front.JPG" alt="The Tower — Issue 1, Sassafras" style={coverImageStyle} />
+            </div>
           </div>
         </div>
 
-        {pages.flatMap((sheet, i) => {
-          const frontNum = i * 2
-          const backNum = i * 2 + 1
-          const slots: ReactNode[] = []
-          if (frontNum >= 1 && frontNum <= 62) {
-            slots.push(
-              <div key={frontNum} ref={(el) => registerPageRef(frontNum, el)} style={frameStyle}>
-                <div style={innerStyle}>{sheet.front}</div>
+        {rows.map((row) => (
+          <div key={row[0].pageNumber} className="flex justify-center">
+            {row.map(({ pageNumber, node }) => (
+              <div key={pageNumber} ref={(el) => registerPageRef(pageNumber, el)} style={frameStyle}>
+                <div style={innerStyle}>{node}</div>
               </div>
-            )
-          }
-          if (backNum >= 1 && backNum <= 62) {
-            slots.push(
-              <div key={backNum} ref={(el) => registerPageRef(backNum, el)} style={frameStyle}>
-                <div style={innerStyle}>{sheet.back}</div>
-              </div>
-            )
-          }
-          return slots
-        })}
+            ))}
+          </div>
+        ))}
 
-        <div style={frameStyle}>
-          <div style={innerStyle}>
-            <img src="/the_tower_assets/cover/back.JPG" alt="The Tower — Issue 1, Sassafras (back cover)" style={coverImageStyle} />
+        <div className="flex justify-center">
+          <div style={frameStyle}>
+            <div style={innerStyle}>
+              <img src="/the_tower_assets/cover/back.JPG" alt="The Tower — Issue 1, Sassafras (back cover)" style={coverImageStyle} />
+            </div>
           </div>
         </div>
       </CitationLayer>
@@ -822,13 +834,27 @@ export default function CurrentIssuePage() {
 
   // Below the md breakpoint, the 3D flip interaction is replaced entirely by
   // MobileScrollReader — drag-to-flip and vertical touch-scroll fight each
-  // other, so mobile gets a plain scrolling stack of pages instead.
+  // other, so mobile gets a plain scrolling stack of pages instead. Gated on
+  // a coarse (touch) pointer, not just viewport size — a short desktop
+  // browser window is common and must not be misclassified as mobile — and
+  // checked against the smaller viewport dimension (not just width) so a
+  // phone rotated to landscape, which can exceed 768px in width, still
+  // counts as mobile instead of falling back to the 3D book.
   const [isMobile, setIsMobile] = useState(false)
+  const [isLandscape, setIsLandscape] = useState(false)
   useEffect(() => {
-    const update = () => setIsMobile(window.innerWidth < 768)
+    const update = () => {
+      const isTouch = window.matchMedia("(pointer: coarse)").matches
+      setIsMobile(isTouch && Math.min(window.innerWidth, window.innerHeight) < 768)
+      setIsLandscape(window.innerWidth > window.innerHeight)
+    }
     update()
     window.addEventListener("resize", update)
-    return () => window.removeEventListener("resize", update)
+    window.addEventListener("orientationchange", update)
+    return () => {
+      window.removeEventListener("resize", update)
+      window.removeEventListener("orientationchange", update)
+    }
   }, [])
   const [mobileReaderOpen, setMobileReaderOpen] = useState(false)
 
@@ -1003,6 +1029,20 @@ export default function CurrentIssuePage() {
 
   const [fullscreen, setFullscreen] = useState(false)
 
+  // Keep whichever expanded viewer is open in sync with the current device
+  // classification — e.g. resizing a browser window, or rotating a tablet
+  // near the breakpoint, shouldn't leave the mobile scroll reader open in
+  // regular desktop mode (or vice versa); swap to the viewer that matches.
+  useEffect(() => {
+    if (isMobile && fullscreen) {
+      setFullscreen(false)
+      setMobileReaderOpen(true)
+    } else if (!isMobile && mobileReaderOpen) {
+      setMobileReaderOpen(false)
+      setFullscreen(true)
+    }
+  }, [isMobile, fullscreen, mobileReaderOpen])
+
   useEffect(() => {
     document.body.style.overflow = fullscreen || mobileReaderOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
@@ -1091,7 +1131,7 @@ export default function CurrentIssuePage() {
 
       {/* ── Mobile reader — fullscreen scroll-through-pages overlay ── */}
       {mounted && mobileReaderOpen && createPortal(
-        <MobileScrollReader pages={pages} registerPageRef={registerPageRef} onClose={() => setMobileReaderOpen(false)} />,
+        <MobileScrollReader pages={pages} registerPageRef={registerPageRef} landscape={isLandscape} onClose={() => setMobileReaderOpen(false)} />,
         document.body
       )}
 
@@ -1160,7 +1200,7 @@ export default function CurrentIssuePage() {
                         {person.pronouns && (
                           <p className="font-alte-haas text-sm tracking-wide mb-2" style={{ color: "#5D9800" }}>{person.pronouns}</p>
                         )}
-                        <p className={`font-alte-haas text-lg leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
+                        <p className={`font-alte-haas text-lg leading-relaxed whitespace-pre-line text-justify ${dm ? "text-white/80" : "text-[#444]"}`}>
                           {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                         </p>
                       </div>
@@ -1183,7 +1223,7 @@ export default function CurrentIssuePage() {
                             )}
                           </div>
                           <ScrollableBio dark={dm}>
-                            <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line ${dm ? "text-white/80" : "text-[#444]"}`}>
+                            <p className={`font-alte-haas text-xl leading-relaxed whitespace-pre-line text-justify ${dm ? "text-white/80" : "text-[#444]"}`}>
                               {person.bio || <span className={`italic ${dm ? "text-white/20" : "text-black/20"}`}>Bio coming soon</span>}
                             </p>
                           </ScrollableBio>
