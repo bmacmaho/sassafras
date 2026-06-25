@@ -577,7 +577,7 @@ function buildPages(
     ...pages[8],
     front: buildPage(16, "right", (
       <>
-        <div style={{ position: "absolute", top: 200, left: 186, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 200, left: 188, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -586,7 +586,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 327, left: 204, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 305, left: 200, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -595,7 +595,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 548, left: 215, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 525, left: 208, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -615,10 +615,10 @@ function buildPages(
     ...pages[8],
     back: buildPage(17, "left", (
       <>
-        <div style={{ position: "absolute", top: 107, left: 170, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 92, left: 163, zIndex: 50 }}>
           <CitationPopover citation={<>Gen. 11:1–9 (New International Version).</>} />
         </div>
-        <div style={{ position: "absolute", top: 313, left: 163, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 303, left: 268, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -627,7 +627,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 355, left: 210, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 338, left: 212, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
