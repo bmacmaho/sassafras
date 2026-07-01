@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
-import { useHeaderExtras, useHeaderScrolled } from "@/components/header-extras-context"
+import { useHeaderExtras, useHeaderScrolled, DARK_MODE_KEY } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
 import { isVideoSrc } from "@/lib/types"
 
@@ -240,7 +240,29 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
     setContextHeaderHeight(headerHeight)
     document.documentElement.style.setProperty('--header-bottom', `${13 + headerHeight}px`)
   }, [headerHeight, setContextHeaderHeight])
-  useEffect(() => { setDarkMode(pathname === "/current-issue") }, [pathname, setDarkMode])
+  // On navigation, decide which theme to show:
+  //  • Pages with a theme toggle honour the user's saved preference; if they
+  //    have never toggled, fall back to the page's default (dark only on
+  //    /current-issue).
+  //  • Pages without a toggle are always light.
+  useEffect(() => {
+    const hasToggle =
+      pathname === "/current-issue" || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+    if (!hasToggle) {
+      setDarkMode(false)
+      return
+    }
+    let stored: string | null = null
+    try { stored = localStorage.getItem(DARK_MODE_KEY) } catch {}
+    setDarkMode(stored !== null ? stored === "true" : pathname === "/current-issue")
+  }, [pathname, setDarkMode])
+
+  // Toggle the theme AND persist the choice so it's restored on return.
+  const toggleDarkMode = () => {
+    const next = !darkMode
+    setDarkMode(next)
+    try { localStorage.setItem(DARK_MODE_KEY, String(next)) } catch {}
+  }
 
   const currentColor = getPageColor(pathname)
   const accentColor = currentColor
@@ -511,7 +533,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               </div>
               {hasThemeToggle && (
                 <button
-                  onClick={() => setDarkMode(!darkMode)}
+                  onClick={toggleDarkMode}
                   className="flex flex-shrink-0 items-center gap-2 pb-1 font-alte-haas text-[10px] tracking-[0.2em] cursor-pointer bg-transparent border-none p-0 transition-opacity hover:opacity-70"
                 >
                   <Sun size={12} style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.55)" }} />

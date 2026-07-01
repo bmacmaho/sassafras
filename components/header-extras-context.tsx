@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react"
 
+export const DARK_MODE_KEY = "sassafras:darkMode"
+
 const HeaderExtrasContext = createContext<{
   extras: ReactNode
   setExtras: (node: ReactNode) => void
