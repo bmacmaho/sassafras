@@ -145,7 +145,6 @@ const NAV_LINKS = [
 const HEADER_MAX = 220
 const HEADER_MIN = 64
 const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
-const SNAP_THRESHOLD = 60
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -198,41 +197,26 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
 
   useEffect(() => { pathnameRef.current = pathname }, [pathname])
 
-  // Wheel interceptor: desktop only, locks content scroll while header collapses
+  // Desktop only: collapse the header as the page scrolls. Driven off the
+  // scroll position with a passive listener so it can never block scrolling
+  // (an earlier non-passive `wheel` handler that called preventDefault broke
+  // gesture scrolling in Safari).
   useEffect(() => {
     if (!window.matchMedia('(min-width: 1024px)').matches) return
 
-    const onWheel = (e: WheelEvent) => {
-      if (pathnameRef.current === "/explore") return
-      if (!phaseLockedRef.current) return
-      e.preventDefault()
-      setHeaderTransition(false)
-      accumRef.current = Math.max(0, Math.min(COLLAPSE_RANGE, accumRef.current + e.deltaY))
-      if (e.deltaY > 0 && accumRef.current >= SNAP_THRESHOLD) {
-        accumRef.current = COLLAPSE_RANGE
-        setHeaderHeight(HEADER_MIN)
-        phaseLockedRef.current = false
-      } else {
-        setHeaderHeight(HEADER_MAX - accumRef.current)
-      }
-    }
-
     const onScroll = () => {
       if (pathnameRef.current === "/explore") return
-      if (window.scrollY === 0 && !phaseLockedRef.current) {
-        phaseLockedRef.current = true
-        accumRef.current = 0
-        setHeaderTransition(true)
-        setHeaderHeight(HEADER_MAX)
-      }
+      const y = Math.max(0, window.scrollY)
+      const height = Math.max(HEADER_MIN, HEADER_MAX - Math.min(y, COLLAPSE_RANGE))
+      accumRef.current = HEADER_MAX - height
+      phaseLockedRef.current = height >= HEADER_MAX
+      setHeaderTransition(false)
+      setHeaderHeight(height)
     }
 
-    window.addEventListener('wheel', onWheel, { passive: false })
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('scroll', onScroll)
-    }
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
 
