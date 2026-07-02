@@ -213,6 +213,9 @@ export default function AboutPage() {
                         )}
                       </div>
                       <div className={`p-4 border-t-2 ${dm ? "border-white bg-white/5" : "border-black bg-[#FBFAF1]"}`}>
+                        {person.coFounder && (
+                          <p className="font-alte-haas text-sm tracking-wide" style={{ color: "#5D9800" }}>Co-founder</p>
+                        )}
                         {person.pronouns && (
                           <p className="font-alte-haas text-sm tracking-wide mb-2" style={{ color: "#5D9800" }}>{person.pronouns}</p>
                         )}
@@ -237,8 +240,13 @@ export default function AboutPage() {
                         <div className="flex-1 pl-2 pr-2 pt-1 pb-3 flex flex-col min-h-0">
                           <div className={`flex items-baseline gap-3 pb-1 mb-1 border-b-2 -ml-2 -mr-2 pl-2 pr-2 flex-shrink-0 ${dm ? "border-white" : "border-black"}`}>
                             <p ref={openId === person.id ? nameRef : undefined} className={`font-alte-haas text-[3.5rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}></p>
-                            {person.pronouns && (
-                              <span className={`font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>{person.pronouns}</span>
+                            {(person.pronouns || person.coFounder) && (
+                              <span className={`relative font-alte-haas text-[1.75rem] leading-tight ${dm ? "text-white" : "text-[#222]"}`}>
+                                {person.coFounder && (
+                                  <span className="absolute bottom-full left-0 font-alte-haas text-sm tracking-wide leading-none whitespace-nowrap" style={{ color: "#5D9800" }}>Co-founder</span>
+                                )}
+                                {person.pronouns}
+                              </span>
                             )}
                           </div>
                           <ScrollableBio dark={dm}>

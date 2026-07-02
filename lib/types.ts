@@ -44,6 +44,7 @@ export interface Person {
   bio: string
   personalLink?: string
   languages?: string[]
+  coFounder?: boolean
 }
 
 export enum ArtworkTag {
