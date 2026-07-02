@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 import { WelcomeTypewriter } from "@/components/home/welcome-typewriter"
 
@@ -25,6 +26,19 @@ export function ScrollDrivenVideo() {
   const videoWrapperRef = useRef<HTMLDivElement>(null)
   const platformForRef = useRef<HTMLParagraphElement>(null)
   const subtitleRestRef = useRef<HTMLSpanElement>(null)
+  const videoElRef = useRef<HTMLVideoElement>(null)
+
+  // Gate the whole page behind a blue loading screen until the hero video is
+  // ready to play. `mounted` guards the portal (server render has no document);
+  // if the video is already buffered before React attaches the handler (cache),
+  // catch it via readyState, and fail open on error so a broken video can't
+  // trap the visitor on the loader forever.
+  const [mounted, setMounted] = useState(false)
+  const [videoReady, setVideoReady] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+    if (videoElRef.current && videoElRef.current.readyState >= 3) setVideoReady(true)
+  }, [])
 
   // Mobile-only: size "a platform for experimental" so its rendered width
   // exactly matches the video's — measured directly (rather than recomputed
@@ -169,6 +183,15 @@ export function ScrollDrivenVideo() {
 
   return (
     <section className="relative bg-[#aac3ef] h-[500vh]">
+      {/* Loading gate: nothing but the blue background and a spinner until the
+          hero video can play. Portaled to <body> and pinned above everything
+          (header included) so the page assembles behind it out of sight. */}
+      {mounted && !videoReady && createPortal(
+        <div className="fixed inset-0 z-100000 flex items-center justify-center bg-[#aac3ef]">
+          <div className="w-10 h-10 rounded-full border-4 border-white/30 border-t-white animate-spin" />
+        </div>,
+        document.body
+      )}
       <div className="sticky top-0 h-screen overflow-hidden z-10 w-full flex flex-col items-start justify-center pl-[20vw]">
         <div className="flex flex-col items-start gap-0" style={{ transform: "translateY(40px)" }}>
           {/* Mobile: plain typewriter title instead of the curved, scroll-driven path */}
@@ -274,11 +297,15 @@ export function ScrollDrivenVideo() {
               >
                 <Link href="/current-issue" className="block w-full h-full">
                   <video
-                    src="/IMG_4255.MOV"
+                    ref={videoElRef}
+                    src="/IMG_4255.mp4"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    preload="auto"
+                    onCanPlay={() => setVideoReady(true)}
+                    onError={() => setVideoReady(true)}
                     className="w-full h-full object-cover"
                   />
                 </Link>

@@ -444,7 +444,7 @@ function buildPages(
     ...pages[6],
     back: buildPage(13, "left", (
       <>
-        <div style={{ position: "absolute", top: 15, left: 330, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 15, left: 334, zIndex: 50 }}>
           <CitationPopover
             citation={
               <a href="https://www.kindl-berlin.de/ausstellungen/iliggocene" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
@@ -453,7 +453,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 80, left: 305, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 80, left: 310, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -462,7 +462,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 315, left: 360, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 310, left: 363, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -471,7 +471,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 435, left: 265, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 428, left: 270, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -484,7 +484,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 512, left: 250, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 505, left: 255, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -509,7 +509,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 85, left: 260, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 82, left: 258, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -518,12 +518,12 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 123, left: 105, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 120, left: 106, zIndex: 50 }}>
           <CitationPopover
             citation={<>Dan. 4:30-4, New International Version.</>}
           />
         </div>
-        <div style={{ position: "absolute", top: 290, left: 65, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 290, left: 76, zIndex: 50 }}>
           <CitationPopover
             citation={
               <>
@@ -532,7 +532,7 @@ function buildPages(
             }
           />
         </div>
-        <div style={{ position: "absolute", top: 385, left: 210, zIndex: 50 }}>
+        <div style={{ position: "absolute", top: 380, left: 210, zIndex: 50 }}>
           <CitationPopover
             citation={<>Marino, “Classification,” 220–25.</>}
           />
@@ -642,14 +642,28 @@ function buildPages(
   pages[9] = { ...pages[9], back: buildPage(19, "left") }
   pages[10] = { ...pages[10], front: buildPage(20, "right") }
   pages[10] = { ...pages[10], back: buildPage(21, "left", <BellsButton />) }
-  pages[11] = { ...pages[11], front: buildPage(22, "right") }
+  pages[11] = { ...pages[11], front: buildPage(22, "right", <>
+    <div style={{ position: "absolute", top: 150, left: 255, zIndex: 50 }}>
+      <CitationPopover
+            citation={
+              <>
+                <a href="https://allpoetry.com/The-Bells-Of-Shandon" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                  'The Bells of Shandon' by Francis Sylvester Mahony 
+                </a>
+                .
+              </>
+            }
+          />
+    </div> 
+  </>)
+  }
   pages[11] = { ...pages[11], back: buildPage(23, "left") }
   pages[12] = {
     ...pages[12],
     front: buildPage(24, "right", (
       <video
         ref={videoRefs.page24}
-        src="/IMG_4255.MOV"
+        src="/IMG_4255.mp4"
         loop
         muted
         playsInline
@@ -666,16 +680,85 @@ function buildPages(
       />
     )),
   }
-  pages[12] = { ...pages[12], back: buildPage(25, "left") }
-  pages[13] = { ...pages[13], front: buildPage(26, "right", <LawElement side="right" currentSheet={currentSheet} />) }
-  pages[13] = { ...pages[13], back: buildPage(27, "left") }
+  pages[12] = {
+    ...pages[12],
+    back: buildPage(25, "left", (
+      <div style={{ position: "absolute", top: 374, left: 183, zIndex: 50 }}>
+        <CitationPopover
+          citation={<>Olive Senior, <i>Gardening in the Tropics</i> (Toronto: Insomniac Press, 2005).</>}
+        />
+      </div>
+    )),
+  }
+  pages[13] = {
+    ...pages[13],
+    front: buildPage(26, "right", (
+      <>
+        <LawElement side="right" currentSheet={currentSheet} />
+        <div style={{ position: "absolute", top: 310, left: 126, zIndex: 50 }}>
+          <CitationPopover
+            citation={<>Trinidad and Tobago, “Summary Offences Act,” Chapter 11:02 § (1921).</>}
+          />
+        </div>
+        <div style={{ position: "absolute", top: 317, left: 124, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                The Summary Offenses Act provides a detailed definition of “agricultural produce”, which includes: (a) all root crops, plants, grasses, pulses, vegetables, cereals, fruit and fibres; (b) all planting material, seeds, herbicides, pesticides and fertilisers; (c) all fish and other aquatic life; (d) all agricultural, forest and aquatic products, tools, machinery, equipment and materials; and (e) any other crop, plant, grass, pulse, vegetable, cereal, fruit, fibre, material, seed, herbicide, pesticide, fertiliser, product, tool, machinery, equipment or material used in agricultural production, whatever the value of the produce stolen may be and whether the land on which the same is at the time growing, being cultivated or situated, is open or enclosed.
+              </>
+            }
+          />
+        </div>
+        <div style={{ position: "absolute", top: 505, left: 258, zIndex: 50 }}>
+          <CitationPopover
+            citation={<>Trinidad and Tobago, “Summary Offences Act,” Chapter 11:02 § (1921).</>}
+          />
+        </div>
+      </>
+    )),
+  }
+  pages[13] = {
+    ...pages[13],
+    back: buildPage(27, "left", (
+      <div style={{ position: "absolute", top: 350, left: 148, zIndex: 50 }}>
+        <CitationPopover
+          citation={<>Karen McCullah Lutz and Kirsten Smith, “Legally Blonde,” Movie, Metro-Goldwyn-Mayer, 2001.</>}
+        />
+      </div>
+    )),
+  }
   pages[14] = { ...pages[14], front: buildPage(28, "right") }
   pages[14] = { ...pages[14], back: buildPage(29, "left") }
   pages[15] = { ...pages[15], front: buildPage(30, "right") }
-  pages[15] = { ...pages[15], back: buildPage(31, "left") }
+  pages[15] = {
+    ...pages[15],
+    back: buildPage(31, "left", (
+      <div style={{ position: "absolute", top: 80, left: 118, zIndex: 50 }}>
+        <CitationPopover
+          citation={
+            <>
+              “Cultural Display Rules.” In <i>Culture and Psychology</i>. 2025. OpenMaricopa. Accessed June 19, 2026,{" "}
+              <a href="https://open.maricopa.edu/culturepsychology/chapter/cultural-display-rules/" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                https://open.maricopa.edu/culturepsychology/chapter/cultural-display-rules/
+              </a>
+            </>
+          }
+        />
+      </div>
+    )),
+  }
   pages[16] = { ...pages[16], front: buildPage(32, "right") }
   pages[16] = { ...pages[16], back: buildPage(33, "left") }
-  pages[17] = { ...pages[17], front: buildPage(34, "right") }
+  pages[17] = {
+    ...pages[17],
+    front: buildPage(34, "right", (
+      <div style={{ position: "absolute", top: 566, left: 244, zIndex: 50 }}>
+        <CitationPopover
+          citation={<>Pragya Agarwal, <i>Hysterical: Exploding the Myth of Gendered Emotions</i> (Canongate Books, 2023).</>}
+        />
+      </div>
+    )),
+  }
   pages[17] = { ...pages[17], back: buildPage(35, "left") }
   pages[18] = { ...pages[18], front: buildPage(36, "right") }
   pages[18] = { ...pages[18], back: buildPage(37, "left") }
@@ -686,8 +769,44 @@ function buildPages(
   pages[21] = { ...pages[21], front: buildPage(42, "right") }
   pages[21] = { ...pages[21], back: buildPage(43, "left") }
   pages[22] = { ...pages[22], front: buildPage(44, "right") }
-  pages[22] = { ...pages[22], back: buildPage(45, "left") }
-  pages[23] = { ...pages[23], front: buildPage(46, "right") }
+  pages[22] = {
+    ...pages[22],
+    back: buildPage(45, "left", (
+      <>
+        <div style={{ position: "absolute", top: 44, left: 172, zIndex: 50 }}>
+          <CitationPopover
+            citation={<>Mole is a term of endearment for young women or girls in Malayalam.</>}
+          />
+        </div>
+        <div style={{ position: "absolute", top: 250, left: 168, zIndex: 50 }}>
+          <CitationPopover
+            citation={
+              <>
+                Read more: Saumya Kalia, “Indian Culture Normalizes Spying. This Affects How We View Digital Privacy,” The Swaddle, August 14, 2021,{" "}
+                <a href="https://www.theswaddle.com/spying-culture-digital-privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "underline" }}>
+                  https://www.theswaddle.com/spying-culture-digital-privacy
+                </a>
+              </>
+            }
+          />
+        </div>
+      </>
+    )),
+  }
+  pages[23] = {
+    ...pages[23],
+    front: buildPage(46, "right", (
+      <div style={{ position: "absolute", top: 88, left: 365, zIndex: 50 }}>
+        <CitationPopover
+          citation={
+            <>
+              The Panopticon was first introduced by Jeremy Bentham as a design for prisons that made it possible for a central watchtower to survey prisoners at all times. The concept was later popularised by Michel Foucault in <i>Discipline and Punish</i> (1975) as a metaphor for the modern disciplinary society where one is watched at all times.
+            </>
+          }
+        />
+      </div>
+    )),
+  }
   pages[23] = { ...pages[23], back: buildPage(47, "left") }
   pages[24] = { ...pages[24], front: buildPage(48, "right") }
   pages[24] = { ...pages[24], back: buildPage(49, "left") }
@@ -965,7 +1084,7 @@ export default function CurrentIssuePage() {
     const video2 = document.createElement("video")
     video2.preload = "auto"
     video2.muted = true
-    video2.src = "/IMG_4255.MOV"
+    video2.src = "/IMG_4255.mp4"
     video2.load()
 
     return () => { images.length = 0 }
