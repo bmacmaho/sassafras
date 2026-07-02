@@ -61,7 +61,7 @@ const PAGE_IMAGES: Record<number, string> = Object.fromEntries(
 // Renders a page's artwork — each source image is already cropped to this
 // single page (split from its spread during the asset migration), so it
 // just fills the page box directly, no further cropping needed.
-function buildPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
+function buildPage(pageNum: number, _side: "left" | "right", extra?: ReactNode) {
   const src = PAGE_IMAGES[pageNum]
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden" }} data-citation-page>
@@ -79,7 +79,6 @@ function buildPage(pageNum: number, side: "left" | "right", extra?: ReactNode) {
           }}
         />
       )}
-      <p style={{ ...pageNumStyle, [side]: 36 }}>{pageNum}</p>
       {extra}
     </div>
   )
@@ -360,7 +359,7 @@ function buildPages(
               border: "none",
               padding: 0,
               cursor: "pointer",
-              fontFamily: "var(--font-geist-sans), sans-serif",
+              fontFamily: "var(--font-eb-garamond-12), 'EB Garamond', serif",
             }}
             className="hover:underline"
           >
