@@ -33,6 +33,8 @@ function ExploreContent() {
   const { headerScrolled, headerHeight: contextHeaderHeight } = useHeaderScrolled()
   const [searchOpen, setSearchOpen] = useState(false)
   const [canvasHeight, setCanvasHeight] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
   const panXRef = useRef(100)
   const panYRef = useRef(80)
   const scaleRef = useRef(0.75)
@@ -73,8 +75,26 @@ function ExploreContent() {
     return () => window.removeEventListener("resize", onResize)
   }, [mounted, contextHeaderHeight])
 
-  // Capture wheel events on canvas — mutate DOM directly to avoid re-render loops
+  // Track mobile: below the `lg` breakpoint the site header collapses to the
+  // slim bar and we switch the gallery to a fullscreen, vertically-scrolling grid.
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)")
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener("change", update)
+    return () => mq.removeEventListener("change", update)
+  }, [])
+
+  // On mobile the pan/zoom transform is disabled — the grid scrolls natively,
+  // so keep the panned layer at its origin.
+  useEffect(() => {
+    if (isMobile && panLayerRef.current) panLayerRef.current.style.transform = "none"
+  }, [isMobile, artworks])
+
+  // Capture wheel events on canvas — mutate DOM directly to avoid re-render loops.
+  // Disabled on mobile, where the grid scrolls natively (vertical only).
+  useEffect(() => {
+    if (isMobile) return
     const canvas = galleryRef.current
     if (!canvas) return
 
@@ -110,25 +130,26 @@ function ExploreContent() {
 
     canvas.addEventListener("wheel", onWheel, { passive: false })
     return () => canvas.removeEventListener("wheel", onWheel)
-  }, [mounted])
+  }, [mounted, isMobile])
 
   const handleRandomize = useCallback(() => {
     if (!galleryRef.current || isRandomizing) return
     setIsRandomizing(true)
-    panXRef.current = 100
-    panYRef.current = 80
-    scaleRef.current = 0.75
-    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
-    if (galleryRef.current) {
-      galleryRef.current.style.backgroundPosition = `100px 80px`
-      galleryRef.current.style.backgroundSize = `75px 75px`
+    if (!isMobile) {
+      panXRef.current = 100
+      panYRef.current = 80
+      scaleRef.current = 0.75
+      if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
+      if (galleryRef.current) {
+        galleryRef.current.style.backgroundPosition = `100px 80px`
+        galleryRef.current.style.backgroundSize = `75px 75px`
+      }
     }
 
     const containerWidth = galleryRef.current.offsetWidth
-    const containerHeight = galleryRef.current.offsetHeight || canvasHeight
-    const isMobile = containerWidth < 768
+    const singleColumn = containerWidth < 768
 
-    const cols = isMobile ? 1 : Math.max(2, Math.floor(containerWidth / 400))
+    const cols = singleColumn ? 1 : Math.max(2, Math.floor(containerWidth / 400))
     const cellWidth = Math.max(100, Math.floor((containerWidth / cols) / 100) * 100)
 
     setTimeout(() => {
@@ -171,23 +192,38 @@ function ExploreContent() {
             float: { delay: `0s`, dur: `0s` }
           }
         })
+        // Total stacked height drives the native scroll area on mobile.
+        setContentHeight(Math.max(...colHeights, 400))
         return placed
       })
       setIsRandomizing(false)
     }, 600)
-  }, [isRandomizing, canvasHeight])
+  }, [isRandomizing, canvasHeight, isMobile])
 
   const hasShuffled = useRef(false)
 
   useEffect(() => {
     setMounted(true)
-    if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
-    if (galleryRef.current) { galleryRef.current.style.backgroundSize = `75px 75px`; galleryRef.current.style.backgroundPosition = `100px 80px` }
+    if (!isMobile) {
+      if (panLayerRef.current) panLayerRef.current.style.transform = `translate(100px, 80px) scale(0.75)`
+      if (galleryRef.current) { galleryRef.current.style.backgroundSize = `75px 75px`; galleryRef.current.style.backgroundPosition = `100px 80px` }
+    }
     if (galleryRef.current && (!hasShuffled.current || artworks[0].pos.width < 100)) {
       handleRandomize()
       hasShuffled.current = true
     }
   }, [handleRandomize, artworks])
+
+  // Re-layout when crossing the mobile/desktop breakpoint: the two modes lay the
+  // grid out differently (single column + native scroll vs. panned canvas).
+  const prevMobile = useRef(isMobile)
+  useEffect(() => {
+    if (!mounted) return
+    if (prevMobile.current !== isMobile) {
+      prevMobile.current = isMobile
+      handleRandomize()
+    }
+  }, [isMobile, mounted, handleRandomize])
 
   useEffect(() => {
     if (typingInterval.current) clearInterval(typingInterval.current)
@@ -268,6 +304,64 @@ function ExploreContent() {
     return categoryMatch && searchMatch
   })
 
+  const artworkItems = filteredArtworks.map((artwork) => (
+    <Link
+      key={artwork.id}
+      href={`/explore/${artwork.slug}`}
+      className={`absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] block ${isRandomizing ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}
+      style={{
+        left: `${artwork.pos.x}px`,
+        top: `${artwork.pos.y}px`,
+        width: `${artwork.pos.width}px`,
+        height: hoveredId === artwork.id
+          ? `${Math.round(artwork.pos.width / artwork.aspectRatio)}px`
+          : `${artwork.pos.height}px`,
+        zIndex: hoveredId === artwork.id ? 50 : 10,
+      }}
+      onMouseEnter={() => setHoveredId(artwork.id)}
+      onMouseLeave={() => setHoveredId(null)}
+    >
+      {(() => {
+        const canvasWidth = galleryRef.current?.offsetWidth ?? 0
+        const screenCentreX = artwork.pos.x * scaleRef.current + panXRef.current + (artwork.pos.width * scaleRef.current) / 2
+        const onRight = screenCentreX > canvasWidth / 2
+        return (
+          <div
+            ref={el => { if (el) labelRefs.current.set(artwork.id, el); else labelRefs.current.delete(artwork.id) }}
+            className={`absolute top-0 transition-all duration-500 pointer-events-none z-50 ${onRight ? 'right-full pr-4 text-right' : 'left-full pl-4 text-left'} ${hoveredId === artwork.id ? 'opacity-100 translate-x-0' : `opacity-0 ${onRight ? 'translate-x-4' : '-translate-x-4'}`}`}
+            style={{ width: '200px' }}
+          >
+            <p data-title className="text-black font-bold font-alte-haas" style={{ fontSize: '42px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
+            <p data-author className="text-[#555] font-alte-haas tracking-widest" style={{ fontSize: '16px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
+          </div>
+        )
+      })()}
+      <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
+        {isVideoSrc(artwork.image) ? (
+          <video
+            src={artwork.image}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+        ) : (
+          <Image
+            src={artwork.image}
+            alt={artwork.title}
+            fill
+            style={{ objectFit: 'cover' }}
+            className="transition-transform duration-1000 group-hover:scale-105"
+            sizes="(max-width: 768px) 300px, 500px"
+            priority={artwork.id <= 4}
+            unoptimized
+          />
+        )}
+      </div>
+    </Link>
+  ))
+
   if (!mounted) return null
 
   return (
@@ -337,6 +431,113 @@ function ExploreContent() {
       </HeaderSlot>
 
       {/* ── Canvas ── */}
+      {isMobile ? (
+      /* ── Mobile: fullscreen, vertically-scrolling grid ── */
+      <div className="-mx-6 sm:-mx-12 md:-mx-16 relative flex flex-col" style={{ height: "calc(100dvh - 84px)" }}>
+        {/* Header bar — Filters / Randomize pills */}
+        <div className="flex-shrink-0 flex items-center gap-2 px-4 pt-4 pb-2">
+          <button
+            onClick={() => showFilters ? closeFilters() : setShowFilters(true)}
+            className="px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-[#6F8C49] transition-all"
+          >
+            Filters
+          </button>
+          <button
+            onClick={handleRandomize}
+            disabled={isRandomizing}
+            className={`px-3 py-1 rounded-full border-2 border-black/20 bg-[#fcfaf2] font-title text-sm tracking-tight text-[#FF270D] transition-all ${isRandomizing ? 'opacity-30' : ''}`}
+          >
+            Randomize
+          </button>
+        </div>
+
+        {/* Filter dropdown */}
+        {(showFilters || closingFilters) && (
+          <div className={`absolute top-14 left-4 flex flex-row items-start pointer-events-auto z-[100] ${closingFilters ? "animate-out fade-out slide-out-to-top-2 duration-200" : "animate-in fade-in slide-in-from-top-2 duration-200"}`}>
+            <div className="flex flex-col border border-black/20 bg-[#fcfaf2] shadow-sm">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    if (activeCategory === cat.id) {
+                      setClosingCategory(true)
+                      setTimeout(() => { setActiveCategory(""); setClosingCategory(false) }, 150)
+                    } else {
+                      setActiveCategory(cat.id)
+                    }
+                  }}
+                  className={`px-4 py-2 text-left text-sm font-alte-haas transition-all ${activeCategory === cat.id ? 'font-semibold text-black bg-black/5' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+            {(activeCategory || closingCategory) && (
+              <div
+                key={activeCategory || lastCategoryRef.current}
+                className={`w-[220px] max-h-[240px] border border-l-0 border-black/20 bg-[#fcfaf2] shadow-sm flex flex-col ${closingCategory ? "animate-out fade-out slide-out-to-left-2 duration-150" : "animate-in fade-in slide-in-from-left-2 duration-150"}`}
+              >
+                <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
+                  <div className="flex flex-wrap gap-2">
+                    {categories.find(c => c.id === (activeCategory || lastCategoryRef.current))?.options.map(opt => (
+                      <button
+                        key={opt}
+                        onClick={() => toggleFilter(activeCategory || lastCategoryRef.current, opt)}
+                        className="flex items-center gap-1.5 border border-black/10 px-2.5 py-1 text-[9px] tracking-wider font-alte-haas hover:border-black/30 transition-all bg-[#FBFAF1]/5"
+                      >
+                        <div className={`w-2.5 h-2.5 border border-black/20 flex items-center justify-center transition-colors ${activeFilters.find(f => f.type === (activeCategory || lastCategoryRef.current) && f.value === opt) ? 'bg-[#8d9c6b]/10 border-black/40' : ''}`}>
+                          {activeFilters.find(f => f.type === (activeCategory || lastCategoryRef.current) && f.value === opt) && <div className="w-1 h-1 bg-[#8d9c6b]" />}
+                        </div>
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Grid — native vertical scroll only, no horizontal movement */}
+        <div
+          ref={galleryRef}
+          className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain z-[49]"
+          style={{
+            backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px), linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)`,
+            backgroundSize: '100px 100px',
+            backgroundAttachment: 'local',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          <div
+            ref={panLayerRef}
+            className="relative w-full"
+            style={{ height: contentHeight || '100%', transformOrigin: '0 0' }}
+          >
+            {artworkItems}
+          </div>
+        </div>
+
+        {/* Chosen filters — pinned to the bottom */}
+        {(activeFilters.length > 0 || searchQuery) && (
+          <div className="flex-shrink-0 flex items-center gap-2 overflow-x-auto px-4 py-2">
+            {activeFilters.map(f => (
+              <div key={`${f.type}-${f.value}`} className="flex-shrink-0 flex items-center gap-2 bg-pink-100 border-2 border-black rounded-full px-2.5 py-0.5">
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">{f.value}</span>
+                <button onClick={() => toggleFilter(f.type, f.value)} className="text-black hover:opacity-60 transition-opacity text-xs font-bold ml-1">×</button>
+              </div>
+            ))}
+            {searchQuery && (
+              <div className="flex-shrink-0 flex items-center gap-2 bg-pink-100 border-2 border-black rounded-full px-2.5 py-0.5">
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">Search:</span>
+                <span className="font-alte-haas text-[13px] tracking-[0.08em] text-black">{searchQuery}</span>
+                <button onClick={() => setSearchQuery("")} className="text-black hover:opacity-60 transition-opacity text-xs font-bold ml-1">×</button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      ) : (
       <div className="-mx-6 sm:-mx-12 md:-mx-16 lg:-mx-24 xl:-mx-32">
       <div
         ref={galleryRef}
@@ -461,66 +662,11 @@ function ExploreContent() {
             className={`absolute pointer-events-none transition-opacity duration-300 bg-[#FBFAF1]/70 ${hoveredId !== null ? 'opacity-100' : 'opacity-0'}`}
             style={{ inset: '-50000px', zIndex: 20 }}
           />
-          {filteredArtworks.map((artwork) => (
-            <Link
-              key={artwork.id}
-              href={`/explore/${artwork.slug}`}
-              className={`absolute transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] block ${isRandomizing ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}
-              style={{
-                left: `${artwork.pos.x}px`,
-                top: `${artwork.pos.y}px`,
-                width: `${artwork.pos.width}px`,
-                height: hoveredId === artwork.id
-                  ? `${Math.round(artwork.pos.width / artwork.aspectRatio)}px`
-                  : `${artwork.pos.height}px`,
-                zIndex: hoveredId === artwork.id ? 50 : 10,
-              }}
-              onMouseEnter={() => setHoveredId(artwork.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              {(() => {
-                const canvasWidth = galleryRef.current?.offsetWidth ?? 0
-                const screenCentreX = artwork.pos.x * scaleRef.current + panXRef.current + (artwork.pos.width * scaleRef.current) / 2
-                const onRight = screenCentreX > canvasWidth / 2
-                return (
-                  <div
-                    ref={el => { if (el) labelRefs.current.set(artwork.id, el); else labelRefs.current.delete(artwork.id) }}
-                    className={`absolute top-0 transition-all duration-500 pointer-events-none z-50 ${onRight ? 'right-full pr-4 text-right' : 'left-full pl-4 text-left'} ${hoveredId === artwork.id ? 'opacity-100 translate-x-0' : `opacity-0 ${onRight ? 'translate-x-4' : '-translate-x-4'}`}`}
-                    style={{ width: '200px' }}
-                  >
-                    <p data-title className="text-black font-bold font-alte-haas" style={{ fontSize: '42px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
-                    <p data-author className="text-[#555] font-alte-haas tracking-widest" style={{ fontSize: '16px', lineHeight: '50px', textAlign: onRight ? 'right' : 'left', overflowWrap: 'normal', wordBreak: 'normal', direction: onRight ? 'rtl' : 'ltr' }} />
-                  </div>
-                )
-              })()}
-              <div className="relative w-full h-full overflow-hidden border border-black/10 hover:border-black/40 transition-all duration-500 cursor-pointer group shadow-2xl bg-[#FBFAF1]">
-                {isVideoSrc(artwork.image) ? (
-                  <video
-                    src={artwork.image}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                ) : (
-                  <Image
-                    src={artwork.image}
-                    alt={artwork.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className="transition-transform duration-1000 group-hover:scale-105"
-                    sizes="(max-width: 768px) 300px, 500px"
-                    priority={artwork.id <= 4}
-                    unoptimized
-                  />
-                )}
-              </div>
-            </Link>
-          ))}
+          {artworkItems}
         </div>
       </div>
       </div>
+      )}
 
       <style jsx global>{`
         @keyframes draw-branch {
