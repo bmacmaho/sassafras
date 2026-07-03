@@ -367,7 +367,7 @@ This piece thereby strings together threads of sound and pieces of towers, tower
     slug: "that-house-scented-with-guava",
     title: "'That House Scented with Guava': Reflections on Fruit Culture and the Law in Tobago",
     author: "Gabrielle Francois",
-    image: "/explore-page-images/that-house-scented-with-guava.mov",
+    image: "/explore-page-images/that-house-scented-with-guava.mp4",
     medium: "Text + Video",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.Personal, ArtworkTag.Video, ArtworkTag.Caribbean, ArtworkTag.TrinidadAndTobagoLaw, ArtworkTag.Community, ArtworkTag.Culture, ArtworkTag.Nature, ArtworkTag.Ecology],
