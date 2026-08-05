@@ -118,6 +118,24 @@ function AudioPlayer({ src }: { src: string }) {
   )
 }
 
+// Splits body text on `[^n]` footnote markers and renders each as a
+// superscript link down to the matching entry in the Notes list below.
+function withFootnoteLinks(text: string, keyPrefix: string) {
+  const parts = text.split(/(\[\^\d+\])/g)
+  return parts.map((part, i) => {
+    const m = part.match(/^\[\^(\d+)\]$/)
+    if (!m) return part
+    const n = m[1]
+    return (
+      <sup key={`${keyPrefix}-fn-${i}`}>
+        <a href={`#fn-${n}`} id={`fnref-${n}`} className="text-[#FF730F] no-underline hover:underline">
+          {n}
+        </a>
+      </sup>
+    )
+  })
+}
+
 export default function ExploreDetailPage() {
   const { slug } = useParams()
   const artwork = artworks.find((a) => a.slug === slug)
@@ -220,7 +238,7 @@ export default function ExploreDetailPage() {
                         <p key={i}>
                           {paragraph.split("\n").map((line, j) => (
                             <span key={j}>
-                              {line}
+                              {withFootnoteLinks(line, `p${i}-l${j}`)}
                               {j < paragraph.split("\n").length - 1 && <br />}
                             </span>
                           ))}
@@ -229,6 +247,23 @@ export default function ExploreDetailPage() {
                     : !artwork.description && (
                         <p className="text-black/40 italic">Full piece coming soon.</p>
                       )}
+                  {artwork.footnotes && artwork.footnotes.length > 0 && (
+                    <div className="pt-4">
+                      <h4 className="text-[10px] tracking-[0.3em] uppercase text-black/60 font-bold mb-4">
+                        Notes
+                      </h4>
+                      <ol className="text-sm leading-relaxed text-[#555] space-y-2 list-none">
+                        {artwork.footnotes.map((note, i) => (
+                          <li key={i} id={`fn-${i + 1}`}>
+                            {i + 1}. {note}{" "}
+                            <a href={`#fnref-${i + 1}`} className="text-[#FF730F] no-underline hover:underline" aria-label="Back to text">
+                              ↩
+                            </a>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
                   {artwork.bibliography && artwork.bibliography.length > 0 && (
                     <div className="pt-4">
                       <h4 className="text-[10px] tracking-[0.3em] uppercase text-black/60 font-bold mb-4">

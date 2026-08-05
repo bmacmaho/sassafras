@@ -105,6 +105,8 @@ export interface Artwork {
   description?: string;
   tags?: ArtworkTag[];
   body?: string;
+  /** Numbered footnotes, referenced inline in `body` via `[^n]` markers (1-indexed). */
+  footnotes?: string[];
   bibliography?: string[];
   aspectRatio: number;
   pos: { x: number; y: number; width: number; height: number };
