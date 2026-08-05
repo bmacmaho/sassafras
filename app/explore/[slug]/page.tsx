@@ -5,8 +5,28 @@ import { isVideoSrc } from "@/lib/types"
 import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Share2, ZoomIn, Play, Pause } from "lucide-react"
+import { ArrowLeft, Share2, ZoomIn } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+
+// Plain sharp-cornered play/pause glyphs — lucide-react's Play/Pause icons
+// bake rounded corners directly into their path/rect geometry (rx="1" on
+// the pause bars, rounded bezier joins on the play triangle), which
+// strokeLinecap/strokeLinejoin can't override since there's no stroke.
+function PlayIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="5,3 21,12 5,21" />
+    </svg>
+  )
+}
+function PauseIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <rect x="5" y="3" width="5" height="18" />
+      <rect x="14" y="3" width="5" height="18" />
+    </svg>
+  )
+}
 
 // Play/pause + draggable scrubber for pieces with an audio track (e.g.
 // "Bells of Shandon") — same grey-track/black-fill scrubber as the bells
@@ -57,9 +77,7 @@ function AudioPlayer({ src }: { src: string }) {
         aria-label={playing ? "Pause" : "Play"}
         className="flex items-center justify-center w-11 h-11 flex-shrink-0"
       >
-        {playing
-          ? <Pause size={22} fill="currentColor" strokeLinecap="butt" strokeLinejoin="miter" />
-          : <Play size={22} fill="currentColor" strokeLinecap="butt" strokeLinejoin="miter" className="ml-0.5" />}
+        {playing ? <PauseIcon size={22} /> : <PlayIcon size={22} />}
       </button>
       <div
         ref={trackRef}
