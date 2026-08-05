@@ -30,7 +30,7 @@ function AudioPlayer({ src }: { src: string }) {
   }
 
   return (
-    <div className="mt-6 flex items-center gap-4">
+    <div className="flex items-center gap-4">
       <audio
         ref={audioRef}
         src={src}
@@ -55,7 +55,7 @@ function AudioPlayer({ src }: { src: string }) {
           }
         }}
         aria-label={playing ? "Pause" : "Play"}
-        className="flex items-center justify-center w-9 h-9 flex-shrink-0 rounded-full border border-black/20 hover:border-black/40 transition-colors bg-[#FBFAF1]"
+        className="flex items-center justify-center w-9 h-9 flex-shrink-0"
       >
         {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
       </button>
@@ -159,7 +159,6 @@ export default function ExploreDetailPage() {
                 />
               )}
             </div>
-            {artwork.audio && <AudioPlayer src={artwork.audio} />}
           </div>
 
           {/* ── Deep Text Section ── */}
@@ -190,6 +189,11 @@ export default function ExploreDetailPage() {
             {/* Main Narrative Text */}
             <div className="md:col-span-8">
               <div className="max-w-2xl">
+                {artwork.audio && (
+                  <div className="mb-8 bg-blue-100 border border-black px-4 py-3">
+                    <AudioPlayer src={artwork.audio} />
+                  </div>
+                )}
                 <div className="font-serif text-lg md:text-xl leading-[1.7] text-[#333] space-y-8 text-justify">
                   {artwork.body
                     ? artwork.body.split(/\n\n+/).map((paragraph, i) => (
