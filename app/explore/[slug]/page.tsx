@@ -5,8 +5,98 @@ import { isVideoSrc } from "@/lib/types"
 import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Share2, ZoomIn } from "lucide-react"
-import { useEffect } from "react"
+import { ArrowLeft, Share2, ZoomIn, Play, Pause } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+
+// Play/pause + draggable scrubber for pieces with an audio track (e.g.
+// "Bells of Shandon") — same grey-track/black-fill scrubber as the bells
+// player on page 21 of the current issue, sized up for this page's roomier
+// layout instead of the book page's tiny printed-placeholder box.
+function AudioPlayer({ src }: { src: string }) {
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const draggingRef = useRef(false)
+  const [playing, setPlaying] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  const seekToClientX = (clientX: number) => {
+    const track = trackRef.current
+    const audio = audioRef.current
+    if (!track || !audio || !isFinite(audio.duration)) return
+    const rect = track.getBoundingClientRect()
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    audio.currentTime = ratio * audio.duration
+    setProgress(ratio)
+  }
+
+  return (
+    <div className="mt-6 flex items-center gap-4">
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="metadata"
+        onEnded={() => setPlaying(false)}
+        onTimeUpdate={(e) => {
+          const audio = e.currentTarget
+          if (!draggingRef.current && isFinite(audio.duration)) setProgress(audio.currentTime / audio.duration)
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          const audio = audioRef.current
+          if (!audio) return
+          if (playing) {
+            audio.pause()
+            setPlaying(false)
+          } else {
+            audio.play()
+            setPlaying(true)
+          }
+        }}
+        aria-label={playing ? "Pause" : "Play"}
+        className="flex items-center justify-center w-9 h-9 flex-shrink-0 rounded-full border border-black/20 hover:border-black/40 transition-colors bg-[#FBFAF1]"
+      >
+        {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
+      </button>
+      <div
+        ref={trackRef}
+        role="slider"
+        aria-label="Seek"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+        tabIndex={0}
+        onPointerDown={(e) => {
+          draggingRef.current = true
+          e.currentTarget.setPointerCapture(e.pointerId)
+          seekToClientX(e.clientX)
+        }}
+        onPointerMove={(e) => {
+          if (!draggingRef.current) return
+          seekToClientX(e.clientX)
+        }}
+        onPointerUp={(e) => {
+          draggingRef.current = false
+          e.currentTarget.releasePointerCapture(e.pointerId)
+        }}
+        onKeyDown={(e) => {
+          const audio = audioRef.current
+          if (!audio || !isFinite(audio.duration)) return
+          if (e.key === "ArrowLeft") audio.currentTime = Math.max(0, audio.currentTime - 5)
+          else if (e.key === "ArrowRight") audio.currentTime = Math.min(audio.duration, audio.currentTime + 5)
+          else return
+          setProgress(audio.currentTime / audio.duration)
+        }}
+        className="relative flex-1 h-4 cursor-pointer"
+        style={{ touchAction: "none" }}
+      >
+        <div className="absolute top-1/2 left-0 right-0 h-[2px] rounded-full bg-black/20 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute top-1/2 left-0 h-[2px] rounded-full bg-black -translate-y-1/2 pointer-events-none" style={{ width: `${progress * 100}%` }} />
+      </div>
+    </div>
+  )
+}
 
 export default function ExploreDetailPage() {
   const { slug } = useParams()
@@ -69,6 +159,7 @@ export default function ExploreDetailPage() {
                 />
               )}
             </div>
+            {artwork.audio && <AudioPlayer src={artwork.audio} />}
           </div>
 
           {/* ── Deep Text Section ── */}

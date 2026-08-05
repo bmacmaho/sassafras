@@ -332,6 +332,7 @@ The imperative to move upwards in search of progress, immortality, perfection, o
     title: "Bells of Shandon",
     author: "Barra MacMahon",
     image: "/explore-page-images/bells-of-shandon.jpg",
+    audio: "/the_tower_assets/pages/21-bells.mp3",
     medium: "Audio",
     theme: "Towers",
     tags: [ArtworkTag.Towers, ArtworkTag.Audio, ArtworkTag.Personal, ArtworkTag.Ireland, ArtworkTag.BritishColonization, ArtworkTag.Religion, ArtworkTag.Power, ArtworkTag.History, ArtworkTag.Hegemony, ArtworkTag.Memory],

@@ -97,6 +97,7 @@ export interface Artwork {
   title: string;
   author: string;
   image: string;
+  audio?: string;
   medium: string;
   theme: string;
   year: string;
