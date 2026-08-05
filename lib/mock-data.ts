@@ -359,7 +359,7 @@ Of the River Lee.
 My piece incorporates threads from this Irish melody into dense swirling reverb, to simulate how the resonance of bells used to fill my room when I lived directly across from a church steeple. I wanted to capture how the bells' strikes bounce off buildings, hills, waters, as they make their way to listening ears. The repeating melody therefore is not locked to a meter. Bells don't play to a metronome after all, they aren't dictated by a conductor; rather, they oscillate based on their own (and the poor bell-ringer's) energy, and thus have an inherently inconsistent rhythm.
 
 This piece thereby strings together threads of sound and pieces of towers, towers such as the Catholic church, or the British empire, or even the Western ideas surrounding how music ought to be formed.`,
-    aspectRatio: 718 / 1024,
+    aspectRatio: 960 / 606,
     pos: { x: 80, y: 25, width: 120, height: 0 },
     float: { delay: "0.8s", dur: "7s" }
   },
