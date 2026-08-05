@@ -55,9 +55,11 @@ function AudioPlayer({ src }: { src: string }) {
           }
         }}
         aria-label={playing ? "Pause" : "Play"}
-        className="flex items-center justify-center w-9 h-9 flex-shrink-0"
+        className="flex items-center justify-center w-11 h-11 flex-shrink-0"
       >
-        {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
+        {playing
+          ? <Pause size={22} fill="currentColor" strokeLinecap="butt" strokeLinejoin="miter" />
+          : <Play size={22} fill="currentColor" strokeLinecap="butt" strokeLinejoin="miter" className="ml-0.5" />}
       </button>
       <div
         ref={trackRef}
