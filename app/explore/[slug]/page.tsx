@@ -190,7 +190,7 @@ export default function ExploreDetailPage() {
             <div className="md:col-span-8">
               <div className="max-w-2xl">
                 {artwork.audio && (
-                  <div className="mb-8 bg-blue-100 border border-black px-4 py-3">
+                  <div className="mb-8 bg-blue-100 border-2 border-black px-4 py-3">
                     <AudioPlayer src={artwork.audio} />
                   </div>
                 )}
