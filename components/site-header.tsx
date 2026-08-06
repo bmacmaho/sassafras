@@ -512,7 +512,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                 <Link
                   href={pageHref}
                   className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
-                  style={pathname === "/about/why-sassafras"
+                  style={pathname === "/about/why-sassafras" || pathname === "/submissions"
                     ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
                     : { color: darkMode ? "white" : "#1a1a1a" }}
                 >
