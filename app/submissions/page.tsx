@@ -74,9 +74,9 @@ export default function SubmissionsPage() {
                 Whether motivated by politics or profit, endurance or escapism, themes of nostalgia are all around us. In Sassafras Initiative&rsquo;s second issue, we are dissecting nostalgia: the reality, the myth, and the impact. We invite curious and creative minds to share their unique approaches to the notion of nostalgia. Submissions are open to all kinds of critical explorations and experimentation surrounding the central theme. Some sub-themes that have inspired our team (while not limiting) are:
               </p>
             </div>
-            <ul className={`mt-8 mx-auto max-w-3xl divide-y font-serif text-base md:text-lg leading-relaxed ${dm ? "divide-white/10 text-white/80" : "divide-black/10 text-[#444]"}`}>
+            <ul className={`mt-8 mx-auto max-w-3xl list-disc list-outside pl-6 text-left space-y-3 font-serif text-base md:text-lg leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
               {SUB_THEMES.map((theme) => (
-                <li key={theme} className="py-3">{theme}</li>
+                <li key={theme}>{theme}</li>
               ))}
             </ul>
           </section>
