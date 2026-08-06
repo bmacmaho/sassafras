@@ -58,9 +58,9 @@ export default function SubmissionsPage() {
       style={{ backgroundColor: dm ? "#000" : "#fcfaf2", transition: "background-color 500ms ease, color 500ms ease" }}
     >
       <div className="relative">
-        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
+        <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-24 lg:px-48 pt-4 pb-6">
           <section className="mb-16 text-center">
-            <div className={`text-lg md:text-xl leading-relaxed font-sans space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
+            <div className={`text-lg md:text-xl leading-relaxed font-sans text-justify space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
                 Y2K is back, and its aesthetics are trending in the mainstream. People are donning low-rise jeans, listening to music via wired headphones, and snapping low-resolution photos on digital cameras again. This is just one example of how nostalgia becomes visible in our daily lives, and with our upcoming issue we seek to explore the various layers of nostalgia.
               </p>
@@ -96,7 +96,7 @@ export default function SubmissionsPage() {
       </div>
 
       {/* ── Call for Submissions ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-24 text-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-24 lg:px-48 pt-1 pb-24 text-center">
         <h2
           className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-12 leading-none select-none"
           style={headingStyle}
@@ -129,7 +129,7 @@ export default function SubmissionsPage() {
           ))}
         </div>
 
-        <p className={`text-base md:text-lg leading-relaxed mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
+        <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
           Send us your ideas as pitches or abstracts by August 31, 2026. We welcome previously unpublished works. Selection will be based on originality, quality, and alignment with our initiative&rsquo;s values.
         </p>
 
