@@ -145,7 +145,9 @@ export default function SubmissionsPage() {
 
         <div className={`w-full sm:w-1/2 mx-auto border-2 ${dm ? "border-white" : "border-black"}`}>
           <a
-            href="mailto:sassafrasinitiative@gmail.com?subject=Issue%2002%20Pitch%3A%20Nostalgia"
+            href="https://forms.gle/ga8yTmKhqdjfAqog6"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`flex items-center justify-center gap-3 pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
           >
             <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Submit a Pitch</span>
