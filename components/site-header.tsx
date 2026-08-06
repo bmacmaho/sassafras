@@ -129,7 +129,7 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
 const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
   "/issues":                  { line1: "Archive",        line2: "Full Collection — 2024 to Present" },
   "/current-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
-  "/submissions":             { line1: "Open Call",      line2: "Issue No. 1 — The Tower" },
+  "/submissions":             { line1: "Open Call",      line2: "Issue No. 2 — Nostalgia" },
 }
 
 const NAV_LINKS = [
@@ -151,7 +151,7 @@ export function SiteHeader() {
   const isExplorePage = pathname === "/explore"
   const isCurrentIssuePage = pathname === "/current-issue"
   const hasChevron = isExplorePage
-const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
@@ -512,7 +512,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                 <Link
                   href={pageHref}
                   className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
-                  style={pathname === "/about/why-sassafras"
+                  style={pathname === "/about/why-sassafras" || pathname === "/submissions"
                     ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
                     : { color: darkMode ? "white" : "#1a1a1a" }}
                 >
@@ -562,7 +562,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               )}
             </div>
           </div>
-          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname.startsWith("/explore/")))) && (
+          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions" || pathname.startsWith("/explore/")))) && (
             <div
               className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
               style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
