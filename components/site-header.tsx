@@ -129,7 +129,7 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
 const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
   "/issues":                  { line1: "Archive",        line2: "Full Collection — 2024 to Present" },
   "/current-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
-  "/submissions":             { line1: "Open Call",      line2: "Issue No. 1 — The Tower" },
+  "/submissions":             { line1: "Open Call",      line2: "Issue No. 2 — Nostalgia" },
 }
 
 const NAV_LINKS = [
