@@ -60,9 +60,6 @@ export default function SubmissionsPage() {
       <div className="relative">
         <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
           <section className="mb-16">
-            <p className={`text-xs tracking-[0.3em] uppercase font-alte-haas mb-6 ${dm ? "text-white/40" : "text-black/40"}`}>
-              Issue 02 &mdash; Call for Submissions
-            </p>
             <div className={`text-lg md:text-xl leading-relaxed font-sans text-left space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
                 Y2K is back, and its aesthetics are trending in the mainstream. People are donning low-rise jeans, listening to music via wired headphones, and snapping low-resolution photos on digital cameras again. This is just one example of how nostalgia becomes visible in our daily lives, and with our upcoming issue we seek to explore the various layers of nostalgia.
