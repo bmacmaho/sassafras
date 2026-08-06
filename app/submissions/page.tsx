@@ -123,16 +123,21 @@ export default function SubmissionsPage() {
           If any files need to be sent in a different format for any reason, feel free to reach out, and we can figure it out together.
         </p>
 
-        <div className={`mx-auto max-w-3xl divide-y mb-16 ${dm ? "divide-white/10" : "divide-black/10"}`}>
-          {TIMELINE.map((item) => (
-            <div key={item.label} className="flex flex-col items-center gap-1 py-4">
-              <span className={`text-xs tracking-widest uppercase font-bold font-alte-haas ${dm ? "text-white/60" : "text-black/60"}`}>
-                {item.label}
-              </span>
-              <span className={`text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</span>
-            </div>
-          ))}
-        </div>
+        <table className="w-full max-w-3xl mx-auto mb-16 border-collapse text-left">
+          <tbody>
+            {TIMELINE.map((item) => (
+              <tr key={item.label} className={`border-b ${dm ? "border-white/10" : "border-black/10"}`}>
+                <th
+                  scope="row"
+                  className={`py-4 pr-8 align-top font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/60" : "text-black/60"}`}
+                >
+                  {item.label}
+                </th>
+                <td className={`py-4 text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
         <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
           Send us your ideas as pitches or abstracts by August 31, 2026. We welcome previously unpublished works. Selection will be based on originality, quality, and alignment with our initiative&rsquo;s values.
