@@ -110,7 +110,7 @@ export default function SubmissionsPage() {
               <tr key={item.label} className={`border-b ${dm ? "border-white/10" : "border-black/10"}`}>
                 <th
                   scope="row"
-                  className={`py-4 pr-8 align-top font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/40" : "text-black/40"}`}
+                  className={`py-4 pr-8 align-top leading-relaxed font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/40" : "text-black/40"}`}
                 >
                   {item.label}
                 </th>
@@ -129,11 +129,11 @@ export default function SubmissionsPage() {
               <tr key={item.label} className={`border-b ${dm ? "border-white/10" : "border-black/10"}`}>
                 <th
                   scope="row"
-                  className={`py-4 pr-8 align-top font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/60" : "text-black/60"}`}
+                  className={`py-4 pr-8 align-top leading-relaxed font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/60" : "text-black/60"}`}
                 >
                   {item.label}
                 </th>
-                <td className={`py-4 align-top text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</td>
+                <td className={`py-4 align-top leading-relaxed text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</td>
               </tr>
             ))}
           </tbody>
