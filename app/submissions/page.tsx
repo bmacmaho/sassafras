@@ -59,8 +59,8 @@ export default function SubmissionsPage() {
     >
       <div className="relative">
         <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-4 pb-6">
-          <section className="mb-16">
-            <div className={`text-lg md:text-xl leading-relaxed font-sans text-left space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
+          <section className="mb-16 text-center">
+            <div className={`text-lg md:text-xl leading-relaxed font-sans space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
                 Y2K is back, and its aesthetics are trending in the mainstream. People are donning low-rise jeans, listening to music via wired headphones, and snapping low-resolution photos on digital cameras again. This is just one example of how nostalgia becomes visible in our daily lives, and with our upcoming issue we seek to explore the various layers of nostalgia.
               </p>
@@ -74,7 +74,7 @@ export default function SubmissionsPage() {
                 Whether motivated by politics or profit, endurance or escapism, themes of nostalgia are all around us. In Sassafras Initiative&rsquo;s second issue, we are dissecting nostalgia: the reality, the myth, and the impact. We invite curious and creative minds to share their unique approaches to the notion of nostalgia. Submissions are open to all kinds of critical explorations and experimentation surrounding the central theme. Some sub-themes that have inspired our team (while not limiting) are:
               </p>
             </div>
-            <ul className={`mt-8 max-w-3xl divide-y font-serif text-base md:text-lg leading-relaxed ${dm ? "divide-white/10 text-white/80" : "divide-black/10 text-[#444]"}`}>
+            <ul className={`mt-8 mx-auto max-w-3xl divide-y font-serif text-base md:text-lg leading-relaxed ${dm ? "divide-white/10 text-white/80" : "divide-black/10 text-[#444]"}`}>
               {SUB_THEMES.map((theme) => (
                 <li key={theme} className="py-3">{theme}</li>
               ))}
@@ -96,7 +96,7 @@ export default function SubmissionsPage() {
       </div>
 
       {/* ── Call for Submissions ── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 md:px-16 pt-1 pb-24 text-center">
         <h2
           className="font-alte-haas text-4xl sm:text-5xl tracking-[0.05em] mb-12 leading-none select-none"
           style={headingStyle}
@@ -104,7 +104,7 @@ export default function SubmissionsPage() {
           Call for Submissions
         </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 max-w-5xl mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 max-w-5xl mx-auto mb-12">
           {GUIDELINES.map((item) => (
             <div key={item.label} className="space-y-2">
               <p className={`text-xs tracking-widest uppercase font-bold font-alte-haas ${dm ? "text-white/40" : "text-black/40"}`}>
@@ -114,13 +114,13 @@ export default function SubmissionsPage() {
             </div>
           ))}
         </div>
-        <p className={`text-xs italic mb-16 max-w-2xl ${dm ? "text-white/40" : "text-black/40"}`}>
+        <p className={`text-xs italic mx-auto mb-16 max-w-2xl ${dm ? "text-white/40" : "text-black/40"}`}>
           If any files need to be sent in a different format for any reason, feel free to reach out, and we can figure it out together.
         </p>
 
-        <div className={`max-w-3xl divide-y mb-16 ${dm ? "divide-white/10" : "divide-black/10"}`}>
+        <div className={`mx-auto max-w-3xl divide-y mb-16 ${dm ? "divide-white/10" : "divide-black/10"}`}>
           {TIMELINE.map((item) => (
-            <div key={item.label} className="flex items-center justify-between py-4">
+            <div key={item.label} className="flex flex-col items-center gap-1 py-4">
               <span className={`text-xs tracking-widest uppercase font-bold font-alte-haas ${dm ? "text-white/60" : "text-black/60"}`}>
                 {item.label}
               </span>
@@ -129,14 +129,14 @@ export default function SubmissionsPage() {
           ))}
         </div>
 
-        <p className={`text-base md:text-lg leading-relaxed mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
+        <p className={`text-base md:text-lg leading-relaxed mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
           Send us your ideas as pitches or abstracts by August 31, 2026. We welcome previously unpublished works. Selection will be based on originality, quality, and alignment with our initiative&rsquo;s values.
         </p>
 
-        <div className={`w-full sm:w-1/2 border-2 ${dm ? "border-white" : "border-black"}`}>
+        <div className={`w-full sm:w-1/2 mx-auto border-2 ${dm ? "border-white" : "border-black"}`}>
           <a
             href="mailto:sassafrasinitiative@gmail.com?subject=Issue%2002%20Pitch%3A%20Nostalgia"
-            className={`flex items-center justify-between pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
+            className={`flex items-center justify-center gap-3 pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
           >
             <span className={`font-alte-haas text-2xl tracking-[0.05em] ${dm ? "text-white" : "text-[#222]"}`}>Submit a Pitch</span>
             <span className="font-alte-haas text-xs tracking-[0.08em]" style={{ color: "#5D9800" }}>&rarr;</span>
