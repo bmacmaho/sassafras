@@ -118,8 +118,9 @@ function AudioPlayer({ src }: { src: string }) {
   )
 }
 
-// Turns bare URLs within footnote text into clickable links, trimming
-// trailing sentence punctuation (periods, commas, etc.) off the link itself.
+// Turns bare URLs within footnote/bibliography text into clickable links,
+// trimming trailing sentence punctuation (periods, commas, etc.) off the
+// link itself.
 function linkifyUrls(text: string, keyPrefix: string) {
   const parts = text.split(/(https?:\/\/[^\s]+)/g)
   return parts.map((part, i) => {
@@ -295,7 +296,7 @@ export default function ExploreDetailPage() {
                       </h4>
                       <div className="text-sm leading-relaxed text-[#555] space-y-2">
                         {artwork.bibliography.map((entry, i) => (
-                          <p key={i}>{entry}</p>
+                          <p key={i}>{linkifyUrls(entry, `bib-${i}`)}</p>
                         ))}
                       </div>
                     </div>
