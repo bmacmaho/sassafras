@@ -368,7 +368,7 @@ This prayer plays a distinct role in childhood memories, and closely symbolises 
 
 When I think of the tower, I think of the church bells ringing, the sound of the divine, the sound of the institution, the sound of continuity, the sound of home and having to wait for it to end so that I could watch The Simpsons. The bells are charming, and cast a purity and virtue that juxtapose the formidable structure at its source.
 
-From bells, to churches, to the thought of home, I was reminded by the Irish ballad 'The Bells of Shandon' which is based on the poem of the same name by Francis Sylvester Mahony. In it, he describes the beauty of the bells that ring in his hometown. He has "heard bells chiming" all around the world and although they are mighty…
+From bells, to churches, to the thought of home, I was reminded by the Irish ballad 'The Bells of Shandon'[^1] which is based on the poem of the same name by Francis Sylvester Mahony. In it, he describes the beauty of the bells that ring in his hometown. He has "heard bells chiming" all around the world and although they are mighty…
 
 For memory, dwelling
 On each proud swelling
@@ -382,6 +382,9 @@ Of the River Lee.
 My piece incorporates threads from this Irish melody into dense swirling reverb, to simulate how the resonance of bells used to fill my room when I lived directly across from a church steeple. I wanted to capture how the bells' strikes bounce off buildings, hills, waters, as they make their way to listening ears. The repeating melody therefore is not locked to a meter. Bells don't play to a metronome after all, they aren't dictated by a conductor; rather, they oscillate based on their own (and the poor bell-ringer's) energy, and thus have an inherently inconsistent rhythm.
 
 This piece thereby strings together threads of sound and pieces of towers, towers such as the Catholic church, or the British empire, or even the Western ideas surrounding how music ought to be formed.`,
+    footnotes: [
+      "'The Bells of Shandon' by Francis Sylvester Mahony, https://allpoetry.com/The-Bells-Of-Shandon.",
+    ],
     aspectRatio: 960 / 606,
     pos: { x: 80, y: 25, width: 120, height: 0 },
     float: { delay: "0.8s", dur: "7s" }
