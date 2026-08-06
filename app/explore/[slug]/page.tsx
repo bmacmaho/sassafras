@@ -118,6 +118,30 @@ function AudioPlayer({ src }: { src: string }) {
   )
 }
 
+// Turns bare URLs within footnote text into clickable links, trimming
+// trailing sentence punctuation (periods, commas, etc.) off the link itself.
+function linkifyUrls(text: string, keyPrefix: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) => {
+    if (!/^https?:\/\//.test(part)) return part
+    const trailingMatch = part.match(/[.,;:!?)\]]+$/)
+    const trailing = trailingMatch ? trailingMatch[0] : ""
+    const url = trailing ? part.slice(0, -trailing.length) : part
+    return [
+      <a
+        key={`${keyPrefix}-url-${i}`}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-[#FF730F] underline hover:opacity-70"
+      >
+        {url}
+      </a>,
+      trailing,
+    ]
+  })
+}
+
 // Splits body text on `[^n]` footnote markers and renders each as a
 // superscript link down to the matching entry in the Notes list below.
 function withFootnoteLinks(text: string, keyPrefix: string) {
@@ -255,7 +279,7 @@ export default function ExploreDetailPage() {
                       <ol className="text-sm leading-relaxed text-[#555] space-y-2 list-none">
                         {artwork.footnotes.map((note, i) => (
                           <li key={i} id={`fn-${i + 1}`}>
-                            {i + 1}. {note}{" "}
+                            {i + 1}. {linkifyUrls(note, `fn-${i + 1}`)}{" "}
                             <a href={`#fnref-${i + 1}`} className="text-[#FF730F] no-underline hover:underline" aria-label="Back to text">
                               ↩
                             </a>
