@@ -104,16 +104,21 @@ export default function SubmissionsPage() {
           Call for Submissions
         </h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 max-w-5xl mx-auto mb-12">
-          {GUIDELINES.map((item) => (
-            <div key={item.label} className="space-y-2">
-              <p className={`text-xs tracking-widest uppercase font-bold font-alte-haas ${dm ? "text-white/40" : "text-black/40"}`}>
-                {item.label}
-              </p>
-              <p className={`text-sm leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>{item.value}</p>
-            </div>
-          ))}
-        </div>
+        <table className="w-full max-w-3xl mx-auto mb-8 border-collapse text-left">
+          <tbody>
+            {GUIDELINES.map((item) => (
+              <tr key={item.label} className={`border-b ${dm ? "border-white/10" : "border-black/10"}`}>
+                <th
+                  scope="row"
+                  className={`py-4 pr-8 align-top font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/40" : "text-black/40"}`}
+                >
+                  {item.label}
+                </th>
+                <td className={`py-4 text-sm leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>{item.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <p className={`text-xs italic mx-auto mb-16 max-w-2xl ${dm ? "text-white/40" : "text-black/40"}`}>
           If any files need to be sent in a different format for any reason, feel free to reach out, and we can figure it out together.
         </p>
