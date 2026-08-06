@@ -118,47 +118,54 @@ function AudioPlayer({ src }: { src: string }) {
   )
 }
 
-// Turns bare URLs within footnote/bibliography text into clickable links,
-// trimming trailing sentence punctuation (periods, commas, etc.) off the
-// link itself.
-function linkifyUrls(text: string, keyPrefix: string) {
-  const parts = text.split(/(https?:\/\/[^\s]+)/g)
-  return parts.map((part, i) => {
-    if (!/^https?:\/\//.test(part)) return part
-    const trailingMatch = part.match(/[.,;:!?)\]]+$/)
-    const trailing = trailingMatch ? trailingMatch[0] : ""
-    const url = trailing ? part.slice(0, -trailing.length) : part
-    return [
-      <a
-        key={`${keyPrefix}-url-${i}`}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-[#FF730F] underline hover:opacity-70"
-      >
-        {url}
-      </a>,
-      trailing,
-    ]
-  })
-}
+// Lightweight inline-markdown renderer for text sourced from the print
+// docx, so **bold**, *italic*, and ***bold italic*** runs (and the docx's
+// footnotes, which had the same emphasis on titles/quotes) survive into the
+// site instead of flattening to plain text. Also handles this codebase's
+// own `[^n]` footnote-marker convention and bare URLs, all in one pass so
+// they can combine within the same line (e.g. an italicized book title
+// right before a footnote marker) without fighting over the same text.
+const INLINE_RE = /\[\^(\d+)\]|\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*|(https?:\/\/[^\s]+)/g
 
-// Splits body text on `[^n]` footnote markers and renders each as a
-// superscript link down to the matching entry in the Notes list below.
-function withFootnoteLinks(text: string, keyPrefix: string) {
-  const parts = text.split(/(\[\^\d+\])/g)
-  return parts.map((part, i) => {
-    const m = part.match(/^\[\^(\d+)\]$/)
-    if (!m) return part
-    const n = m[1]
-    return (
-      <sup key={`${keyPrefix}-fn-${i}`}>
-        <a href={`#fn-${n}`} id={`fnref-${n}`} className="text-[#FF730F] no-underline hover:underline">
-          {n}
+function renderInline(text: string, keyPrefix: string) {
+  const nodes: React.ReactNode[] = []
+  let lastIndex = 0
+  let i = 0
+  let m: RegExpExecArray | null
+  INLINE_RE.lastIndex = 0
+  while ((m = INLINE_RE.exec(text))) {
+    if (m.index > lastIndex) nodes.push(text.slice(lastIndex, m.index))
+    const [, footnoteId, boldItalic, bold, italic, url] = m
+    if (footnoteId !== undefined) {
+      nodes.push(
+        <sup key={`${keyPrefix}-fn-${i}`}>
+          <a href={`#fn-${footnoteId}`} id={`fnref-${footnoteId}`} className="text-[#FF730F] no-underline hover:underline">
+            {footnoteId}
+          </a>
+        </sup>
+      )
+    } else if (boldItalic !== undefined) {
+      nodes.push(<strong key={`${keyPrefix}-bi-${i}`}><em>{boldItalic}</em></strong>)
+    } else if (bold !== undefined) {
+      nodes.push(<strong key={`${keyPrefix}-b-${i}`}>{bold}</strong>)
+    } else if (italic !== undefined) {
+      nodes.push(<em key={`${keyPrefix}-i-${i}`}>{italic}</em>)
+    } else if (url !== undefined) {
+      const trailingMatch = url.match(/[.,;:!?)\]]+$/)
+      const trailing = trailingMatch ? trailingMatch[0] : ""
+      const cleanUrl = trailing ? url.slice(0, -trailing.length) : url
+      nodes.push(
+        <a key={`${keyPrefix}-url-${i}`} href={cleanUrl} target="_blank" rel="noopener noreferrer" className="text-[#FF730F] underline hover:opacity-70">
+          {cleanUrl}
         </a>
-      </sup>
-    )
-  })
+      )
+      if (trailing) nodes.push(trailing)
+    }
+    lastIndex = INLINE_RE.lastIndex
+    i++
+  }
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex))
+  return nodes
 }
 
 export default function ExploreDetailPage() {
@@ -263,7 +270,7 @@ export default function ExploreDetailPage() {
                         <p key={i}>
                           {paragraph.split("\n").map((line, j) => (
                             <span key={j}>
-                              {withFootnoteLinks(line, `p${i}-l${j}`)}
+                              {renderInline(line, `p${i}-l${j}`)}
                               {j < paragraph.split("\n").length - 1 && <br />}
                             </span>
                           ))}
@@ -280,7 +287,7 @@ export default function ExploreDetailPage() {
                       <ol className="text-sm leading-relaxed text-[#555] space-y-2 list-none">
                         {artwork.footnotes.map((note, i) => (
                           <li key={i} id={`fn-${i + 1}`}>
-                            {i + 1}. {linkifyUrls(note, `fn-${i + 1}`)}{" "}
+                            {i + 1}. {renderInline(note, `fn-${i + 1}`)}{" "}
                             <a href={`#fnref-${i + 1}`} className="text-[#FF730F] no-underline hover:underline" aria-label="Back to text">
                               ↩
                             </a>
@@ -296,7 +303,7 @@ export default function ExploreDetailPage() {
                       </h4>
                       <div className="text-sm leading-relaxed text-[#555] space-y-2">
                         {artwork.bibliography.map((entry, i) => (
-                          <p key={i}>{linkifyUrls(entry, `bib-${i}`)}</p>
+                          <p key={i}>{renderInline(entry, `bib-${i}`)}</p>
                         ))}
                       </div>
                     </div>
