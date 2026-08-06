@@ -562,7 +562,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
               )}
             </div>
           </div>
-          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname.startsWith("/explore/")))) && (
+          {(pathname === "/explore" || (!scrolled && (pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions" || pathname.startsWith("/explore/")))) && (
             <div
               className="absolute bottom-0 left-24 right-24 h-0 border-b-4 pointer-events-none z-0"
               style={{ borderColor: darkMode ? "rgba(255,255,255,0.2)" : "#D5D4CD", transition: "border-color 500ms ease" }}
