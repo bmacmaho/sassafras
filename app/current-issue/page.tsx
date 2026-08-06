@@ -84,20 +84,53 @@ function buildPage(pageNum: number, _side: "left" | "right", extra?: ReactNode) 
   )
 }
 
-// Play/pause toggle for page 21's bells sound effect. The button's box is the
+// Play/pause toggle + scrubber for page 21's bells sound effect, sized to
+// the printed placeholder box on the page art (logical x:110.7-332.2,
+// y:121.8-140.0 — sampled from the artwork itself). The button's box is the
 // icons' shared trimmed bounding box (originally drawn on the full spread
 // canvas at left:247 top:265 width:46 height:30 px) scaled down to this
-// page's rendered size, so it sits exactly where the artwork places it.
-function BellsButton() {
+// page's rendered size, so it sits exactly where the artwork places it; the
+// scrubber fills the rest of the placeholder box to its right.
+function BellsButton({ currentSheet }: { currentSheet: number }) {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const draggingRef = useRef(false)
   const [playing, setPlaying] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  // Stop on any page turn — currentSheet only changes once a flip actually
+  // settles onto a different sheet (see FlipBook), regardless of which page
+  // it's turned to/from. Pausing the <audio> element is a genuine
+  // external-system side effect, not a pure state derivation, so this can't
+  // be a render-time adjustment the way LawElement's close-on-navigate is.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    audioRef.current?.pause()
+    setPlaying(false)
+  }, [currentSheet])
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const seekToClientX = (clientX: number) => {
+    const track = trackRef.current
+    const audio = audioRef.current
+    if (!track || !audio || !isFinite(audio.duration)) return
+    const rect = track.getBoundingClientRect()
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    audio.currentTime = ratio * audio.duration
+    setProgress(ratio)
+  }
 
   return (
     <>
       <audio
         ref={audioRef}
         src="/the_tower_assets/pages/21-bells.mp3"
+        preload="metadata"
         onEnded={() => setPlaying(false)}
+        onTimeUpdate={(e) => {
+          const audio = e.currentTarget
+          if (!draggingRef.current && isFinite(audio.duration)) setProgress(audio.currentTime / audio.duration)
+        }}
       />
       <button
         type="button"
@@ -135,6 +168,52 @@ function BellsButton() {
           style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }}
         />
       </button>
+      {/* Scrubber: grey track + black progress fill, draggable to seek. */}
+      <div
+        ref={trackRef}
+        role="slider"
+        aria-label="Seek bells recording"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+        tabIndex={0}
+        onPointerDown={(e) => {
+          e.stopPropagation()
+          draggingRef.current = true
+          e.currentTarget.setPointerCapture(e.pointerId)
+          seekToClientX(e.clientX)
+        }}
+        onPointerMove={(e) => {
+          if (!draggingRef.current) return
+          e.stopPropagation()
+          seekToClientX(e.clientX)
+        }}
+        onPointerUp={(e) => {
+          draggingRef.current = false
+          e.currentTarget.releasePointerCapture(e.pointerId)
+        }}
+        onKeyDown={(e) => {
+          const audio = audioRef.current
+          if (!audio || !isFinite(audio.duration)) return
+          if (e.key === "ArrowLeft") audio.currentTime = Math.max(0, audio.currentTime - 5)
+          else if (e.key === "ArrowRight") audio.currentTime = Math.min(audio.duration, audio.currentTime + 5)
+          else return
+          setProgress(audio.currentTime / audio.duration)
+        }}
+        style={{
+          position: "absolute",
+          left: 140,
+          top: 123.6,
+          width: 178,
+          height: 14,
+          cursor: "pointer",
+          zIndex: 50,
+          touchAction: "none",
+        }}
+      >
+        <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: 2, borderRadius: 1, background: "#999", transform: "translateY(-50%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: 0, width: `${progress * 100}%`, height: 2, borderRadius: 1, background: "#000", transform: "translateY(-50%)", pointerEvents: "none" }} />
+      </div>
     </>
   )
 }
@@ -641,7 +720,7 @@ function buildPages(
   pages[9] = { ...pages[9], front: buildPage(18, "right") }
   pages[9] = { ...pages[9], back: buildPage(19, "left") }
   pages[10] = { ...pages[10], front: buildPage(20, "right") }
-  pages[10] = { ...pages[10], back: buildPage(21, "left", <BellsButton />) }
+  pages[10] = { ...pages[10], back: buildPage(21, "left", <BellsButton currentSheet={currentSheet} />) }
   pages[11] = { ...pages[11], front: buildPage(22, "right", <>
     <div style={{ position: "absolute", top: 150, left: 255, zIndex: 50 }}>
       <CitationPopover
