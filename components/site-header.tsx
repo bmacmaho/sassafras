@@ -151,7 +151,7 @@ export function SiteHeader() {
   const isExplorePage = pathname === "/explore"
   const isCurrentIssuePage = pathname === "/current-issue"
   const hasChevron = isExplorePage
-const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
