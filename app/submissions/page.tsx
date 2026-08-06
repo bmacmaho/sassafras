@@ -114,7 +114,7 @@ export default function SubmissionsPage() {
                 >
                   {item.label}
                 </th>
-                <td className={`py-4 text-sm leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>{item.value}</td>
+                <td className={`py-4 align-top text-sm leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>{item.value}</td>
               </tr>
             ))}
           </tbody>
@@ -133,7 +133,7 @@ export default function SubmissionsPage() {
                 >
                   {item.label}
                 </th>
-                <td className={`py-4 text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</td>
+                <td className={`py-4 align-top text-sm font-serif italic ${dm ? "text-white/90" : "text-[#333]"}`}>{item.date}</td>
               </tr>
             ))}
           </tbody>
