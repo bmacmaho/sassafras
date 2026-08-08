@@ -6,13 +6,15 @@ import { useHeaderScrolled } from "@/components/header-extras-context"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 const SUB_THEMES = [
-  "Techno-nostalgia",
-  "Nostalgia-core trend cycles (Y2K aesthetics, 2016 trend, etc.)",
-  "Commodification of nostalgia",
-  "Nostalgia as a form of escapism",
+  "Trend cycles: Y2K revival, analog revival, etc.",
+  "Commodification of memory",
+  "Rerun and reboot culture",
+  "Escapism",
   "Retro-futurism",
-  "Historical revisionism and mythical pasts in political narratives",
-  "Political nostalgia: “the good old days,” conservative turn, pro-monarchy sentiments, revisiting past leftist movements, nations that no longer exist, etc.",
+  "Historical revisionism",
+  "Political narratives",
+  "Mythical pasts",
+  "Selective remembrance",
 ]
 
 const GUIDELINES = [
@@ -28,10 +30,9 @@ const GUIDELINES = [
 
 const TIMELINE = [
   { label: "Pitch Deadline", date: "August 31, 2026" },
-  { label: "Submissions (First Drafts)", date: "TBA" },
-  { label: "Notification of Acceptance", date: "TBA" },
-  { label: "Suggested Edits", date: "TBA" },
-  { label: "Date of Publication", date: "TBA" },
+  { label: "Submission Deadline (First Drafts)", date: "October 14, 2026" },
+  { label: "Revision Period", date: "October 14 – December 6, 2026" },
+  { label: "Publication (Issue 2)", date: "January 2027" },
 ]
 
 export default function SubmissionsPage() {
@@ -62,16 +63,13 @@ export default function SubmissionsPage() {
           <section className="mb-16 text-center">
             <div className={`text-lg md:text-xl leading-relaxed font-sans text-justify space-y-6 ${dm ? "text-white/90" : "text-[#333]"}`}>
               <p>
-                Y2K is back, and its aesthetics are trending in the mainstream. People are donning low-rise jeans, listening to music via wired headphones, and snapping low-resolution photos on digital cameras again. This is just one example of how nostalgia becomes visible in our daily lives, and with our upcoming issue we seek to explore the various layers of nostalgia.
+                Nostalgia is a powerful sentiment, one loaded with comfort, memory, and idealization. It can inform our ideologies, relationships, fashion, technologies, and even the food on our plates. It is both personal and public, reflected in our most intimate thoughts and our outward presentations of self, community, and the nation-state. At the same time, nostalgia is slippery and subjective, and its malleable nature is increasingly deployed as a tool in political propaganda and purchasing power.
               </p>
               <p>
-                Nostalgia is a supremely powerful sentiment. It is a term loaded with comfort, memory, and idealization. It can inform our ideologies, relationships, style choices, technologies, and even the food on our plates. It is both personal and public, reflected in our most intimate thoughts and our outward presentations of self, community, and state. At the same time, nostalgia is frequently used as a tool for propaganda, its fuzzy nature lending itself towards selective remembrance and historical revisionism.
+                In our increasingly chaotic and fast-paced world, it seems like everyone is looking towards a romanticized, sometimes mythologized, or maybe just less complicated past to provide a new sense of direction for our shared futures. But we must ask: was it always brighter and better in the past, or are we just conflating sepia tones with simplicity?
               </p>
               <p>
-                In our increasingly chaotic and fast-paced world, it seems like everyone is looking towards a romanticized, sometimes mythologized, or maybe just simpler past to provide a new sense of direction for our shared futures. But we must ask: was it always brighter and better in the past, or are we just conflating sepia tones with simplicity?
-              </p>
-              <p>
-                Whether motivated by politics or profit, endurance or escapism, themes of nostalgia are all around us. In Sassafras Initiative&rsquo;s second issue, we are dissecting nostalgia: the reality, the myth, and the impact. We invite curious and creative minds to share their unique approaches to the notion of nostalgia. Submissions are open to all kinds of critical explorations and experimentation surrounding the central theme. Some sub-themes that have inspired our team (while not limiting) are:
+                In Sassafras Initiative&rsquo;s second issue, we are exploring nostalgia: the memory, the myth, and the impact. We invite curious and creative minds to share their unique approaches to the notion of nostalgia. Submissions are open to all kinds of critical interpretations and experimental approaches surrounding the central theme. Some sub-themes that have inspired our team (while not limiting) are:
               </p>
             </div>
             <ul className={`mt-8 mx-auto max-w-3xl list-disc list-outside pl-6 text-left space-y-3 font-serif text-base md:text-lg leading-relaxed ${dm ? "text-white/80" : "text-[#444]"}`}>
@@ -103,6 +101,22 @@ export default function SubmissionsPage() {
         >
           Call for Submissions
         </h2>
+
+        <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
+          Send us your &lsquo;pitch&rsquo;&mdash;idea, outline, abstract, etc&mdash;by 31st August 2026{" "}
+          <a
+            href="https://forms.gle/ABHscZumMbQVa7eY7"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#FF730F] underline hover:opacity-70"
+          >
+            here
+          </a>
+          . First-time contributors are welcome and previously unpublished works are preferred. Conditional acceptances will be based on originality, quality, adherence to theme, and diversity of topics and contributors, as well as a commitment to delivering a final product consistent with your original pitch and our team&rsquo;s editorial feedback within the designated timeframe.
+        </p>
+        <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-16 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
+          We look for pieces that are thought-provoking, in alignment with our ethics, and give voice to underrepresented peoples and ideas. We are a platform for experimental thought and publication, and we believe strongly in nurturing critical curiosity, decolonial thought, and embodied intersectional feminist practices.
+        </p>
 
         <table className="w-full max-w-3xl mx-auto mb-8 border-collapse text-left">
           <tbody>
@@ -139,13 +153,9 @@ export default function SubmissionsPage() {
           </tbody>
         </table>
 
-        <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
-          Send us your ideas as pitches or abstracts by August 31, 2026. We welcome previously unpublished works. Selection will be based on originality, quality, and alignment with our initiative&rsquo;s values.
-        </p>
-
         <div className={`w-full sm:w-1/2 mx-auto border-2 ${dm ? "border-white" : "border-black"}`}>
           <a
-            href="https://forms.gle/ga8yTmKhqdjfAqog6"
+            href="https://forms.gle/ABHscZumMbQVa7eY7"
             target="_blank"
             rel="noopener noreferrer"
             className={`flex items-center justify-center gap-3 pl-4 pr-2 py-3 transition-colors duration-200 ${dm ? "hover:bg-white/10" : "hover:bg-[#f0efe7]"}`}
