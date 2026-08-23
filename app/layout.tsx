@@ -82,8 +82,8 @@ export const metadata: Metadata = {
   description:
     "An interdisciplinary publication seeking to reimagine academic discourse. Research, visual arts, oral histories, and radical experimentation of form.",
   icons: {
-    icon: "/sassafras-logo.png",
-    apple: "/sassafras-logo.png",
+    icon: "/sassafras-logo-square.JPG",
+    apple: "/sassafras-logo-square.JPG",
   },
   openGraph: {
     type: "website",
