@@ -137,7 +137,7 @@ const NAV_LINKS = [
   { href: "/current-issue", label: "CURRENT ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }] },
+  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }, ...(FEATURE_FLAGS.faq ? [{ href: "/about/faq", label: "FAQ", pageTitle: "FAQ" }] : [])] },
   ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
   { href: "/keep-in-touch", label: FEATURE_FLAGS.supportUs ? "CONTACT / SUPPORT" : "CONTACT", pageTitle: "Contact" },
 ]
@@ -490,7 +490,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                   </div>
                 </Link>
               ))}
-              {pathname === "/about/why-sassafras" && (
+              {(pathname === "/about/why-sassafras" || pathname === "/about/faq") && (
                 <div className="flex gap-5">
                   {[
                     "/why-sassafras-squares/IMG_6372.JPG",
@@ -512,7 +512,7 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
                 <Link
                   href={pageHref}
                   className="font-alte-haas text-5xl tracking-[0.03em] hover:opacity-60 transition-opacity"
-                  style={pathname === "/about/why-sassafras" || pathname === "/submissions"
+                  style={pathname === "/about/why-sassafras" || pathname === "/about/faq" || pathname === "/submissions"
                     ? { color: "#A1C874", WebkitTextStroke: `1.5px ${darkMode ? "white" : "black"}` }
                     : { color: darkMode ? "white" : "#1a1a1a" }}
                 >
