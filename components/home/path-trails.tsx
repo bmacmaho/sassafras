@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { SUBTITLE_TEXT } from "./scroll-driven-video"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
 // Mirrors the cubic bezier parameters in SectionScrollAnimator:
 //   B(p) = (1-p)³·P0 + 3(1-p)²p·P1 + 3(1-p)p²·P2 + p³·P3  (P3 = card centre)
@@ -10,6 +11,11 @@ const STEP_BEZIERS = [
   { step: 2, sx: 1400, sy: -200, cx1:  500, cy1: -500, cx2: -400, cy2:  200 },
   { step: 3, sx: -850, sy: -600, cx1:  300, cy1: -800, cx2:  400, cy2:  300 },
   { step: 4, sx:  920, sy:  700, cx1: -300, cy1:  800, cx2:  150, cy2: -400 },
+  // Step 5 (Submissions) only exists while its feature flag is on — kept in
+  // sync with the flag-gated tile in app/page.tsx and case 5 in SectionScrollAnimator.
+  ...(FEATURE_FLAGS.submissions
+    ? [{ step: 5, sx: -650, sy: 750, cx1: 450, cy1: -650, cx2: -250, cy2: 250 }]
+    : []),
 ]
 
 function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: number) {
@@ -21,7 +27,7 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: numbe
     const imageH = vh * 0.15
     const labelH = 8 + 14 // gap-2 (8px) + leaf icon/label row (~14px)
     const tileH = imageH + labelH
-    const n = 4
+    const n = STEP_BEZIERS.length
     const gap = (h - n * tileH) / (n + 1)
     const topY = step * gap + (step - 1) * tileH
     return { x: w / 2, y: topY + imageH / 2 }
@@ -31,6 +37,7 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: numbe
     case 2: { const cw = 220; return { x: 0.26 * w + cw / 2, y: 0.60 * h + cw / 2 } }
     case 3: { const cw = 220; const tlx = w * (1 - 0.21) - cw; return { x: tlx + cw / 2, y: 0.12 * h + cw / 2 } }
     case 4: { const cw = 280; const ch = cw / 1.6; const tlx = w * (1 - 0.10) - cw; return { x: tlx + cw / 2, y: 0.64 * h + ch / 2 } }
+    case 5: { const cw = 220; return { x: 0.44 * w + cw / 2, y: 0.55 * h + cw / 2 } }
     default: return { x: 0, y: 0 }
   }
 }

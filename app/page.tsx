@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { FEATURE_FLAGS } from "@/lib/feature-flags"
 import { ScrollAnimator } from "@/components/scroll-animator"
 import { ScrollDrivenVideo } from "@/components/home/scroll-driven-video"
 import { LeafSnake } from "@/components/home/leaf-snake"
@@ -143,6 +144,28 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+
+            {/* 5. SUBMISSIONS — hidden until the submissions feature flag is on
+                (the /submissions route 404s while the flag is off). */}
+            {FEATURE_FLAGS.submissions && (
+              <div className="md:absolute md:left-[44%] md:top-[55%]" data-scroll-step="5" data-scroll-col="right">
+                <div data-scroll-item style={{ opacity: 0 }}>
+                  <Link href="/submissions" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                    <div className="h-[15vh] md:h-auto md:w-[220px] aspect-square bg-white shadow-2xl overflow-hidden p-1 relative">
+                      <div className="w-full h-full overflow-hidden">
+                        <img src="/explore_struggle_new.jpg" alt="Submissions" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <img src="/leaves/Leaf 1.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
+                      <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
+                        SUBMISSIONS - OPEN CALL
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
           </div>
         </div>
