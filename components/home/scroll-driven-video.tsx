@@ -35,9 +35,27 @@ export function ScrollDrivenVideo() {
   // trap the visitor on the loader forever.
   const [mounted, setMounted] = useState(false)
   const [videoReady, setVideoReady] = useState(false)
+
+  // iOS/iPadOS only autoplays a video that is *provably* muted and inline.
+  // React sets `muted` as a property but doesn't always emit the attribute, so
+  // Safari sees an unmuted video, blocks autoplay, and overlays a native play
+  // button — which, since the <video> is wrapped in a <Link>, navigates away
+  // when tapped instead of playing. Forcing muted + playsInline on the element
+  // and nudging play() imperatively makes it autoplay so no button ever shows.
+  const startPlayback = () => {
+    const v = videoElRef.current
+    if (!v) return
+    v.muted = true
+    v.defaultMuted = true
+    v.playsInline = true
+    const p = v.play()
+    if (p) p.catch(() => {})
+  }
+
   useEffect(() => {
     setMounted(true)
     if (videoElRef.current && videoElRef.current.readyState >= 3) setVideoReady(true)
+    startPlayback()
   }, [])
 
   // Mobile-only: size "a platform for experimental" so its rendered width
@@ -304,7 +322,7 @@ export function ScrollDrivenVideo() {
                     muted
                     playsInline
                     preload="auto"
-                    onCanPlay={() => setVideoReady(true)}
+                    onCanPlay={() => { setVideoReady(true); startPlayback() }}
                     onError={() => setVideoReady(true)}
                     className="w-full h-full object-cover"
                   />
