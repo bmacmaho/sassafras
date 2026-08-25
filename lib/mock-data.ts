@@ -639,15 +639,17 @@ While I am concerned about the larger systems of surveillance brought forth by t
     tags: [ArtworkTag.Towers, ArtworkTag.Essay, ArtworkTag.AI, ArtworkTag.Technology, ArtworkTag.Futurism, ArtworkTag.Hierarchies, ArtworkTag.Class, ArtworkTag.Power, ArtworkTag.Commodification],
     year: "2026",
     issue: "Issue 01",
-    body: `How social media, AI, and the tech elite shape our relation to knowledge and critical thinking.
+    body: `## How social media, AI, and the tech elite shape our relation to knowledge and critical thinking.
 
 The idea of the "ivory tower" describes a situation in which the academic, intellectual elite sit high up in the tower, theorizing over society, thinking themselves superior, while being detached from not only the majority of people but also from "real life." But what if a new tower is being constructed? One in which the tech elite sits high up in the chain of decision-making and governance, while the rest of us sit at the bottom, looking up, without any power to move up the tower nor to crumble it? A tower where the people who have knowledge, critical thinking skills, and, most importantly, the ability to engage with the world through theorizing about it, sit at the top while the rest are glued to their phones, disengaged. A tower in which your position is determined based on whether you have the privilege of being able to avoid social media and, even more importantly, to avoid using AI.
 
-Polluted environments and the new underclass
+
+## Polluted environments and the new underclass
 
 In a time of information overload, a post-truth society, social media, increasingly addictive algorithms, and artificial intelligence (AI), critical thinking skills, as well as the time and capability to engage with social sciences, humanities, and philosophy are likely to become a privilege of the few. In fact, these developments are likely to create a new underclass. In her video essay "the chronically online will be the new underclass,"[^1] DJ and Youtuber @yagirldjmagic puts forward a theory likening the internet, specifically social media, to a physical place, which has become unbearable for most. She distinguishes six "pollutants", which, just as pollutants in the physical world, create a toxic environment with far-reaching social problems. These pollutants include echo chamber, anxiety, over-consumption, cultural extraction, addiction, and rage bait, which not only poison the space, but also exploit something from our daily lives. For example, anxiety exploits our mental health and sense of self, while addiction exploits our time and attention. These pollutants, as well as external conditions shaping our lives, keep people on their phones. In fact, I would argue that in today's hyper-capitalistic society, many people are constantly in survival mode, working full-time during unprecedented levels of wealth inequality, a cost of living crisis, the dissolution of the community, and ongoing climate catastrophe. Thereby, social media becomes a coping mechanism in order to escape reality, relax from work and stimulate oneself without having to physically do anything. Then the above-mentioned pollutants, actively used by creators, keep people on the platform and engaged, which is very much done intentionally by platform owners, as attention is the currency. It is important to note that marginalized communities are often hit harder by certain conditions, such as the cost of living crisis, while at the same time lacking access to alternative spaces to form real life connections or enjoy leisure time, making them more vulnerable to the pollutants of the internet. Thus, already existing social inequalities are exacerbated, and privilege becomes the determining factor of who gets to log off.
 
-AI and its impact on critical thinking
+
+## AI and its impact on critical thinking
 
 While social media is harmful and has far-reaching social consequences, AI is further intensifying this. For one, AI is increasingly making content creation easier, faster and cheaper for platforms, intensifying the aforementioned pollutants and making it easier to keep people glued to their phones. Furthermore, the increasing use of social media and particularly AI are diminishing critical thinking skills and contributing to the post-truth[^2] society, in which there is no consensus anymore on what is a fact, while opinions matter more and people are drawn to the truth that they find the most compelling or the most entertaining. AI's best skill is making something sound as if it is the truth, which is literally what LLMs (Large Language Models) are doing.
 
@@ -657,13 +659,15 @@ Recent studies[^3] already show very clearly that AI is negatively affecting bra
 
 In this process, AI is being portrayed as an inevitable future[^6], in which it will take over everything, including the economy, stopping people from imagining alternatives. Propagating this vision of the future as inevitable does not only push people into using AI more, intensifying its above-mentioned negative effects, but it is also necessary to get people to accept AI and ignore the moral and ethical questions around it. Moreover, this framing is also necessary in order to make investors believe they are investing in the future, which makes it possible to get massive amounts of money behind it. This then becomes a self-fulfilling prophecy, as any idea with billions of dollars invested in it is likely to become the future.
 
-The tech elite in their towers
+
+## The tech elite in their towers
 
 These developments are not accidental byproducts of technical advancements; instead, the people controlling these technologies are aware of this and encourage it. Many tech CEOs do not use their own technologies at home and don't let their kids use them. Steve Jobs[^7] famously did not allow his children to use iPads, highlighting that they are very much aware of the dangerous effects of these technologies. This is mirrored by a recent lawsuit[^8] in the U.S., in which a court found that Meta intentionally builds algorithms on their platforms in a way that is addictive and thus is responsible for negatively affecting teens mental health.
 
 Furthermore, they know that thinking critically, studying philosophy, and engaging with questions about life are crucial. As recounted by Brené Brown[^9], many tech CEOs, when asked what people should tell their children to study, say that they should study mathematics, physics, or engineering. However, when they are then asked to what they attribute their wealth and their success when thinking deeply about this, they attribute it to their studying of stoicism and philosophy. This clearly shows that they are aware of both the negative effects of their technologies and the value of critical thinking skills. Their privileges allow them to log off and not use social media and AI, avoiding its negative consequences. Unlike the new "underclass" described earlier, they can avoid the negative consequences of these technologies as well as the polluted environments they cause, staying high up in their towers.
 
-Commodifying intelligence
+
+## Commodifying intelligence
 
 All of this is taking place in a post-truth[^10] social context, in which information is abundant, but so is misinformation, while the ability to determine what is fact and universal agreement on the truth are lacking. When there is a constant information overload in combination with reduced critical thinking abilities, intelligence is becoming increasingly scarce and reserved for the privileged.
 
@@ -675,7 +679,8 @@ The dystopian vision he is painting here is one where intelligence is effectivel
 
 This future is coming soon, as AI will increasingly be paywalled. The way AI is being offered currently as mostly free is not sustainable, as it is very expensive, requiring not only constant advancement and innovation, but also massive computing, which needs large, energy-intensive data centers. Furthermore, three major AI companies— OpenAI, Anthropic and Space X— just went public[^12], which will increase pressure to turn a profit. It is likely that seeing ads when using LLMs like Claude or ChatGPT will soon be normal, and much like how "pollutants" on social media are being used to keep people online, LLMs will use similar ones to keep users engaged.
 
-The growing influence of tech elite
+
+## The growing influence of tech elite
 
 The consequences are as dystopian as they are endless. People can be influenced increasingly easily with social media and AI as critical thinking skills continue to decrease. In addition, the power and wealth coming from these technologies, on which the tech elite is built on, allows them increasing political influence, while democracies worldwide are deteriorating. People will largely lack the insights into how political decisions are made and what is constructed as truth, destroying democratic processes, transparency and accountability. They will also lack the ability to influence their political institutions, constituting a new powerless underclass.
 
@@ -683,7 +688,8 @@ The growing influence of billionaires, particularly the ones linked to the tech 
 
 Furthermore, AI is increasingly used and integrated into governments, overtaking tasks. For example, Palantir, an AI company focused on data integration and analytics software, is employed in the U.S. defense department[^15]. Their recently published Manifesto[^16] does not only frame the advance of AI as inevitable, but it also underlines and justifies the vision for these tech elites to be embedded in the government, specifically in the defense and intelligence apparatus. The growing political influence of the tech elite and their technologies is not just bad for accountability and transparency; it is potentially very dangerous. Most people, including the government employees using the AI on a daily basis and implementing its decisions, do not understand how AI works and are not equipped to question or control it. Moreover, as AI is increasingly becoming autonomous, it begs the question of who will in the end truly be able to fully understand how it works, and what exactly its "intelligence" is based on. Lacking transparency and expertise to question AI, its decisions and consequences could be disastrous.
 
-Looking up at the tower
+
+## Looking up at the tower
 
 Taking into account all of these developments, it appears as if a new tower is being constructed. One in which the tech elite is guarding human intelligence, while the majority of people are stuck in a polluted environment shaped by social media and AI, diminishing critical thinking and engagement with social and political issues. Intelligence is becoming commodified, and access to it, as well as what it means and looks like, depends on a small tech elite, while many people are actively losing their economic bargaining power due to being replaced by AI. In this dystopian future, critical thinking and engagement with social sciences, philosophy, and humanities, which are the tools necessary to question and resist these developments, are reserved for the rich and privileged who can afford it. The rest forms the new underclass looking up at the tower.`,
     footnotes: [
