@@ -30,6 +30,12 @@ function windingTransform(step: number, p: number): { x: number; y: number } {
         y: t*t*t* 700 + 3*t*t*p* 800 + 3*t*p*p*-400,
       }
     }
+    case 5: { // center-low → arcs up and right → sweeps back into place
+      return {
+        x: t*t*t*-650 + 3*t*t*p* 450 + 3*t*p*p*-250,
+        y: t*t*t* 750 + 3*t*t*p*-650 + 3*t*p*p* 250,
+      }
+    }
     default:
       return { x: 0, y: 0 }
   }
