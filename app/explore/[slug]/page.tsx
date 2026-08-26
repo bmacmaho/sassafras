@@ -266,16 +266,30 @@ export default function ExploreDetailPage() {
                 )}
                 <div className="font-serif text-lg md:text-xl leading-[1.7] text-[#333] space-y-8 text-justify">
                   {artwork.body
-                    ? artwork.body.split(/\n\n+/).map((paragraph, i) => (
-                        <p key={i}>
-                          {paragraph.split("\n").map((line, j) => (
-                            <span key={j}>
-                              {renderInline(line, `p${i}-l${j}`)}
-                              {j < paragraph.split("\n").length - 1 && <br />}
-                            </span>
-                          ))}
-                        </p>
-                      ))
+                    ? artwork.body.split(/\n\n+/).map((paragraph, i, arr) => {
+                        // `## `-prefixed chunks are section titles — rendered
+                        // slightly larger and bold instead of as body copy. Each
+                        // gets extra space above it to set sections apart, except
+                        // the first (it already sits below the intro paragraph).
+                        if (paragraph.startsWith("## ")) {
+                          const isFirstHeading = arr.findIndex((p) => p.startsWith("## ")) === i
+                          return (
+                            <h3 key={i} className={`font-bold text-xl md:text-2xl leading-snug text-[#222] text-left ${isFirstHeading ? "" : "pt-8"}`}>
+                              {renderInline(paragraph.slice(3), `h${i}`)}
+                            </h3>
+                          )
+                        }
+                        return (
+                          <p key={i}>
+                            {paragraph.split("\n").map((line, j) => (
+                              <span key={j}>
+                                {renderInline(line, `p${i}-l${j}`)}
+                                {j < paragraph.split("\n").length - 1 && <br />}
+                              </span>
+                            ))}
+                          </p>
+                        )
+                      })
                     : !artwork.description && (
                         <p className="text-black/40 italic">Full piece coming soon.</p>
                       )}
