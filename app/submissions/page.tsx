@@ -29,7 +29,7 @@ const GUIDELINES = [
 ]
 
 const TIMELINE = [
-  { label: "Pitch Deadline", date: "August 31, 2026" },
+  { label: "Pitch Deadline", date: "September 10, 2026" },
   { label: "Submission Deadline (First Drafts)", date: "October 14, 2026" },
   { label: "Revision Period", date: "October 14 – December 6, 2026" },
   { label: "Publication (Issue 2)", date: "January 2027" },
@@ -103,7 +103,7 @@ export default function SubmissionsPage() {
         </h2>
 
         <p className={`text-base md:text-lg leading-relaxed text-justify mx-auto mb-8 max-w-3xl ${dm ? "text-white/80" : "text-[#444]"}`}>
-          Send us your &lsquo;pitch&rsquo;&mdash;idea, outline, abstract, etc&mdash;by 31st August 2026{" "}
+          Send us your &lsquo;pitch&rsquo;&mdash;idea, outline, abstract, etc&mdash;by 10th September 2026{" "}
           <a
             href="https://forms.gle/ABHscZumMbQVa7eY7"
             target="_blank"
@@ -143,7 +143,7 @@ export default function SubmissionsPage() {
               <tr key={item.label} className={`border-b ${dm ? "border-white/10" : "border-black/10"}`}>
                 <th
                   scope="row"
-                  className={`py-4 pr-8 align-top leading-relaxed font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-nowrap ${dm ? "text-white/60" : "text-black/60"}`}
+                  className={`py-4 pr-4 sm:pr-8 align-top leading-relaxed font-alte-haas text-xs tracking-widest uppercase font-bold whitespace-normal sm:whitespace-nowrap ${dm ? "text-white/60" : "text-black/60"}`}
                 >
                   {item.label}
                 </th>
