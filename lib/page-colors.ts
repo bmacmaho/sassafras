@@ -7,7 +7,7 @@ export const PAGE_COLORS: Record<string, string> = {
   "/contact":       "#7089B9",
   "/issues":        "#9DA941",
   "/article":       "#9DA941",
-  "/current-issue": "#7C6ABE",
+  "/latest-issue": "#7C6ABE",
 }
 
 export const DEFAULT_COLOR = "#9DA941"

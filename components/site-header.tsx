@@ -128,13 +128,13 @@ function NavLink({ href, label, pathname, submenu, darkMode }: { href: string; l
 
 const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
   "/issues":                  { line1: "Archive",        line2: "Full Collection — 2024 to Present" },
-  "/current-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
+  "/latest-issue":           { line1: "The Tower",      line2: "Issue No. 1 — JUNE 2026" },
   "/submissions":             { line1: "Open Call",      line2: "Issue No. 2 — Nostalgia" },
 }
 
 const NAV_LINKS = [
   { href: "/", label: "HOME" },
-  { href: "/current-issue", label: "CURRENT ISSUE" },
+  { href: "/latest-issue", label: "LATEST ISSUE" },
   ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
   { href: "/explore", label: "EXPLORE" },
   { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }] },
@@ -149,9 +149,9 @@ const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
 export function SiteHeader() {
   const pathname = usePathname()
   const isExplorePage = pathname === "/explore"
-  const isCurrentIssuePage = pathname === "/current-issue"
+  const isLatestIssuePage = pathname === "/latest-issue"
   const hasChevron = isExplorePage
-const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions"
+const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions"
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
@@ -243,18 +243,18 @@ const hasThemeToggle = isCurrentIssuePage || pathname.startsWith("/about") || pa
   // On navigation, decide which theme to show:
   //  • Pages with a theme toggle honour the user's saved preference; if they
   //    have never toggled, fall back to the page's default (dark only on
-  //    /current-issue).
+  //    /latest-issue).
   //  • Pages without a toggle are always light.
   useEffect(() => {
     const hasToggle =
-      pathname === "/current-issue" || pathname.startsWith("/about") || pathname === "/keep-in-touch"
+      pathname === "/latest-issue" || pathname.startsWith("/about") || pathname === "/keep-in-touch"
     if (!hasToggle) {
       setDarkMode(false)
       return
     }
     let stored: string | null = null
     try { stored = localStorage.getItem(DARK_MODE_KEY) } catch {}
-    setDarkMode(stored !== null ? stored === "true" : pathname === "/current-issue")
+    setDarkMode(stored !== null ? stored === "true" : pathname === "/latest-issue")
   }, [pathname, setDarkMode])
 
   // Toggle the theme AND persist the choice so it's restored on return.

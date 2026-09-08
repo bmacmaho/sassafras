@@ -43,18 +43,18 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: numbe
 }
 
 // Sentence path: a long flat run from off-screen left into an anchor point in
-// the right half of the Current Issue card, an S-curve (down, then flattening
+// the right half of the Latest Issue card, an S-curve (down, then flattening
 // back to horizontal) passing the anchor point in the left half of the
 // Contact/Support card, then a long flat run continuing off-screen right.
 // The text renders at its natural size (no stretching/compressing) — it
-// always *starts* exactly on the Current Issue anchor, but how far it gets
+// always *starts* exactly on the Latest Issue anchor, but how far it gets
 // before running off the right edge depends on its own natural length.
 function sentencePathSegments(w: number, h: number, isMd: boolean, vw: number) {
   const ABOVE_CARD_OFFSET = 15   // vertical gap above each card's top edge
 
   const ciCw = isMd ? 350 : vw * 0.70
   const ciLeft = (isMd ? 0.12 : 0.04) * w
-  const startY = (isMd ? 0.25 : 0.22) * h - ABOVE_CARD_OFFSET   // above Current Issue card
+  const startY = (isMd ? 0.25 : 0.22) * h - ABOVE_CARD_OFFSET   // above Latest Issue card
   const startX = ciLeft + ciCw * 0.75   // centre of the card's right half
 
   const contCw = isMd ? 280 : vw * 0.50

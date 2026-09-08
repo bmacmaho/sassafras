@@ -6,7 +6,7 @@
   },
 
   "nav": {
-    "currentIssue": "CURRENT ISSUE",
+    "latestIssue": "LATEST ISSUE",
     "allIssues": "ALL ISSUES",
     "explore": "EXPLORE",
     "about": "ABOUT",
@@ -21,7 +21,7 @@
         "line1": "Archive",
         "line2": "Full Collection — 2024 to Present"
       },
-      "currentIssue": {
+      "latestIssue": {
         "line1": "The Tower",
         "line2": "Issue No. 1 — JUNE 2026"
       },
@@ -51,14 +51,14 @@
   "home": {
     "welcome": "WELCOME TO SASSAFRAS",
     "tagline": "a platform for experimental thoughts and publication",
-    "navCurrentIssue": "CURRENT ISSUE - THE TOWER",
+    "navLatestIssue": "LATEST ISSUE - THE TOWER",
     "navAllIssues": "ALL ISSUES",
     "navExplore": "EXPLORE",
     "navAbout": "ABOUT US",
     "navSubmissions": "UPCOMING ISSUE/SUBMISSIONS",
     "navContact": "CONTACT/SUPPORT",
-    "imgAltCurrentIssueLeft": "Current Issue Left",
-    "imgAltCurrentIssueRight": "Current Issue Right",
+    "imgAltLatestIssueLeft": "Latest Issue Left",
+    "imgAltLatestIssueRight": "Latest Issue Right",
     "imgAltAllIssuesLeft": "All Issues Left",
     "imgAltAllIssuesRight": "All Issues Right",
     "imgAltExplore": "Explore",
@@ -78,7 +78,7 @@
 
   "homeOverlay": {
     "submissions": "SUBMISSIONS",
-    "currentIssue": "CURRENT ISSUE",
+    "latestIssue": "LATEST ISSUE",
     "allIssues": "ALL ISSUES",
     "explore": "EXPLORE",
     "about": "ABOUT",
@@ -86,9 +86,9 @@
     "instagram": "INSTAGRAM"
   },
 
-  "currentIssue": {
+  "latestIssue": {
     "meta": {
-      "title": "Current Issue | Sassafras"
+      "title": "Latest Issue | Sassafras"
     },
     "tagline": "“Challenging the Ivory Tower as an encloser of knowledge.”",
     "description": "Our inaugural issue explores hierarchies of power, surveillance, and the fragmentation of shared understanding through interdisciplinary inquiry. Flip through the digital edition below.",
@@ -245,7 +245,7 @@
 
   "article": {
     "notFoundTitle": "Not Found",
-    "backToCurrentIssue": "ISSUE {number}: {title}",
+    "backToLatestIssue": "ISSUE {number}: {title}",
     "backToAllIssues": "ALL ISSUES",
     "previousLabel": "PREVIOUS",
     "nextLabel": "NEXT",
