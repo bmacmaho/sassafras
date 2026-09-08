@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { getArticleBySlug, getAllArticleSlugs, getCurrentIssue } from "@/lib/queries"
+import { getArticleBySlug, getAllArticleSlugs, getLatestIssue } from "@/lib/queries"
 import { ArticleBody } from "@/components/article-body"
 import { mediaTypeLabels } from "@/lib/types"
 import { ArrowLeft, ArrowRight } from "lucide-react"
@@ -44,21 +44,21 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  let data, currentIssue
+  let data, latestIssue
   try {
-    ;[data, currentIssue] = await Promise.all([
+    ;[data, latestIssue] = await Promise.all([
       getArticleBySlug(slug),
-      getCurrentIssue(),
+      getLatestIssue(),
     ])
   } catch {
     notFound()
   }
   if (!data) notFound()
 
-  const isCurrentIssue =
-    currentIssue && data.issue.slug === currentIssue.slug
-  const issueHref = isCurrentIssue
-    ? "/current-issue"
+  const isLatestIssue =
+    latestIssue && data.issue.slug === latestIssue.slug
+  const issueHref = isLatestIssue
+    ? "/latest-issue"
     : `/issues`
 
   const currentIndex = data.issue.articles.findIndex((a) => a.slug === slug)
@@ -85,7 +85,7 @@ export default async function ArticlePage({
                 style={{ fontSize: "10px", letterSpacing: "0.18em" }}
               >
                 <ArrowLeft size={10} />
-                {isCurrentIssue
+                {isLatestIssue
                   ? `ISSUE ${data.issue.number}: ${data.issue.title}`
                   : "ALL ISSUES"}
               </Link>

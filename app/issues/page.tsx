@@ -50,7 +50,7 @@ export default function IssuesPage() {
                  season="SPRING 2026"
                  date="JUNE 2026"
                  status="CURRENTLY ACCEPTING SUBMISSIONS"
-                 href="/current-issue"
+                 href="/latest-issue"
                />
              </ClientOnly>
              {/* Add more BookCoverLinks here in the future */}

@@ -296,7 +296,7 @@ export function ScrollDrivenVideo() {
                 style={{ right: "calc(100% + 10px)", bottom: "100%" }}
               >
                 <Link
-                  href="/current-issue"
+                  href="/latest-issue"
                   className="block font-alte-haas text-base tracking-wide hover:opacity-80 transition-opacity"
                   style={{
                     transformOrigin: "right bottom",
@@ -305,7 +305,7 @@ export function ScrollDrivenVideo() {
                     color: "#2d6a4f",
                   }}
                 >
-                  <span className="underline underline-offset-2">to the current issue</span>{" "}v
+                  <span className="underline underline-offset-2">to the latest issue</span>{" "}v
                 </Link>
               </div>
               {/* Video — animates on a curve independently */}
@@ -313,7 +313,7 @@ export function ScrollDrivenVideo() {
                 ref={videoRef}
                 className="absolute inset-0 border-[4px] md:border-[6px] border-white overflow-hidden shadow-2xl"
               >
-                <Link href="/current-issue" className="block w-full h-full">
+                <Link href="/latest-issue" className="block w-full h-full">
                   <video
                     ref={videoElRef}
                     src="/IMG_4255.mp4"

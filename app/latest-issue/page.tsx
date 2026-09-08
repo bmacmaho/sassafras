@@ -1022,7 +1022,7 @@ function MobileScrollReader({
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Page component ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-export default function CurrentIssuePage() {
+export default function LatestIssuePage() {
   const videoLeftRef = useRef<HTMLVideoElement>(null)
   const videoRightRef = useRef<HTMLVideoElement>(null)
   const videoPage24Ref = useRef<HTMLVideoElement>(null)
@@ -1318,7 +1318,7 @@ export default function CurrentIssuePage() {
         <button
           onClick={() => (isMobile ? setMobileReaderOpen(true) : setFullscreen(true))}
           className="fixed bottom-5 right-5 p-2 transition-opacity hover:opacity-70"
-          style={{ zIndex: 9999, color: getPageColor("/current-issue") }}
+          style={{ zIndex: 9999, color: getPageColor("/latest-issue") }}
           title="Fullscreen"
         >
           <Maximize2 size={24} />

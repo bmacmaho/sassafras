@@ -229,7 +229,7 @@ export const mockIssues: Issue[] = [
     description:
       "Issue 3 explores the liminal—those in-between spaces where transformation occurs. Essays, poetry, sound, and visual work that dwell in doorways, borders, and the moments just before change.",
     coverColor: "oklch(0.09 0.018 55)",
-    isCurrent: true,
+    isLatest: true,
     articles: issue1Articles,
   },
   {
@@ -242,7 +242,7 @@ export const mockIssues: Issue[] = [
     description:
       "Issue 2 listens for repetition and return—patterns that recur across language, landscape, and memory. How does the past make itself heard in the present?",
     coverColor: "oklch(0.12 0.025 40)",
-    isCurrent: false,
+    isLatest: false,
     articles: issue2Articles,
   },
 ]

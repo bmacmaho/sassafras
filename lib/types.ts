@@ -23,7 +23,7 @@ export interface Issue {
   year: number
   description: string
   coverColor: string
-  isCurrent: boolean
+  isLatest: boolean
   articles: Article[]
 }
 

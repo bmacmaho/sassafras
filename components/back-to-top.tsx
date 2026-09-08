@@ -8,7 +8,7 @@ export function BackToTop() {
   const { bottomLeft } = useHeaderExtras()
   if (pathname === "/" || pathname === "/keep-in-touch") return null
 
-  if (pathname === "/current-issue") {
+  if (pathname === "/latest-issue") {
     return (
       <div className="mb-4 flex items-end justify-between">
         {bottomLeft ?? <span />}

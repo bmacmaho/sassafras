@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react"
 import { BloomingFlower } from "./blooming-flower"
 
 const NAV_LINKS = [
-  { href: "/current-issue", label: "CURRENT ISSUE", variant: "sassafras" },
+  { href: "/latest-issue", label: "LATEST ISSUE", variant: "sassafras" },
   { href: "/issues", label: "ALL ISSUES", variant: "fern" },
   { href: "/explore", label: "EXPLORE", variant: "daisy" },
   { href: "/about", label: "ABOUT", variant: "star" },

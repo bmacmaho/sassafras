@@ -30,7 +30,7 @@ function PauseIcon({ size }: { size: number }) {
 
 // Play/pause + draggable scrubber for pieces with an audio track (e.g.
 // "Bells of Shandon") — same grey-track/black-fill scrubber as the bells
-// player on page 21 of the current issue, sized up for this page's roomier
+// player on page 21 of the latest issue, sized up for this page's roomier
 // layout instead of the book page's tiny printed-placeholder box.
 function AudioPlayer({ src }: { src: string }) {
   const audioRef = useRef<HTMLAudioElement>(null)

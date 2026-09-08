@@ -59,20 +59,20 @@ export default function HomePage() {
               as before). */}
           <div className="flex flex-col items-center justify-evenly h-full md:contents">
 
-            {/* 1. CURRENT ISSUE */}
+            {/* 1. LATEST ISSUE */}
             <div className="md:absolute md:left-[12%] md:top-[25%]" data-scroll-step="1" data-scroll-col="left">
               <div data-scroll-item style={{ opacity: 0 }}>
-                <Link href="/current-issue" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
+                <Link href="/latest-issue" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">
                   <div className="h-[15vh] md:h-auto md:w-[350px] aspect-[1.4/1] bg-white shadow-2xl overflow-hidden p-1 relative">
                     <div className="w-full h-full flex overflow-hidden">
-                      <img src="/the_tower_assets/cover/front.JPG" alt="Current Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <img src="/the_tower_assets/cover/back.JPG" alt="Current Issue Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/the_tower_assets/cover/front.JPG" alt="Latest Issue Left" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="/the_tower_assets/cover/back.JPG" alt="Latest Issue Right" className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
                     <img src="/leaves/Leaf 4.PNG" alt="" className="w-3 md:w-4 object-contain" style={{ transform: 'scaleX(-1)' }} />
                     <p className="text-white text-[10px] md:text-xs tracking-[0.08em] uppercase group-hover:underline font-alte-haas">
-                      CURRENT ISSUE - THE TOWER
+                      LATEST ISSUE - THE TOWER
                     </p>
                   </div>
                 </Link>

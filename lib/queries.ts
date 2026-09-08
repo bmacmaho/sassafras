@@ -3,8 +3,8 @@ import type { Article, Issue } from "./types"
 
 // ── Queries (using mock data — no Supabase needed) ───────────────────────────
 
-export async function getCurrentIssue(): Promise<Issue | null> {
-  return mockIssues.find((i) => i.isCurrent) ?? null
+export async function getLatestIssue(): Promise<Issue | null> {
+  return mockIssues.find((i) => i.isLatest) ?? null
 }
 
 export async function getIssueBySlug(slug: string): Promise<Issue | null> {
@@ -17,7 +17,7 @@ export async function getAllIssues(): Promise<Issue[]> {
 
 export async function getPreviousIssues(): Promise<Issue[]> {
   return mockIssues
-    .filter((i) => !i.isCurrent)
+    .filter((i) => !i.isLatest)
     .sort((a, b) => b.number - a.number)
 }
 
