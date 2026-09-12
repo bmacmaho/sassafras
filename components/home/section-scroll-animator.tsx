@@ -71,7 +71,14 @@ export function SectionScrollAnimator() {
 
     const trigger = ScrollTrigger.create({
       trigger: container,
-      start: "top top",
+      // Starting at "top top" (when the section is already fully pinned)
+      // meant the whole slide-up transition from the hero happened with
+      // every card sitting at opacity 0, so the reveal only ever began
+      // right as the section locked in place — reading as a sudden pop.
+      // Starting a bit earlier, while the section is still sliding into
+      // view, lets the reveal get underway before the pin engages. Keep in
+      // sync with PathTrails, which traces lines to these same cards.
+      start: "top 25%",
       end: "bottom bottom",
       scrub: 0.6,
       onUpdate: (self) => applyProgress(self.progress),
