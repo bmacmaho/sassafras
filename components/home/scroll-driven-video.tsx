@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
 import { WelcomeTypewriter } from "@/components/home/welcome-typewriter"
+import { ScrollTrigger } from "@/lib/gsap"
 
 const TITLE_TEXT = "WELCOME TO SASSAFRAS"
 
@@ -16,6 +17,7 @@ const SUBTITLE_FIRST = "a platform for experimental"
 const SUBTITLE_REST = SUBTITLE_TEXT.slice(SUBTITLE_FIRST.length).trim()
 
 export function ScrollDrivenVideo() {
+  const sectionRef = useRef<HTMLElement>(null)
   const titlePathRef = useRef<SVGTextPathElement>(null)
   const titleCurveRef = useRef<SVGPathElement>(null)
   const subtitlePathRef = useRef<SVGTextPathElement>(null)
@@ -121,11 +123,22 @@ export function ScrollDrivenVideo() {
   }, [])
 
   useEffect(() => {
-    const update = () => {
+    const section = sectionRef.current
+    if (!section) return
+
+    // `ease` used to be derived from raw window.scrollY, so every scroll
+    // event snapped every property straight to its target — smooth-ish while
+    // scrolling but jumpy on trackpad/wheel notches. ScrollTrigger's `scrub`
+    // instead tweens the reported progress toward the scroll position over
+    // that many seconds, so the same math below now moves with inertia. The
+    // window (one viewport-height) matches the section's own pin duration —
+    // h-[200vh] above is exactly one viewport of static space plus one of
+    // pinned scroll — so the whole reveal completes within a single scroll
+    // and releases straight into the next section, rather than the old
+    // four-viewport-height runway.
+    const applyEase = (ease: number) => {
       const vw = window.innerWidth
       const vh = window.innerHeight
-      const scrollY = window.scrollY
-      const ease = Math.max(0, Math.min(1, scrollY / (4 * vh)))
 
       // Title: slides along the curve path as the user scrolls — the flat
       // start of the path reads as moving right, then it rides up the curve.
@@ -191,16 +204,21 @@ export function ScrollDrivenVideo() {
       }
     }
 
-    let rafId = requestAnimationFrame(function loop() {
-      update()
-      rafId = requestAnimationFrame(loop)
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${window.innerHeight}`,
+      scrub: 0.6,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => applyEase(self.progress),
+      onRefresh: (self) => applyEase(self.progress),
     })
 
-    return () => cancelAnimationFrame(rafId)
+    return () => trigger.kill()
   }, [])
 
   return (
-    <section className="relative bg-[#aac3ef] h-[500vh]">
+    <section ref={sectionRef} data-hero-scroll-container="true" className="relative bg-[#aac3ef] h-[200vh]">
       {/* Loading gate: nothing but the blue background and a spinner until the
           hero video can play. Portaled to <body> and pinned above everything
           (header included) so the page assembles behind it out of sight. */}

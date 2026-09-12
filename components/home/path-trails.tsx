@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { SUBTITLE_TEXT } from "./scroll-driven-video"
 import { FEATURE_FLAGS } from "@/lib/feature-flags"
+import { ScrollTrigger } from "@/lib/gsap"
 
 // Mirrors the cubic bezier parameters in SectionScrollAnimator:
 //   B(p) = (1-p)³·P0 + 3(1-p)²p·P1 + 3(1-p)p²·P2 + p³·P3  (P3 = card centre)
@@ -104,7 +105,8 @@ export function PathTrails() {
   }, [dims])
 
   useEffect(() => {
-    let ticking = false
+    const container = document.querySelector("[data-leaves-scroll-container]") as HTMLElement | null
+    if (!container) return
     const d = { vw: window.innerWidth, vh: window.innerHeight }
 
     const sync = () => {
@@ -113,20 +115,17 @@ export function PathTrails() {
       setDims({ vw: d.vw, vh: d.vh })
     }
 
-    const updatePaths = () => {
-      const container = document.querySelector("[data-leaves-scroll-container]") as HTMLElement | null
-      if (!container) { ticking = false; return }
-
+    // Progress comes from the same ScrollTrigger (trigger/start/end/scrub)
+    // as SectionScrollAnimator's card movement — these trails trace lines
+    // to those same cards, so they must be driven by an identical, equally
+    // smoothed progress value or the lines visibly lag/lead the cards.
+    const applyProgress = (progress: number) => {
       const { vw, vh } = d
       const isMd = vw >= 768
       const inset = isMd ? 16 : 12
       const w = vw - 2 * inset
       const h = vh - 2 * inset
 
-      const containerRect = container.getBoundingClientRect()
-      const extraScroll = container.offsetHeight - vh
-      const scrolledThrough = Math.max(0, -containerRect.top)
-      const progress = Math.min(1, scrolledThrough / extraScroll)
       const p = Math.max(0, Math.min(1, progress / 0.8))
 
       pathRefs.current.forEach((el, i) => {
@@ -156,26 +155,24 @@ export function PathTrails() {
       if (sentenceTextPathRef.current) {
         sentenceTextPathRef.current.setAttribute("startOffset", String(p * sentenceMaxOffsetRef.current))
       }
-
-      ticking = false
     }
 
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true
-        window.requestAnimationFrame(() => { updatePaths(); ticking = false })
-      }
-    }
+    const trigger = ScrollTrigger.create({
+      trigger: container,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.6,
+      onUpdate: (self) => applyProgress(self.progress),
+    })
 
-    const onResize = () => { sync(); updatePaths() }
+    const onResize = () => { sync(); applyProgress(trigger.progress) }
 
-    window.addEventListener("scroll", onScroll, { passive: true })
     window.addEventListener("resize", onResize)
     sync()
-    updatePaths()
+    applyProgress(trigger.progress)
     return () => {
-      window.removeEventListener("scroll", onScroll)
       window.removeEventListener("resize", onResize)
+      trigger.kill()
     }
   }, [])
 

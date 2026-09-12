@@ -16,15 +16,15 @@ export default function HomePage() {
       style={{
         width: 'calc(100vw - var(--scrollbar-width, 0px))',
         left: 'calc(-50vw + var(--scrollbar-width, 0px) / 2 + 50%)',
-        marginBottom: 'calc(-14rem - 400vh)',
+        marginBottom: 'calc(-14rem - 100vh)',
       }}
     >
       <ScrollAnimator />
 
       {/* Leaf snake overlay: native position:sticky (no JS scroll-compensation
           jitter) inside a spacer spanning the full page (first + second
-          section, ~1000vh) so it never un-sticks before the page ends. */}
-      <div className="absolute top-0 left-6 md:left-10 z-[200]" style={{ height: "1000vh" }} aria-hidden="true">
+          section, ~400vh) so it never un-sticks before the page ends. */}
+      <div className="absolute top-0 left-6 md:left-10 z-[200]" style={{ height: "400vh" }} aria-hidden="true">
         <LeafSnake />
       </div>
 
@@ -32,7 +32,7 @@ export default function HomePage() {
       <ScrollDrivenVideo />
 
       {/* ── Second Page ── */}
-      <div className="relative" style={{ height: '500vh' }} data-leaves-scroll-container="true">
+      <div className="relative" style={{ height: '200vh' }} data-leaves-scroll-container="true">
         <div className="sticky top-0 w-full h-screen bg-[#FF730F]">
         <section className="absolute inset-[10px] md:inset-[13px] bg-[#1a1a1a] overflow-hidden">
           <PathTrails />

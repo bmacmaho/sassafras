@@ -1,17 +1,28 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { ScrollTrigger } from "@/lib/gsap"
 
 export function LeafSnake() {
   const leafRefs = useRef<(HTMLImageElement | null)[]>([null, null, null, null])
   const stickyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const update = () => {
+    const section = document.querySelector("[data-hero-scroll-container]") as HTMLElement | null
+    if (!section) return
+
+    // Shares the hero's own scroll window (see scroll-driven-video.tsx) so
+    // the leaves stay in lockstep with the title/video reveal, but tracked
+    // slightly further (1.15vh vs 1vh) to also cover the resting-position
+    // transition below. ScrollTrigger's progress is reconstructed back into
+    // an equivalent "scrollY" so the rest of the math (tuned in those units)
+    // doesn't need touching — `scrub` is what actually smooths it now,
+    // rather than this reading window.scrollY raw on every frame.
+    const applyProgress = (progress: number) => {
       const vw = window.innerWidth
       const vh = window.innerHeight
-      const scrollY = window.scrollY
-      const ease = Math.max(0, Math.min(1, scrollY / (4 * vh)))
+      const scrollY = progress * 1.15 * vh
+      const ease = Math.max(0, Math.min(1, scrollY / (1 * vh)))
 
       // Snake animation: each leaf moves in an L — straight left until it's
       // above its neighbour's column, then straight down to land just above
@@ -50,26 +61,31 @@ export function LeafSnake() {
       // sticky offset — the range is small (≤72px) so any single-frame lag
       // is imperceptible, unlike the earlier 1:1 scroll-cancellation case
       // that caused jitter. Timed to land right after the snake finishes
-      // (4vh) and finish before the title starts fading in (4.7vh), so the
+      // (1vh) and finish before the title starts fading in (1.15vh), so the
       // leaves are already in place by the time it appears. That heading is
       // hidden on mobile, so there's nothing to clear there — topEnd matches
       // topStart, making the interpolation a no-op.
       if (stickyRef.current) {
         const topStart = 24
         const topEnd = vw >= 768 ? 96 : 24
-        const transitionStart = 4 * vh
-        const transitionEnd = 4.6 * vh
+        const transitionStart = 1 * vh
+        const transitionEnd = 1.15 * vh
         const t = Math.max(0, Math.min(1, (scrollY - transitionStart) / (transitionEnd - transitionStart)))
         stickyRef.current.style.top = `${topStart + (topEnd - topStart) * t}px`
       }
     }
 
-    let rafId = requestAnimationFrame(function loop() {
-      update()
-      rafId = requestAnimationFrame(loop)
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${window.innerHeight * 1.15}`,
+      scrub: 0.6,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => applyProgress(self.progress),
+      onRefresh: (self) => applyProgress(self.progress),
     })
 
-    return () => cancelAnimationFrame(rafId)
+    return () => trigger.kill()
   }, [])
 
   return (

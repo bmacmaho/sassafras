@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { ScrollTrigger } from "@/lib/gsap"
 
 function windingTransform(step: number, p: number): { x: number; y: number } {
   const t = 1 - p
@@ -43,22 +44,21 @@ function windingTransform(step: number, p: number): { x: number; y: number } {
 
 export function SectionScrollAnimator() {
   useEffect(() => {
-    let ticking = false
+    const container = document.querySelector("[data-leaves-scroll-container]") as HTMLElement | null
+    if (!container) return
 
-    const update = () => {
-      const container = document.querySelector("[data-leaves-scroll-container]") as HTMLElement | null
-      if (!container) return
-      const vh = window.innerHeight
-      const containerRect = container.getBoundingClientRect()
-      const extraScroll = container.offsetHeight - vh
-      const scrolledThrough = Math.max(0, -containerRect.top)
-      const progress = Math.min(1, scrolledThrough / extraScroll)
+    // Reveal completes at 80% through the pin (progress/0.8, capped at 1),
+    // leaving a short settled hold before the section releases — same
+    // pacing as before, just driven by ScrollTrigger's own pin-relative
+    // progress (start "top top" / end "bottom bottom" is exactly the
+    // previous manual scrolledThrough/extraScroll calc) with `scrub`
+    // smoothing the value instead of snapping to it on every scroll event.
+    const applyProgress = (progress: number) => {
+      const p = Math.max(0, Math.min(1, progress / 0.8))
+      const opacity = Math.min(1, p * 4)
 
       container.querySelectorAll("[data-scroll-step]").forEach((el) => {
         const step = parseInt((el as HTMLElement).dataset.scrollStep ?? "0")
-        const p = Math.max(0, Math.min(1, progress / 0.8))
-        const opacity = Math.min(1, p * 4)
-
         const { x, y } = windingTransform(step, p)
 
         const item = (el as HTMLElement).querySelector("[data-scroll-item]") as HTMLElement | null
@@ -67,20 +67,18 @@ export function SectionScrollAnimator() {
           item.style.opacity = `${opacity}`
         }
       })
-
-      ticking = false
     }
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update)
-        ticking = true
-      }
-    }
+    const trigger = ScrollTrigger.create({
+      trigger: container,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.6,
+      onUpdate: (self) => applyProgress(self.progress),
+      onRefresh: (self) => applyProgress(self.progress),
+    })
 
-    window.addEventListener("scroll", onScroll, { passive: true })
-    update()
-    return () => window.removeEventListener("scroll", onScroll)
+    return () => trigger.kill()
   }, [])
 
   return null
