@@ -159,7 +159,9 @@ export function PathTrails() {
 
     const trigger = ScrollTrigger.create({
       trigger: container,
-      start: "top top",
+      // Kept in sync with SectionScrollAnimator's start — these trails
+      // trace lines to those same cards, so the two must share a start.
+      start: "top 25%",
       end: "bottom bottom",
       scrub: 0.6,
       onUpdate: (self) => applyProgress(self.progress),
