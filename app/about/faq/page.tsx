@@ -10,54 +10,44 @@ type FaqItem = { question: string; answer: ReactNode }
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What is Sassafras Initiative?",
-    answer: (
-      <p>
-        Sassafras is an experimental publication platform dedicated to highlighting creative and critical
-        thought. We seek to expand the terrain of intellectual discourse by platforming ideas and formats that
-        are typically shut out from traditional academic circles—such as personal essays, artworks, multimedia
-        pieces, etc—and create a space where these various types of works can further color our understanding of
-        theory, culture, and engagement with the world around us.
-      </p>
-    ),
-  },
-  {
     question: "Are Sassafras’s issues free?",
     answer: (
       <p>
-        Yes, everything that we publish online is free for everyone to view. We aim to make critical curiosity
-        and diverse forms of knowledge-sharing more accessible—both to potential contributors and to the public
-        audience. In the future, we hope to also offer physical printed copies of our issues for a small fee for
-        interested persons, but digital versions will continue to remain online for free.
+        Yes, Sassafras’ digital publications are free for everyone to view. No ads. No subscription paywalls. We
+        aim to make critical curiosity and diverse forms of knowledge-sharing as accessible as possible. In the
+        future, we do intend to make physical copies of our issues available for sale, but digital versions will
+        continue to remain free.
       </p>
     ),
   },
   {
     question: "What are the submission requirements?",
     answer: (
-      <>
-        <p>
-          We welcome submissions of various mediums/formats and from anyone around the world, regardless of
-          educational background or level, so long as your piece is an original work, relates to the theme of the
-          issue, and, at this time, is understandable to English speakers (for written works). Institutional
-          affiliations are not necessary, and submissions with shared authorship/multiple collaborators are also
-          welcome. We look for pieces that are thought-provoking, in alignment with our ethics, and give voice to
-          underrepresented peoples and ideas, especially with consideration for decolonial thought and
-          intersectional feminist values. We prefer previously unpublished works, but previously published works
-          will still be considered provided that you have the rights or permission to repost.
-        </p>
-        <p>
-          First, we ask that you share your ‘pitch’ via the form on the ‘Submissions’ page. Briefly explain the
-          idea of your work and tell us what connection it has to a given issue’s theme. From the pitches we
-          receive, we try to curate a selection of diverse and unique contributions to the issue’s theme, both in
-          terms of content and format. Selected pitches will receive a ‘conditional acceptance’, meaning that we
-          are very likely to publish your final product so long as it complies with the expectations set by your
-          pitch, our ethical guidelines, our timelines, and our quality standards. If we feel that there is a
-          place in this issue for your perspective, we will offer a conditional acceptance and invite you to
-          submit your full work. From there, you will work with our editing team to prepare your piece for
-          publication.
-        </p>
-      </>
+      <p>
+        Sassafras welcomes submissions of various mediums/formats and from anyone around the world, regardless of
+        educational background or level. Submissions must be original work, relate to the theme of the issue,
+        and, at this time, be understandable to English speakers or include an English translation (for written
+        works). Institutional affiliations are not necessary, and submissions with shared authorship/multiple
+        collaborators are also welcome. We look for pieces that are thought-provoking, in alignment with our
+        ethics, and feature perspectives rooted in critical decolonial thought and intersectional feminist
+        values. We prefer unpublished works, but previously published works will still be considered provided
+        that you can provide written confirmation that you have the rights/permission to republish on other
+        platforms.
+      </p>
+    ),
+  },
+  {
+    question: "How does the submission/selection process work?",
+    answer: (
+      <p>
+        At this time, we only accept submissions in response to issue-specific calls for submissions. Firstly, we
+        ask that you share your ‘pitch’ via the form on the ‘Submissions’ page. Pitches should briefly explain the
+        idea of your work and tell us what connection it has to a given issue’s theme. From the pitches we
+        receive, we try to put together a selection of diverse and unique contributions that, in terms of content
+        and format, speak to the topic and to each other. Selected pitches will receive a ‘conditional
+        acceptance’, meaning that we are likely to publish your final product so long as it complies with the
+        expectations set by your pitch, our ethical guidelines, our timeline, and our quality standards.
+      </p>
     ),
   },
   {
@@ -65,144 +55,38 @@ const FAQ_ITEMS: FaqItem[] = [
     answer: (
       <>
         <p>
-          We currently publish two issues per year, meaning we spend roughly six months preparing each issue. The
-          open call period typically spans around one month. Those who submit a ‘pitch’ will receive an email with
-          the specific dates and details for the given issue’s timeline.
+          We currently publish 2 issues per year, meaning we spend roughly 6 months preparing each issue. The open
+          call period typically spans around 1 month. Those who submit a ‘pitch’ will receive an email with the
+          specific dates and details for the given issue’s timeline.
         </p>
         <p>
-          Once granted a conditional acceptance, contributors will then have around 4-6 weeks to share their full
-          piece. Once you have shared a completed draft with us, our editing team will provide feedback and
-          propose revisions as necessary. From there, the revision period may last up to another 6 weeks,
-          depending on the needs of the individual piece and contributor’s availability.
+          Once granted a conditional acceptance, contributors will then have around 4-6 weeks to share their first
+          full draft. Once you have shared a completed draft with us, our editing team will provide feedback and
+          propose revisions as necessary. From there, you will have another 6-8 weeks to finalise your piece with
+          support from our editing team.
         </p>
         <p>
-          We will try to be accommodating of your needs and work together on a realistic timeline to finalize your
-          piece. Ultimately, the final draft must be ready at least 6 weeks before the given issue’s publication
-          date. This is necessary to allow our team time to design and format the upcoming issue and code the
-          website accordingly.
+          We will try to be accommodating of our contributor’s needs and work together on a realistic timeline to
+          finalize your piece. Ultimately, the final piece must be ready at least 6 weeks before the given issue’s
+          publication date. This is necessary to allow our team time to design and format the upcoming issue and
+          code the website accordingly.
         </p>
       </>
     ),
   },
   {
     question: "Do contributors get paid for their publications?",
-    answer: (
-      <>
-        <p>No– unfortunately, we are not able to pay our contributors.</p>
-        <p>
-          We understand that this is a larger problem in the landscape of academic publishing, and we take issue
-          with publishing schemes that ask authors to pay out-of-pocket to publish their own work while
-          simultaneously placing said publications behind paywalls for audiences.
-        </p>
-        <p>
-          Though we cannot offer direct financial compensation at this time, we are providing a free platform for
-          your work, alongside the unpaid labor from our team in content creation, editing services, outreach, and
-          website design.
-        </p>
-      </>
-    ),
-  },
-  {
-    question: "What are your ethical guidelines?",
-    answer: (
-      <div className="space-y-5">
-        <div>
-          <p className="font-semibold">Accessibility</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>
-              How accessible is the issue?
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>Always available for free online</li>
-                <li>Eventual print versions will incur a small fee</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-semibold">AI</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Transparency in case of use</li>
-            <li>
-              Acceptable use of AI
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>Supportive: grammar/spelling checks, assistance with translation, formatting, etc.</li>
-              </ul>
-            </li>
-            <li>
-              Non-acceptable use of AI
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>Generative AI: image/audio/text creation</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-semibold">Inclusivity</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>
-              What do we accept?
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>No barriers in terms of discrimination, sexual orientation, background, language, etc.</li>
-                <li>No parameters set on education level, disciplinary background, or institutional affiliations</li>
-                <li>For now, we are an English-medium publication platform, but we accept translated works</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-semibold">Privacy</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>
-              Consent
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>From contributor(s), to publish their piece, promote on social media, etc.</li>
-                <li>From any party included in the piece (name, image, quotes, etc.)</li>
-              </ul>
-            </li>
-            <li>
-              Your information
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>Choice to publish under your full name, first name, pseudonym, or anonymously</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-semibold">Red lines</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>
-              Intolerance and discrimination: racism, homophobia, misogyny, islamophobia, casteism, etc.—
-              protection of marginalized identities
-            </li>
-            <li>Defamation</li>
-            <li>Far-right/Nazi ideology</li>
-            <li>
-              Misinformation/disinformation: claims must be supported by reputable sources, citations/hyperlinks
-              must be made clear, no pseudoscientific or conspiratorial claims; editing team will fact-check
-            </li>
-            <li>
-              Authorship
-              <ul className="list-[circle] pl-6 space-y-1">
-                <li>Plagiarism</li>
-                <li>Collaborative work</li>
-                <li>AI</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    ),
+    answer: <p>No—unfortunately, we are not able to pay our contributors at this time.</p>,
   },
   {
     question: "I’d like to get in touch with one of your contributors. How do I reach out to them?",
     answer: (
       <p>
-        Reach out to us at [insert email ID here] and, where a contributor has agreed to be contacted, we will do
-        our best to pass your message along.
+        Contributors have the option to include their social media handles and/or emails, in which case their
+        contact information can be found next to their names on the article/in their contributor bios. Otherwise,
+        please send your request to contact the contributor to us directly at sassafrasinitiative@gmail.com. For
+        privacy reasons, we cannot pass out contact details, however we can pass on your email and then it is up
+        to them if they wish to respond or not.
       </p>
     ),
   },
@@ -210,41 +94,36 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "I’m interested in supporting Sassafras. Can I make a donation or sponsor your work?",
     answer: (
       <p>
-        We are always happy to receive public support! Currently, Sassafras is in the process of registering as a
-        Verein (non-profit organization). If you are interested in sponsoring our work in some capacity, please
-        get in touch: [insert email ID here].
+        We are always grateful to receive financial support. If you are interested in sponsoring our work in some
+        capacity, please get in touch: sassafrasinitiative@gmail.com. Sassafras’ members work on a volunteer basis
+        and are in the process of registering as a Verein (non-profit organization). Until then, donations are
+        not tax-deductible.
       </p>
     ),
   },
   {
-    question: "I’d like to collaborate with Sassafras in some capacity. Is your organization open to this?",
+    question: "I’d like to collaborate with Sassafras in some capacity. Is your collective open to this?",
     answer: (
-      <p>
-        Yes, we are very interested in collaborations with like-minded organizations, researchers, or artists.
-        This could include collaborating on a publication, co-hosting an event, social media promotion, or other
-        ideas you may have. We invite interested parties to share your collaborative ideas with us via our email:
-        [insert email ID here].
-      </p>
-    ),
-  },
-  {
-    question:
-      "I’ve published a piece with you already and I want to change or remove part or all of my work. What should I do?",
-    answer: (
-      <p>
-        Please contact us at [insert email ID here] if you’d like to request any changes or removals
-        post-publication. We ask you to thoroughly explain the reasons and urgency behind your request. We will
-        evaluate requests on a case-by-case basis and make every attempt to respond promptly as needed. For very
-        serious and/or time-sensitive cases, please indicate ‘URGENT’ in the email subject line.
-      </p>
+      <>
+        <p>
+          Yes! We are very interested in all kinds of collaborations, including collaborating on a publication,
+          co-hosting an event, doing a workshop, or other ideas you may have. Feel free to reach out with your
+          idea via email at sassafrasinitiative@gmail.com.
+        </p>
+        <p>
+          We also welcome volunteers who are interested in assisting us with our behind-the-scenes operations.
+          Focus areas include editing, design, social media, and web development. If you’d like to lend a helping
+          hand in one of these areas, please get in touch.
+        </p>
+      </>
     ),
   },
   {
     question: "How can I contact Sassafras for comments, questions, requests, ideas to share, etc.?",
     answer: (
       <p>
-        We welcome all kinds of feedback and would love to hear from you! You can email us at [insert email ID
-        here], or you can engage with us via comments or DMs on our Instagram account.
+        We welcome all kinds of feedback and would love to hear from you! You can email us at
+        sassafrasinitiative@gmail.com, or you can engage with us via comments or DMs on our Instagram account.
       </p>
     ),
   },
