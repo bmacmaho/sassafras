@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { FEATURE_FLAGS } from "@/lib/feature-flags"
+import { submissionsFlag } from "@/lib/flags"
 import { ScrollAnimator } from "@/components/scroll-animator"
 import { ScrollDrivenVideo } from "@/components/home/scroll-driven-video"
 import { LeafSnake } from "@/components/home/leaf-snake"
@@ -9,7 +9,9 @@ import { PathTrails } from "@/components/home/path-trails"
 
 export const revalidate = 3600
 
-export default function HomePage() {
+export default async function HomePage() {
+  const submissions = await submissionsFlag()
+
   return (
     <div
       className="home-page relative bg-[#1a1a1a] text-white overflow-x-clip font-sans"
@@ -35,7 +37,7 @@ export default function HomePage() {
       <div className="relative" style={{ height: '200vh' }} data-leaves-scroll-container="true">
         <div className="sticky top-0 w-full h-screen bg-[#FF730F]">
         <section className="absolute inset-[10px] md:inset-[13px] bg-[#1a1a1a] overflow-hidden">
-          <PathTrails />
+          <PathTrails submissions={submissions} />
           {/* Blurred inner edges */}
           <div className="absolute top-0 left-0 right-0 h-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to bottom, #FF730F, transparent)' }} />
           <div className="absolute bottom-0 left-0 right-0 h-[8px] pointer-events-none z-50" style={{ background: 'linear-gradient(to top, #FF730F, transparent)' }} />
@@ -147,7 +149,7 @@ export default function HomePage() {
 
             {/* 5. SUBMISSIONS — hidden until the submissions feature flag is on
                 (the /submissions route 404s while the flag is off). */}
-            {FEATURE_FLAGS.submissions && (
+            {submissions && (
               <div className="md:absolute md:left-[44%] md:top-[55%]" data-scroll-step="5" data-scroll-col="right">
                 <div data-scroll-item style={{ opacity: 0 }}>
                   <Link href="/submissions" className="group flex flex-col items-center md:items-start gap-2 transition-all duration-300">

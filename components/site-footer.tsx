@@ -4,9 +4,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useHeaderScrolled } from "@/components/header-extras-context"
-import { FEATURE_FLAGS } from "@/lib/feature-flags"
 
-export function SiteFooter() {
+export function SiteFooter({ supportUs, substack }: { supportUs: boolean; substack: boolean }) {
   const pathname = usePathname()
   const { darkMode } = useHeaderScrolled()
   const isAbout = pathname === "/about" || pathname.startsWith("/explore") || pathname === "/issues"
@@ -45,7 +44,7 @@ export function SiteFooter() {
         </div>
 
         {/* 3 — Support */}
-        {FEATURE_FLAGS.supportUs && (
+        {supportUs && (
           <div className="flex flex-col">
             <span className={colLabel}>Support:</span>
             <Link href="/donate" className={colLink}>Donate</Link>
@@ -75,7 +74,7 @@ export function SiteFooter() {
             >
               <Image src="/socials/instagram.PNG" alt="Instagram" width={40} height={40} className="object-contain" />
             </a>
-            {FEATURE_FLAGS.substack && (
+            {substack && (
               <a
                 href="https://substack.com/sassafrasinitiative"
                 target="_blank"
