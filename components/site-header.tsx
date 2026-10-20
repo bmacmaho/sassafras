@@ -8,7 +8,6 @@ import { createPortal } from "react-dom"
 import { ChevronUp, ChevronDown, Sun, Moon } from "lucide-react"
 import { getPageColor, PAGE_COLORS, DEFAULT_COLOR } from "@/lib/page-colors"
 import { useHeaderExtras, useHeaderScrolled, DARK_MODE_KEY } from "@/components/header-extras-context"
-import { FEATURE_FLAGS } from "@/lib/feature-flags"
 import { isVideoSrc } from "@/lib/types"
 
 function ViewedThumb({ src }: { src: string }) {
@@ -132,21 +131,24 @@ const PAGE_SUBTITLES: Record<string, { line1: string; line2: string }> = {
   "/submissions":             { line1: "Open Call",      line2: "Issue No. 2 — Nostalgia" },
 }
 
-const NAV_LINKS = [
-  { href: "/", label: "HOME" },
-  { href: "/latest-issue", label: "LATEST ISSUE" },
-  ...(FEATURE_FLAGS.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
-  { href: "/explore", label: "EXPLORE" },
-  { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }, ...(FEATURE_FLAGS.faq ? [{ href: "/about/faq", label: "FAQ", pageTitle: "FAQ" }] : [])] },
-  ...(FEATURE_FLAGS.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
-  { href: "/keep-in-touch", label: FEATURE_FLAGS.supportUs ? "CONTACT / SUPPORT" : "CONTACT", pageTitle: "Contact" },
-]
+function buildNavLinks(flags: { allIssues: boolean; faq: boolean; submissions: boolean; supportUs: boolean }) {
+  return [
+    { href: "/", label: "HOME" },
+    { href: "/latest-issue", label: "LATEST ISSUE" },
+    ...(flags.allIssues ? [{ href: "/issues", label: "ALL ISSUES" }] : []),
+    { href: "/explore", label: "EXPLORE" },
+    { href: "/about", label: "ABOUT", pageTitle: "Who are we?", submenu: [{ href: "/about", label: "OUR TEAM" }, { href: "/about/why-sassafras", label: "WHY 'SASSAFRAS'?", pageTitle: "Why 'Sassafras'?" }, ...(flags.faq ? [{ href: "/about/faq", label: "FAQ", pageTitle: "FAQ" }] : [])] },
+    ...(flags.submissions ? [{ href: "/submissions", label: "SUBMISSIONS" }] : []),
+    { href: "/keep-in-touch", label: flags.supportUs ? "CONTACT / SUPPORT" : "CONTACT", pageTitle: "Contact" },
+  ]
+}
 
 const HEADER_MAX = 220
 const HEADER_MIN = 64
 const COLLAPSE_RANGE = HEADER_MAX - HEADER_MIN
 
-export function SiteHeader() {
+export function SiteHeader({ allIssues, faq, submissions, supportUs }: { allIssues: boolean; faq: boolean; submissions: boolean; supportUs: boolean }) {
+  const NAV_LINKS = buildNavLinks({ allIssues, faq, submissions, supportUs })
   const pathname = usePathname()
   const isExplorePage = pathname === "/explore"
   const isLatestIssuePage = pathname === "/latest-issue"

@@ -2,24 +2,25 @@
 
 import { useEffect, useRef, useState } from "react"
 import { SUBTITLE_TEXT } from "./scroll-driven-video"
-import { FEATURE_FLAGS } from "@/lib/feature-flags"
 import { ScrollTrigger } from "@/lib/gsap"
 
 // Mirrors the cubic bezier parameters in SectionScrollAnimator:
 //   B(p) = (1-p)³·P0 + 3(1-p)²p·P1 + 3(1-p)p²·P2 + p³·P3  (P3 = card centre)
-const STEP_BEZIERS = [
-  { step: 1, sx: -900, sy:  650, cx1:  500, cy1: -700, cx2: -200, cy2: -100 },
-  { step: 2, sx: 1400, sy: -200, cx1:  500, cy1: -500, cx2: -400, cy2:  200 },
-  { step: 3, sx: -850, sy: -600, cx1:  300, cy1: -800, cx2:  400, cy2:  300 },
-  { step: 4, sx:  920, sy:  700, cx1: -300, cy1:  800, cx2:  150, cy2: -400 },
-  // Step 5 (Submissions) only exists while its feature flag is on — kept in
-  // sync with the flag-gated tile in app/page.tsx and case 5 in SectionScrollAnimator.
-  ...(FEATURE_FLAGS.submissions
-    ? [{ step: 5, sx: -650, sy: 750, cx1: 450, cy1: -650, cx2: -250, cy2: 250 }]
-    : []),
-]
+function stepBeziers(submissions: boolean) {
+  return [
+    { step: 1, sx: -900, sy:  650, cx1:  500, cy1: -700, cx2: -200, cy2: -100 },
+    { step: 2, sx: 1400, sy: -200, cx1:  500, cy1: -500, cx2: -400, cy2:  200 },
+    { step: 3, sx: -850, sy: -600, cx1:  300, cy1: -800, cx2:  400, cy2:  300 },
+    { step: 4, sx:  920, sy:  700, cx1: -300, cy1:  800, cx2:  150, cy2: -400 },
+    // Step 5 (Submissions) only exists while its feature flag is on — kept in
+    // sync with the flag-gated tile in app/page.tsx and case 5 in SectionScrollAnimator.
+    ...(submissions
+      ? [{ step: 5, sx: -650, sy: 750, cx1: 450, cy1: -650, cx2: -250, cy2: 250 }]
+      : []),
+  ]
+}
 
-function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: number) {
+function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: number, stepCount: number) {
   if (!isMd) {
     // Mobile: the tiles are a single centered column, evenly spaced via
     // justify-evenly (see app/page.tsx) — all four share the same image
@@ -28,7 +29,7 @@ function cardAnchor(step: number, w: number, h: number, isMd: boolean, vh: numbe
     const imageH = vh * 0.15
     const labelH = 8 + 14 // gap-2 (8px) + leaf icon/label row (~14px)
     const tileH = imageH + labelH
-    const n = STEP_BEZIERS.length
+    const n = stepCount
     const gap = (h - n * tileH) / (n + 1)
     const topY = step * gap + (step - 1) * tileH
     return { x: w / 2, y: topY + imageH / 2 }
@@ -83,7 +84,8 @@ function sentencePathSegments(w: number, h: number, isMd: boolean, vw: number) {
   return { full, leadLength: startX - leadX }
 }
 
-export function PathTrails() {
+export function PathTrails({ submissions }: { submissions: boolean }) {
+  const STEP_BEZIERS = stepBeziers(submissions)
   const pathRefs = useRef<(SVGPathElement | null)[]>(Array(STEP_BEZIERS.length).fill(null))
   const sentenceCurveRef = useRef<SVGPathElement | null>(null)
   const sentenceTextPathRef = useRef<SVGTextPathElement | null>(null)
@@ -131,7 +133,7 @@ export function PathTrails() {
       pathRefs.current.forEach((el, i) => {
         if (!el) return
         const { step, sx, sy, cx1, cy1, cx2, cy2 } = STEP_BEZIERS[i]
-        const { x: ex, y: ey } = cardAnchor(step, w, h, isMd, vh)
+        const { x: ex, y: ey } = cardAnchor(step, w, h, isMd, vh, STEP_BEZIERS.length)
 
         const P0x = ex + sx,  P0y = ey + sy
         const P1x = ex + cx1, P1y = ey + cy1
