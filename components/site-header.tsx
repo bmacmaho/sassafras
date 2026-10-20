@@ -156,6 +156,7 @@ export function SiteHeader({ allIssues, faq, submissions, supportUs }: { allIssu
 const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pathname === "/keep-in-touch" || pathname === "/submissions"
 
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
   const [headerHeight, setHeaderHeight] = useState(HEADER_MAX)
   const [headerTransition, setHeaderTransition] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -176,6 +177,7 @@ const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pat
   const router = useRouter()
   const menuOpenRef = useRef(menuOpen)
   useEffect(() => { menuOpenRef.current = menuOpen }, [menuOpen])
+  useEffect(() => { if (!menuOpen) setMobileExpanded(null) }, [menuOpen])
 
   useEffect(() => {
     if (!menuOpenRef.current) return
@@ -285,16 +287,56 @@ const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pat
           } ${darkMode ? "bg-black/95" : "bg-[#fcfaf2]/95"}`}
           style={{ top: "76px" }}
         >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className={`font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors text-center ${darkMode ? "text-white" : "text-[#222]"}`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => {
+            if (!link.submenu?.length) {
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors text-center ${darkMode ? "text-white" : "text-[#222]"}`}
+                >
+                  {link.label}
+                </Link>
+              )
+            }
+
+            const expanded = mobileExpanded === link.href
+            return (
+              <div key={link.href} className="w-full flex flex-col items-center">
+                <button
+                  onClick={() => setMobileExpanded(expanded ? null : link.href)}
+                  aria-expanded={expanded}
+                  className={`flex items-center gap-3 font-alte-haas text-4xl sm:text-5xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors bg-transparent border-none p-0 cursor-pointer ${darkMode ? "text-white" : "text-[#222]"}`}
+                >
+                  {link.label}
+                  <ChevronDown
+                    size={28}
+                    strokeWidth={2}
+                    className="transition-transform duration-300"
+                    style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
+                  />
+                </button>
+                <div
+                  className="w-full grid transition-[grid-template-rows] duration-400 ease-in-out"
+                  style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+                >
+                  <div className="overflow-hidden flex flex-col items-center gap-4 pt-4">
+                    {link.submenu.map((sub) => (
+                      <Link
+                        key={sub.href}
+                        href={sub.href}
+                        onClick={() => setMenuOpen(false)}
+                        className={`font-alte-haas text-xl sm:text-2xl uppercase tracking-[0.05em] hover:text-[#c5d940] transition-colors text-center ${darkMode ? "text-white/70" : "text-[#222]/70"}`}
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
       </div>
 
         {/* Mobile slim bar */}
