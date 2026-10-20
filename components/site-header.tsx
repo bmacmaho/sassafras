@@ -313,7 +313,7 @@ const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pat
             {pageLabel && (
               <Link
                 href={pageHref}
-                className="min-w-0 truncate font-alte-haas text-sm tracking-[0.2em] transition-opacity duration-300 hover:opacity-60"
+                className="font-alte-haas text-sm tracking-[0.2em] transition-opacity duration-300 hover:opacity-60"
                 style={{ color: darkMode ? "white" : undefined }}
               >
                 {pageLabel}
