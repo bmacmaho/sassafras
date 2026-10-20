@@ -299,7 +299,7 @@ const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pat
 
         {/* Mobile slim bar */}
         <header className="lg:hidden sticky top-[10px] z-[160] px-8 flex items-start pt-3 pb-5 relative overflow-visible" style={{ backgroundColor: darkMode ? "#000" : "#fbfaf1", height: "64px", transition: "background-color 500ms ease" }}>
-          <div className={`flex items-center gap-2 min-w-0 flex-1 transition-[padding] duration-300 ${searchOpen ? "pr-[270px]" : "pr-[150px]"}`}>
+          <div className="flex items-center gap-2 min-w-0 flex-1 pr-[150px]">
             <Link href="/" className="flex items-start flex-shrink-0">
               <Image src={darkMode ? "/Logo-dark-version.JPG" : "/sassafras-logo-square.JPG"} alt="Sassafras" width={48} height={48} className="object-contain" />
             </Link>
@@ -310,7 +310,7 @@ const hasThemeToggle = isLatestIssuePage || pathname.startsWith("/about") || pat
                 </div>
               </Link>
             ))}
-            {pageLabel && (
+            {pageLabel && !searchOpen && (
               <Link
                 href={pageHref}
                 className="font-alte-haas text-sm tracking-[0.2em] transition-opacity duration-300 hover:opacity-60"
